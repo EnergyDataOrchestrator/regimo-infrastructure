@@ -1,0 +1,22 @@
+{
+  "type": "record",
+  "name": "RegimoMessage",
+  "namespace": "de.kit.regimo",
+  "fields": [
+    {
+      "name": "ontology_iri",
+      "type": "string",
+      "doc": "Reference to the Regimo Ontology class (e.g., PowerMeasurement)"
+    },
+    {
+      "name": "timestamp",
+      "type": "long",
+      "doc": "ISO-8601 unix timestamp"
+    },
+    {
+      "name": "payload",
+      "type": "bytes",
+      "doc": "The actual energy data payload"
+    }
+  ]
+}
