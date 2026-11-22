@@ -65,15 +65,35 @@ import logging
 import urllib.parse
 from importlib.metadata import version as _package_version
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import click
 
 from . import docker as D
-from .trip import (DMP_DEFAULT, DEVICE_DEFAULT, SHAPES_FILE, SPARQL_PREFIXES,
-                   Builder, TurtleGraph, _build_checks,
-                   _default_property_files, _load_json, ask, count, date_lit,
-                   dec_lit, iri, shacl_validate, sparql, sparql_update,
-                   ttl_escape)
+
+if TYPE_CHECKING:  # SchemaView is only imported at runtime inside _linkml()
+    from linkml_runtime import SchemaView
+
+from .trip import (
+    DEVICE_DEFAULT,
+    DMP_DEFAULT,
+    SHAPES_FILE,
+    SPARQL_PREFIXES,
+    Builder,
+    TurtleGraph,
+    _build_checks,
+    _default_property_files,
+    _load_json,
+    ask,
+    count,
+    date_lit,
+    dec_lit,
+    iri,
+    shacl_validate,
+    sparql,
+    sparql_update,
+    ttl_escape,
+)
 
 # ---------------------------------------------------------------------------
 # paths
@@ -310,13 +330,13 @@ def transform(dmp: dict, device: dict | None, properties: list[dict],
         "transformed_project": project_obj,
         "transformed_sensor": sensor_obj,
         "notes": [
-            "The serialiser emits rdf:type for every nested class node; "
-            "trip.py (CF2-003) omitted it for Interval and Identifier blank "
-            "nodes — the agnostic graph therefore holds 4 more triples "
-            "(82 vs. 78) with otherwise identical content.",
-            "SHACL: the faithful P6 omission of edo:hasContact (absent in the "
-            "export) still trips the project-claim-shapes.ttl sh:minCount 1 "
-            "(documented conflict, CF2-003 finding F1).",
+            ("The serialiser emits rdf:type for every nested class node; "
+             "trip.py (CF2-003) omitted it for Interval and Identifier blank "
+             "nodes — the agnostic graph therefore holds 4 more triples "
+             "(82 vs. 78) with otherwise identical content."),
+            ("SHACL: the faithful P6 omission of edo:hasContact (absent in the "
+             "export) still trips the project-claim-shapes.ttl sh:minCount 1 "
+             "(documented conflict, CF2-003 finding F1)."),
         ],
     }
     return ser.g.turtle(), b.checks, meta

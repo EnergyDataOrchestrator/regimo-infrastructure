@@ -29,17 +29,17 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
-from pathlib import Path
 import shutil
+from pathlib import Path
 from typing import cast
 
 import click
-from rocrate.rocrate import ROCrate
 
 # rocrate ships no type stubs — import its entity model so the checker can
 # resolve `.id`, `__setitem__` and `append_to` on the objects we build.
 from rocrate.model.entity import Entity
 from rocrate.model.file import File
+from rocrate.rocrate import ROCrate
 
 from . import docker as D
 

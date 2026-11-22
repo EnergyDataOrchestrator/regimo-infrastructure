@@ -102,8 +102,8 @@ SPARQL_PREFIXES = (
 # P8: role_template free text -> RDA maDMP contributor-type CV. First matching
 # regex wins; anything unmatched falls back to "Other" (documented default).
 ROLE_TRANSLATION = [
-    (re.compile(r"responsible for preservation", re.I), "Data Curator"),
-    (re.compile(r"responsible for metadata", re.I), "Data Curator"),
+    (re.compile(r"responsible for preservation", re.IGNORECASE), "Data Curator"),
+    (re.compile(r"responsible for metadata", re.IGNORECASE), "Data Curator"),
 ]
 ROLE_FALLBACK = "Other"
 
@@ -111,12 +111,12 @@ ROLE_FALLBACK = "Other"
 # 2026-11-19). Emitted as IANA media-type IRIs, following
 # fuseki-proto/data/sample-project.ttl.
 FORMAT_TRANSLATION = [
-    (re.compile(r"\bcsv\b", re.I), "text/csv"),
-    (re.compile(r"\bjson\b", re.I), "application/json"),
-    (re.compile(r"\bxls(x)?\b|\bexcel\b", re.I), "application/vnd.ms-excel"),
-    (re.compile(r"\bnetcdf\b", re.I), "application/netcdf"),
-    (re.compile(r"\bpdf\b", re.I), "application/pdf"),
-    (re.compile(r"\bxml\b", re.I), "application/xml"),
+    (re.compile(r"\bcsv\b", re.IGNORECASE), "text/csv"),
+    (re.compile(r"\bjson\b", re.IGNORECASE), "application/json"),
+    (re.compile(r"\bxls(x)?\b|\bexcel\b", re.IGNORECASE), "application/vnd.ms-excel"),
+    (re.compile(r"\bnetcdf\b", re.IGNORECASE), "application/netcdf"),
+    (re.compile(r"\bpdf\b", re.IGNORECASE), "application/pdf"),
+    (re.compile(r"\bxml\b", re.IGNORECASE), "application/xml"),
 ]
 
 # S10–S12: datasheet overrides (authority per CF1-005 / spec open item 7),
@@ -131,7 +131,7 @@ DATASHEET_OVERRIDES = {
     },
 }
 
-PIDINST_RE = re.compile(r"PIDINST:\s*(\S+)", re.I)
+PIDINST_RE = re.compile(r"PIDINST:\s*(\S+)", re.IGNORECASE)
 
 
 # ---------------------------------------------------------------------------
@@ -856,7 +856,7 @@ def shacl_validate(graph_file: Path, shapes_file: Path) -> dict:
     proc = subprocess.run(
         [*cmd, "-s", str(shapes_file), "-d", str(graph_file),
          "-e", str(shapes_file)],
-        capture_output=True, text=True, timeout=300)
+        check=False, capture_output=True, text=True, timeout=300)
     # pyshacl writes the human-readable validation report to stdout (small) and
     # verbose progress logs to stderr (large) — report on stdout wins.
     stdout = (proc.stdout or "").strip()
@@ -1037,7 +1037,7 @@ def verify_cmd(obj, dmp_path, device_path, property_paths):
     dmp = _load_json(Path(dmp_path))
     device = _load_json(Path(device_path)) if device_path else None
     properties = [_load_json(Path(p)) for p in property_paths]
-    _, checks, meta = transform(dmp, device, properties)
+    _, checks, _meta = transform(dmp, device, properties)
 
     # 1. dump the stored graph back out
     dump = D.dump_graph(base, ds, user, password)

@@ -9,16 +9,15 @@ from __future__ import annotations
 
 import datetime as _dt
 import sys
-
 from pathlib import Path
 
 import click
 
 from . import docker as D
-from .docker import DEFAULT_BACKUPS_DIR, TOOL_DIR
-from .trip import trip as trip_cmd
 from .agnostic_trip import agnostic_trip as agnostic_trip_cmd
+from .docker import DEFAULT_BACKUPS_DIR, TOOL_DIR
 from .ro_crate import crate_group as crate_cmd
+from .trip import trip as trip_cmd
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
@@ -82,7 +81,6 @@ def cli(ctx, compose_dir, service, dataset, port, user, password, backups_dir):
                             backups_dir=backups_dir)
     if ctx.invoked_subcommand is None:
         click.echo(ctx.get_help())
-    pass
 
 
 # CF2-003 round trip (transform -> store -> verify), see trip.py and
@@ -113,9 +111,9 @@ def start(fc: FusekiContext):
     """
     _run_compose(fc, "up", "-d", "--build")
     if not D.wait_for_ping(fc.base_url, fc.dataset, fc.user, fc.password):
-        raise click.ClickException("Fuseki did not answer /{}/query in time. "
-                                   "Check `status` / `docker compose -f ... logs fuseki`.".format(
-                                       fc.dataset))
+        raise click.ClickException(
+            f"Fuseki did not answer /{fc.dataset}/query in time. "
+            "Check `status` / `docker compose -f ... logs fuseki`.")
     _seed_shapes(fc)
     click.echo(f"OK: Fuseki up at {fc.base_url}.")
 
@@ -154,7 +152,7 @@ def status(fc: FusekiContext):
     # datasets may be absent.
     try:
         D.http_get(D.dataset_query_url(fc.base_url, fc.dataset), fc.user, fc.password)
-    except Exception:
+    except Exception:  # noqa: BLE001 — liveness probe, any failure means "not alive"
         click.echo(f"no Fuseki responding on {fc.base_url} (probed /{fc.dataset}/query)")
         return
     click.echo(f"live Fuseki on {fc.base_url}; served datasets:")
@@ -163,7 +161,7 @@ def status(fc: FusekiContext):
         try:
             D.http_get(D.dataset_query_url(fc.base_url, name), fc.user, fc.password)
             present.append(name)
-        except Exception:
+        except Exception:  # noqa: BLE001,S110 — probing optional datasets, silence is fine
             pass
     for name in present:
         marker = "  <-- prototype" if name == fc.dataset else ""

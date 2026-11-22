@@ -46,7 +46,7 @@ def container_status(service: str, cwd: Path) -> str:
             capture=True,
         )
         output = (proc.stdout or "").strip()
-    except Exception:  # docker compose itself failed
+    except Exception:  # noqa: BLE001 — any compose failure just means "unknown state"
         return "unknown"
     if proc.returncode != 0 or not output:
         return "missing"
@@ -88,7 +88,7 @@ def wait_for_ping(base_url: str, dataset: str, user: str, password: str,
         try:
             http_get(url, user=user, password=password)
             return True
-        except Exception:
+        except Exception:  # noqa: BLE001 — retry loop; keep probing until timeout
             time.sleep(1.0)
     return False
 
