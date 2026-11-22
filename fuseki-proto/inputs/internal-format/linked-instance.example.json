@@ -1,0 +1,127 @@
+{
+  "@context": {
+    "edo": "https://w3id.org/edo/terms/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "sosa": "http://www.w3.org/ns/sosa/",
+    "smscv": "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/"
+  },
+  "@id": "urn:uuid:<uuid5 rdmo:project:6>",
+  "@type": "edo:Project",
+  "dcterms:title": "Measurement_02",
+  "dcterms:language": "eng",
+  "time:hasInterval": { "begin": "2026-07-01", "end": "2026-09-11" },
+  "edo:hasContact": {
+    "@type": "foaf:Person",
+    "foaf:name": "A. Koubaa",
+    "foaf:mbox": "mailto:mohamed-anis.koubaa@kit.edu"
+  },
+  "edo:hasContribution": [
+    { "@type": "edo:Contribution", "prov:agent": {"foaf:name": "A. Koubaa"},
+      "dcterms:type": "Data Curator" },
+    { "@type": "edo:Contribution", "prov:agent": {"foaf:name": "A. Koubaa"},
+      "dcterms:type": "Data Curator" }
+  ],
+  "dcat:dataset": {
+    "@id": "edo:dataset:weatherstation-q3-2026",
+    "@type": "dcat:Dataset",
+    "dcterms:title": "Weatherstation Q3-2026",
+    "dcterms:description": "The data are collected from the sensor with the PIDINST: 21.11157/9b6cdfb9-a4fb-4269-af04-1ef94588f5a8. Data are continuously generated",
+    "dcat:keyword": ["Energy", "Orchestrator"],
+    "edo:personalData": false,
+    "edo:sensitiveData": false,
+    "edo:qualityAssurance": [],
+    "dcat:distribution": [
+      { "@type": "dcat:Distribution",
+        "dcterms:title": "Storage during the project",
+        "dcat:accessURL": "https://gitlab.kit.edu/kit/iai/it4edm/metadb",
+        "edo:dataAccess": "open",
+        "dcat:format": ["http://purl.org/NET/mediatypes/text/csv"] },
+      { "@type": "dcat:Distribution",
+        "dcterms:title": "Preservation after the project",
+        "edo:dataAccess": "open",
+        "edo:license": {"dcterms:license": "https://creativecommons.org/licenses/by/4.0/",
+                        "time:hasBeginning": "2027-01-29"} }
+    ],
+    "prov:wasGeneratedBy": {
+      "@type": "sosa:Sensor",
+      "@id": "https://sms.atmohub.kit.edu/devices/67",
+      "dcterms:title": "KIT-CN-IAI-Bau445-Weather-Station-Weatherstation",
+      "edo:model": "FS6002",
+      "edo:manufacturer": "FuehlerSysteme eNET International GmbH",
+      "dcterms:type": "smscv:equipmenttypes/54/",
+      "edo:identifier": {"dcterms:identifier": "21.11157/9b6cdfb9-a4fb-4269-af04-1ef94588f5a8",
+                         "dcterms:type": "handle"},
+      "sosa:observes": [
+        {
+          "@type": "sosa:ObservableProperty",
+          "smscv:measuredQuantity": "smscv:measuredquantities/172/",
+          "dcterms:title": "Wind speed",
+          "edo:unit": "smscv:units/56/",
+          "edo:measuringRangeMin": 0.0,
+          "edo:measuringRangeMax": 75.0,
+          "edo:samplingMedia": "smscv:samplingmedia/9/",
+          "edo:compartment": "smscv:compartments/1/",
+          "edo:aggregationType": "smscv:aggregationtypes/1/"
+        },
+        {
+          "@type": "sosa:ObservableProperty",
+          "smscv:measuredQuantity": "smscv:measuredquantities/170/",
+          "dcterms:title": "Wind direction",
+          "edo:unit": "smscv:units/54/",
+          "edo:measuringRangeMin": 0.0,
+          "edo:measuringRangeMax": 360.0,
+          "edo:samplingMedia": "smscv:samplingmedia/9/",
+          "edo:compartment": "smscv:compartments/1/",
+          "edo:aggregationType": "smscv:aggregationtypes/8/"
+        },
+        {
+          "@type": "sosa:ObservableProperty",
+          "smscv:measuredQuantity": "smscv:measuredquantities/4/",
+          "dcterms:title": "Air temperature",
+          "edo:unit": "smscv:units/51/",
+          "edo:measuringRangeMin": -80.0,
+          "edo:measuringRangeMax": 60.0,
+          "edo:samplingMedia": "smscv:samplingmedia/9/",
+          "edo:compartment": "smscv:compartments/1/",
+          "edo:aggregationType": "smscv:aggregationtypes/1/"
+        },
+        {
+          "@type": "sosa:ObservableProperty",
+          "smscv:measuredQuantity": "smscv:measuredquantities/124/",
+          "dcterms:title": "Relative humidity",
+          "edo:unit": "smscv:units/52/",
+          "edo:measuringRangeMin": 0.0,
+          "edo:measuringRangeMax": 100.0,
+          "edo:samplingMedia": "smscv:samplingmedia/9/",
+          "edo:compartment": "smscv:compartments/1/",
+          "edo:aggregationType": "smscv:aggregationtypes/1/"
+        },
+        {
+          "@type": "sosa:ObservableProperty",
+          "smscv:measuredQuantity": "smscv:measuredquantities/3/",
+          "dcterms:title": "Atmospheric pressure",
+          "edo:unit": "smscv:units/57/",
+          "edo:measuringRangeMin": 500.0,
+          "edo:measuringRangeMax": 1200.0,
+          "edo:resolution": 0.1,
+          "edo:samplingMedia": "smscv:samplingmedia/9/",
+          "edo:compartment": "smscv:compartments/1/",
+          "edo:aggregationType": "smscv:aggregationtypes/1/"
+        }
+      ]
+    },
+    "edo:realizedAs": {
+      "@type": "edo:MeasurementSeries",
+      "dcterms:title": "Weatherstation Q3-2026",
+      "time:hasInterval": { "begin": "2026-07-01", "end": "2026-09-30" },
+      "edo:hasSamplingPlan": {
+        "@type": "edo:SamplingPlan",
+        "edo:samplingInterval": "PT15M",
+        "edo:samplingMedia": "smscv:samplingmedia/9/"
+      }
+    }
+  }
+}

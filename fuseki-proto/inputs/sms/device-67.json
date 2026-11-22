@@ -1,0 +1,98 @@
+{
+  "data": {
+    "type": "device",
+    "id": "67",
+    "attributes": {
+      "description": "",
+      "short_name": "KIT-CN-IAI-Bau445-Weather-Station-Weatherstation",
+      "long_name": "",
+      "serial_number": "",
+      "manufacturer_uri": "",
+      "manufacturer_name": "FuehlerSysteme eNET International GmbH ",
+      "device_type_uri": "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/equipmenttypes/54/",
+      "device_type_name": "Weather station",
+      "status_uri": "",
+      "status_name": "",
+      "model": "FS6002",
+      "inventory_number": "",
+      "persistent_identifier": "21.11157/9b6cdfb9-a4fb-4269-af04-1ef94588f5a8",
+      "website": "",
+      "created_at": "2024-01-19T14:18:13.197421+00:00",
+      "updated_at": "2026-03-17T13:34:04.208206+00:00",
+      "group_ids": ["6"],
+      "is_private": false,
+      "is_internal": false,
+      "is_public": true,
+      "archived": false,
+      "update_description": "create;attachment",
+      "keywords": [],
+      "country": "",
+      "has_system_generated_serial_number": false
+    },
+    "relationships": {
+      "created_by": {
+        "links": { "related": "/backend/api/v1/users/25" },
+        "data": { "type": "user", "id": "25" }
+      },
+      "updated_by": {
+        "links": { "related": "/backend/api/v1/users/25" },
+        "data": { "type": "user", "id": "25" }
+      },
+      "customfields": {
+        "links": { "related": "/backend/api/v1/customfields?id=67" },
+        "data": [{ "type": "customfield", "id": "123" }]
+      },
+      "device_properties": {
+        "links": { "related": "/backend/api/v1/device-properties?id=67" },
+        "data": [
+          { "type": "device_property", "id": "157" },
+          { "type": "device_property", "id": "159" },
+          { "type": "device_property", "id": "158" },
+          { "type": "device_property", "id": "160" },
+          { "type": "device_property", "id": "161" }
+        ]
+      },
+      "device_attachments": {
+        "links": { "related": "/backend/api/v1/device-attachments?id=67" },
+        "data": [{ "type": "device_attachment", "id": "395" }]
+      },
+      "device_images": {
+        "links": {
+          "related": "/backend/api/v1/device-images?filter%5Bdevice_id%5D=67"
+        },
+        "data": []
+      },
+      "device_parameters": {
+        "links": { "related": "/backend/api/v1/device-parameters?id=67" },
+        "data": []
+      },
+      "contacts": {
+        "links": { "related": "/backend/api/v1/contacts?id=67" },
+        "data": []
+      },
+      "generic_device_actions": {
+        "links": { "related": "/backend/api/v1/generic-device-actions?id=67" },
+        "data": []
+      },
+      "device_mount_actions": {
+        "links": { "related": "/backend/api/v1/device-mount-actions?id=67" },
+        "data": [{ "type": "device_mount_action", "id": "13" }]
+      },
+      "device_calibration_actions": {
+        "links": {
+          "related": "/backend/api/v1/device-calibration-actions?id=67"
+        },
+        "data": []
+      },
+      "device_software_update_actions": {
+        "links": {
+          "related": "/backend/api/v1/device-software-update-actions?id=67"
+        },
+        "data": []
+      }
+    },
+    "links": { "self": "/backend/api/v1/devices/67" }
+  },
+  "links": { "self": "/backend/api/v1/devices/67" },
+  "jsonapi": { "version": "1.0" }
+}

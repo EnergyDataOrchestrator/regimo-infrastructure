@@ -1,0 +1,460 @@
+id: https://w3id.org/edo/schemas/internal-format
+name: edo-internal-format-schema
+title: EDO Internal Format Schema
+description: >
+  The EDO intermediate format (card CF1-006, spec
+  `../internal-format/04_P04_S04_internal-format-spec.md` v0.2): the pivot
+  between the sources (DMP via RDMO, SMS) and the targets (RO-Crate /
+  JSON-LD / RDF-star graph, OEP). JSON-LD-compatible; class and slot
+  `mappings` fix the vocabulary IRIs (decision deferred from CF1-006 §6).
+prefixes:
+  linkml: https://w3id.org/linkml/
+  edo: https://w3id.org/edo/terms/
+  dcterms: http://purl.org/dc/terms/
+  dcat: http://www.w3.org/ns/dcat#
+  foaf: http://xmlns.com/foaf/0.1/
+  prov: http://www.w3.org/ns/prov#
+  time: http://www.w3.org/2006/time#
+  sosa: http://www.w3.org/ns/sosa/
+  smscv: https://sms-cv.helmholtz.cloud/sms/cv/api/v1/
+  xsd: http://www.w3.org/2001/XMLSchema#
+default_prefix: edo
+default_range: string
+
+imports:
+  - linkml:types
+
+classes:
+
+  Project:
+    description: EDO project level, fed by maDMP `dmp` + `dmp/project`.
+    class_uri: edo:Project
+    mappings:
+      - prov:Entity
+    slots:
+      - title
+      - description
+      - language
+      - interval
+      - dmp_id
+      - has_contact
+      - has_contribution
+      - has_cost
+      - has_dataset
+
+  Person:
+    description: A person; contact or contributor agent.
+    class_uri: foaf:Person
+    slots:
+      - name
+      - mbox
+      - identifier
+
+  Contribution:
+    description: Person + role (RDA maDMP contributor-type CV; free-text role_template translation happens in CF2-003).
+    class_uri: edo:Contribution
+    mappings:
+      - prov:Attribution
+    slots:
+      - agent
+      - role
+
+  Cost:
+    description: Cost entry; values come from RDMO `project/costs/**` (gap register #13).
+    class_uri: edo:Cost
+    slots:
+      - title
+      - value
+      - currency
+
+  Identifier:
+    description: Typed identifier (dmp_id, dataset_id, sensor PID).
+    class_uri: edo:Identifier
+    slots:
+      - identifier_value
+      - identifier_type
+
+  Interval:
+    description: Closed date interval (project timeframe, measurement-series timeframe).
+    class_uri: time:Interval
+    slots:
+      - interval_begin
+      - interval_end
+
+  Dataset:
+    description: EDO dataset level, fed by maDMP `dmp/dataset`.
+    class_uri: dcat:Dataset
+    slots:
+      - title
+      - description
+      - issued
+      - dataset_type
+      - keyword
+      - personal_data
+      - sensitive_data
+      - quality_assurance
+      - preservation_statement
+      - identifier
+      - has_distribution
+      - observes
+      - was_generated_by
+      - realized_as
+
+  Distribution:
+    description: Storage during / preservation after the project (two per dataset).
+    class_uri: dcat:Distribution
+    slots:
+      - title
+      - access_url
+      - data_access
+      - format
+      - certified_with
+      - pid_system
+      - hosted_by
+      - license
+      - license_start_date
+
+  License:
+    description: License URI + start date (license_start_date from RDMO data_publication_date).
+    class_uri: dcterms:LicenseDocument
+    slots:
+      - license_uri
+      - license_start_date
+
+  Host:
+    description: Repository/storage hosting a distribution.
+    class_uri: edo:Host
+    slots:
+      - title
+      - url
+
+  Sensor:
+    description: Instrument, fed by the SMS device record.
+    class_uri: sosa:Sensor
+    slots:
+      - title
+      - model
+      - manufacturer
+      - sensor_type
+      - identifier
+      - observes
+
+  MeasuredProperty:
+    description: Measured quantity of a sensor, fed by the SMS device property. CV URIs are reused verbatim from the SMS CV.
+    class_uri: sosa:ObservableProperty
+    slots:
+      - measured_quantity
+      - measured_quantity_name
+      - unit
+      - measuring_range_min
+      - measuring_range_max
+      - accuracy
+      - resolution
+      - sampling_media
+      - compartment
+      - aggregation_type
+
+  MeasurementSeries:
+    description: The concrete series realized as a dataset (EDO-specific). Sampling interval and timeframe currently have no machine-readable source (gap register #16/#17).
+    class_uri: edo:MeasurementSeries
+    mappings:
+      - sosa:Observation
+    slots:
+      - title
+      - interval
+      - has_sampling_plan
+      - was_generated_by
+
+  SamplingPlan:
+    description: How the series is sampled (EDO-specific).
+    class_uri: edo:SamplingPlan
+    slots:
+      - sampling_interval
+      - sampling_media
+
+slots:
+
+  title:
+    mappings:
+      - dcterms:title
+    range: string
+    required: true
+  name:
+    mappings:
+      - foaf:name
+    range: string
+    required: true
+  mbox:
+    mappings:
+      - foaf:mbox
+    range: uriorcurie
+    description: "Email address of a person (mailto: URI recommended)."
+  description:
+    mappings:
+      - dcterms:description
+    range: string
+  language:
+    mappings:
+      - dcterms:language
+    range: string
+    description: BCP-47 / ISO 639-3 code.
+  interval:
+    range: Interval
+    inlined: true
+    mappings:
+      - time:hasInterval
+  interval_begin:
+    mappings:
+      - time:hasBeginning
+    range: date
+  interval_end:
+    mappings:
+      - time:hasEnd
+    range: date
+    description: "Reconciled in CF2-004: time:hasEnd (not time:hasEnding), matching the realisation in CF2-003 (trip.py) and the SHACL IntervalShape."
+
+  dmp_id:
+    range: Identifier
+    inlined: true
+    description: Deterministically minted `urn:uuid` (uuid5, seed `rdmo:project:<pk>`).
+  identifier:
+    range: Identifier
+    inlined: true
+  identifier_value:
+    mappings:
+      - dcterms:identifier
+    range: string
+    required: true
+  identifier_type:
+    mappings:
+      - dcterms:type
+    range: IdentifierTypeEnum
+    required: true
+
+  has_contact:
+    aliases: [contact]
+    range: Person
+    inlined: true
+  has_contribution:
+    range: Contribution
+    multivalued: true
+    inlined_as_list: true
+  agent:
+    mappings:
+      - prov:agent
+    range: Person
+    inlined: true
+  role:
+    mappings:
+      - dcterms:type
+    range: ContributorTypeEnum
+    required: true
+
+  has_cost:
+    range: Cost
+    multivalued: true
+    inlined_as_list: true
+  value:
+    range: decimal
+  currency:
+    range: string
+    description: ISO 4217 currency code.
+
+  has_dataset:
+    mappings:
+      - dcat:dataset
+    range: Dataset
+    multivalued: true
+    inlined_as_list: true
+  dataset_type:
+    mappings:
+      - dcterms:type
+    range: string
+  issued:
+    mappings:
+      - dcterms:issued
+    range: date
+  keyword:
+    mappings:
+      - dcat:keyword
+    range: string
+    multivalued: true
+  personal_data:
+    range: boolean
+  sensitive_data:
+    range: boolean
+  quality_assurance:
+    range: string
+    multivalued: true
+  preservation_statement:
+    range: string
+
+  has_distribution:
+    mappings:
+      - dcat:distribution
+    range: Distribution
+    multivalued: true
+    inlined_as_list: true
+  access_url:
+    mappings:
+      - dcat:accessURL
+    range: uriorcurie
+  data_access:
+    range: DataAccessEnum
+  format:
+    mappings:
+      - dcat:format
+    range: uriorcurie
+    multivalued: true
+    description: "Reconciled in CF2-004: IANA media type as IRI (http://purl.org/NET/mediatypes/<type>), matching the realisation in CF2-003 (trip.py, P34). RDMO free text is translated into these IRIs by the transformation."
+  certified_with:
+    range: CertificationEnum
+    multivalued: true
+  pid_system:
+    range: IdentifierTypeEnum
+    multivalued: true
+  hosted_by:
+    range: Host
+    inlined: true
+  url:
+    mappings:
+      - edo:url
+    range: uriorcurie
+  license:
+    range: License
+    inlined: true
+  license_uri:
+    mappings:
+      - dcterms:license
+    range: uriorcurie
+  license_start_date:
+    mappings:
+      - time:hasBeginning
+    range: date
+    description: "Reconciled in CF2-004: license start date maps to time:hasBeginning, matching the realisation in CF2-003 (trip.py, P39/P42)."
+
+  observes:
+    mappings:
+      - sosa:observes
+    range: MeasuredProperty
+    multivalued: true
+    inlined_as_list: true
+  was_generated_by:
+    mappings:
+      - prov:wasGeneratedBy
+    range: Sensor
+    inlined: true
+  sensor_type:
+    mappings:
+      - dcterms:type
+    range: uriorcurie
+    description: SMS CV equipment type URI (e.g. smscv:equipmenttypes/54/).
+  model:
+    range: string
+  manufacturer:
+    range: string
+
+  measured_quantity:
+    mappings:
+      - smscv:measuredQuantity
+    range: uriorcurie
+    description: "SMS CV measured-quantity URI (e.g. smscv:measuredquantities/4/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S7)."
+  measured_quantity_name:
+    mappings:
+      - dcterms:title
+    range: string
+    description: "Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S8)."
+  unit:
+    range: uriorcurie
+    description: SMS CV unit URI (e.g. smscv:units/51/).
+  measuring_range_min:
+    range: decimal
+  measuring_range_max:
+    range: decimal
+  accuracy:
+    range: string
+    description: Free text in v0.2 ("±0.3 K @ 25 °C"); structured form decided with the CF2 transformations.
+  resolution:
+    range: decimal
+  sampling_media:
+    mappings:
+      - smscv:samplingMedia
+    range: uriorcurie
+    description: "SMS CV sampling-media URI (e.g. smscv:samplingmedia/9/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S13)."
+  compartment:
+    mappings:
+      - smscv:compartment
+    range: uriorcurie
+    description: "SMS CV compartment URI (e.g. smscv:compartments/1/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S14)."
+  aggregation_type:
+    range: uriorcurie
+    description: SMS CV aggregation-type URI (e.g. smscv:aggregationtypes/1/).
+
+  realized_as:
+    range: MeasurementSeries
+    inlined: true
+  has_sampling_plan:
+    range: SamplingPlan
+    inlined: true
+  sampling_interval:
+    range: string
+    description: ISO 8601 duration, e.g. "PT15M".
+    pattern: '^(-)?P(?=.)(\d+Y)?(\d+M)?(\d+W)?(\d+D)?(T(?=.)(\d+H)?(\d+M)?(\d+(\.\d+)?S)?)?$'
+  sampling_interval_source:
+    range: string
+    description: Where the interval came from while gap register #16 is open (manual / ELN / future catalog question).
+
+enums:
+
+  IdentifierTypeEnum:
+    description: maDMP identifier-type CV; same value set as the maDMP schema.
+    permissible_values:
+      doi:
+      handle:
+      ark:
+      purl:
+      url:
+      urn:
+      other:
+
+  DataAccessEnum:
+    description: maDMP data-access CV.
+    permissible_values:
+      open:
+      shared:
+      closed:
+
+  ContributorTypeEnum:
+    description: RDA maDMP contributor-type CV (DataCite contributor types) — CF1-006 decision 2026-11-19.
+    permissible_values:
+      Contact Person:
+      Data Collector:
+      Data Curator:
+      Data Manager:
+      Distributor:
+      Editor:
+      Hosting Institution:
+      Producer:
+      Project Leader:
+      Project Member:
+      Project Manager:
+      Related Person:
+      Researcher:
+      Research Group:
+      Rights Holder:
+      Sponsor:
+      Supervisor:
+      Work Package Leader:
+      Other:
+
+  CertificationEnum:
+    description: maDMP certified-with CV.
+    permissible_values:
+      din31644:
+      dini-zertifikat:
+      dsa:
+      iso16363:
+      iso16919:
+      trac:
+      wds:
+      coretrustseal:

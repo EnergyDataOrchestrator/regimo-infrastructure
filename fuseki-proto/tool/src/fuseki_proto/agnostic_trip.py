@@ -1,13 +1,13 @@
 """agnostic_trip.py — map-driven round trip, realisation of card CF2-004.
 
 This is the **second, agnostic way** of performing the CF2-003 transformation:
-instead of hand-coding every rule of `scripts/trafos/patterns.md` in Python
+instead of hand-coding every rule of `inputs/trafos/patterns.md` in Python
 (``trip.py``, card CF2-003), the transformation logic lives in two **LinkML
 Map** files (linkml-map TransformationSpecifications) that compile the
 catalogue:
 
-  * ``scripts/trafos/dmp-to-internal.linkml-map.yaml``  — rules P1–P42
-  * ``scripts/trafos/sms-to-internal.linkml-map.yaml``  — rules S1–S16
+  * ``inputs/trafos/dmp-to-internal.linkml-map.yaml``  — rules P1–P42
+  * ``inputs/trafos/sms-to-internal.linkml-map.yaml``  — rules S1–S16
 
 The executing tool (`fuseki-proto agnostic-trip`) is *agnostic* with respect
 to the rules: it only wires the engine and serialises the result.
@@ -67,8 +67,6 @@ from importlib.metadata import version as _package_version
 from pathlib import Path
 
 import click
-from linkml_runtime import SchemaView
-from linkml_map.transformer.object_transformer import ObjectTransformer
 
 from . import docker as D
 from .trip import (DMP_DEFAULT, DEVICE_DEFAULT, SHAPES_FILE, SPARQL_PREFIXES,
@@ -82,9 +80,10 @@ from .trip import (DMP_DEFAULT, DEVICE_DEFAULT, SHAPES_FILE, SPARQL_PREFIXES,
 # ---------------------------------------------------------------------------
 TOOL_DIR = D.TOOL_DIR                      # .../fuseki-proto/tool
 PROTO_DIR = TOOL_DIR.parent                # .../fuseki-proto
-# fuseki-proto lives in infrastructure/; the research scripts (dmp/sms/trafos/
-# linkml inputs) stayed in projecting_spaces — two levels up is the edo root.
-SCRIPTS_DIR = PROTO_DIR.parent.parent / "projecting_spaces" / "EDO" / "Artefacts" / "07_Fragments" / "scripts"
+# the research inputs (dmp/sms/trafos/linkml) were copied verbatim from the
+# projecting_spaces testbed into inputs/ so the tool is self-contained
+# (see inputs/README.md).
+SCRIPTS_DIR = PROTO_DIR / "inputs"
 TRAFO_DIR = SCRIPTS_DIR / "trafos"
 LINKML_DIR = SCRIPTS_DIR / "linkml"
 DMP_MAP_DEFAULT = TRAFO_DIR / "dmp-to-internal.linkml-map.yaml"
@@ -94,6 +93,26 @@ SMS_SCHEMA = LINKML_DIR / "05_P05_S05_sms-schema.yaml"
 INTERNAL_SCHEMA = LINKML_DIR / "05_P05_S05_internal-format-schema.yaml"
 SMS_DIR = SCRIPTS_DIR / "sms"
 AGNOSTIC_DIR = PROTO_DIR / "data" / "agnostic-trip"
+
+
+def _linkml():
+    """Import linkml-runtime/linkml-map on demand.
+
+    They are declared as the optional `agnostic` extra (they pull in the
+    whole LinkML toolchain); the rest of the CLI works without them.
+    """
+    try:
+        from linkml_map.transformer.object_transformer import ObjectTransformer
+        from linkml_runtime import SchemaView
+    except ModuleNotFoundError as e:
+        raise click.ClickException(
+            "agnostic-trip needs linkml-map/linkml-runtime, which are not "
+            "installed in this environment. Either run the tool from the edo "
+            "root venv (`uv run fuseki-proto ...`) or install the extra in "
+            "the tool venv: `uv sync --extra agnostic` (in "
+            "infrastructure/fuseki-proto/tool)."
+        ) from e
+    return SchemaView, ObjectTransformer
 
 # ---------------------------------------------------------------------------
 # constants
@@ -117,6 +136,7 @@ def run_map(map_file: Path, source_schema: Path, source_obj: dict,
     expressions, value tables, reconciliation patches); this function only
     wires source/target schema views and the ObjectTransformer.
     """
+    SchemaView, ObjectTransformer = _linkml()
     tr = ObjectTransformer(unrestricted_eval=True)
     tr.source_schemaview = SchemaView(str(source_schema))
     tr.load_transformer_specification(str(map_file))
@@ -254,6 +274,8 @@ def transform(dmp: dict, device: dict | None, properties: list[dict],
     catalogue checks (imported from trip.py) and ``meta`` documents the maps,
     the applied derivations and the transformed objects.
     """
+    SchemaView, _ = _linkml()
+
     # --- DMP half ------------------------------------------------------------
     project_obj = run_map(dmp_map, MADMP_SCHEMA, dmp["dmp"], "DMP")
 
@@ -341,7 +363,8 @@ def _patch_latest_report(patch: dict) -> None:
             report.setdefault(key, {}).update(value)
         else:
             report[key] = value
-    path.write_text(json.dumps(report, indent=2, ensure_ascii=False),
+    path.write_text(json.dumps(report, indent=2, ensure_ascii=False,
+                               default=str),
                     encoding="utf-8")
 
 
@@ -361,8 +384,8 @@ def agnostic_trip(ctx, port, user, password, dataset):
     """CF2-004 round trip: map-driven transform -> store -> dump -> verify.
 
     Realises the CF2-003 scenarios with the transformation logic taken from
-    the LinkML Map files in scripts/trafos/ (dmp-to-internal and
-    sms-to-internal); see scripts/trafos/README.md for the full documentation.
+    the LinkML Map files in inputs/trafos/ (dmp-to-internal and
+    sms-to-internal); see inputs/trafos/README.md for the full documentation.
     """
     ctx.obj = {
         "base_url": f"http://127.0.0.1:{port}",
@@ -380,7 +403,7 @@ def agnostic_trip(ctx, port, user, password, dataset):
 @click.option("--sms-property", "property_paths", multiple=True,
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
-              show_default="(all device-*-property-*.json under scripts/sms/)",
+              show_default="(all device-*-property-*.json under inputs/sms/)",
               help="SMS device-property JSON:API records (repeatable).")
 @click.option("--dmp-map", "dmp_map", type=click.Path(exists=True, dir_okay=False),
               default=str(DMP_MAP_DEFAULT), show_default=True,
@@ -420,8 +443,11 @@ def transform_cmd(obj, dmp_path, device_path, property_paths, dmp_map, sms_map,
                     "description": c["description"], "kind": c["kind"]}
                    for c in checks],
     }
+    # default=str: linkml-map (>=0.6) may put Decimal objects into the
+    # transformed objects; they are serialised as their string value.
     (out / "agnostic-trip-report.json").write_text(
-        json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+        json.dumps(report, indent=2, ensure_ascii=False, default=str),
+        encoding="utf-8")
     click.echo(f"Transformed {Path(dmp_path).name} + SMS via LinkML Maps "
                f"(project {meta['project_iri']}, sensor {meta['sensor_iri']}); "
                f"linkml-map {meta['linkml_map_version']}.")
@@ -499,7 +525,7 @@ def store_cmd(obj, graph_path, wipe, validate):
 @click.option("--sms-property", "property_paths", multiple=True,
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
-              show_default="(all device-*-property-*.json under scripts/sms/)")
+              show_default="(all device-*-property-*.json under inputs/sms/)")
 @click.pass_obj
 def verify_cmd(obj, dmp_path, device_path, property_paths):
     """Scenario 3: dump /projects and verify field-level equality with the sources."""
@@ -572,7 +598,8 @@ def verify_cmd(obj, dmp_path, device_path, property_paths):
     report["checks"] = results
     report["summary"] = {"total": len(results), "passed": passed_n,
                          "failed": len(failed), "triple_counts_equal": counts_equal}
-    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False),
+    report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False,
+                                      default=str),
                            encoding="utf-8")
     click.echo(f"Report updated: {report_path}")
 

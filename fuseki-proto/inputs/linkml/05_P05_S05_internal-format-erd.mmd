@@ -1,0 +1,104 @@
+```mermaid
+erDiagram
+Contribution {
+    ContributorTypeEnum role  
+}
+Cost {
+    string currency  
+    string title  
+    decimal value  
+}
+Dataset {
+    string description  
+    string dataset_type  
+    date issued  
+    stringList keyword  
+    boolean personal_data  
+    string preservation_statement  
+    stringList quality_assurance  
+    boolean sensitive_data  
+    string title  
+}
+Distribution {
+    uriorcurie access_url  
+    CertificationEnumList certified_with  
+    DataAccessEnum data_access  
+    stringList format  
+    date license_start_date  
+    IdentifierTypeEnumList pid_system  
+    string title  
+}
+Host {
+    string title  
+    uriorcurie url  
+}
+Identifier {
+    IdentifierTypeEnum identifier_type  
+    string identifier_value  
+}
+Interval {
+    date interval_begin  
+    date interval_end  
+}
+License {
+    date license_start_date  
+    uriorcurie license_uri  
+}
+MeasuredProperty {
+    string accuracy  
+    uriorcurie aggregation_type  
+    uriorcurie compartment  
+    uriorcurie measured_quantity  
+    string measured_quantity_name  
+    double measuring_range_max  
+    double measuring_range_min  
+    double resolution  
+    uriorcurie sampling_media  
+    uriorcurie unit  
+}
+MeasurementSeries {
+    string title  
+}
+Person {
+    string name  
+    uriorcurie mbox  
+}
+Project {
+    string description  
+    string language  
+    string title  
+}
+SamplingPlan {
+    string sampling_interval  
+    uriorcurie sampling_media  
+}
+Sensor {
+    string manufacturer  
+    string model  
+    uriorcurie sensor_type  
+    string title  
+}
+
+Contribution ||--|o Person : "agent"
+Dataset ||--|o Identifier : "identifier"
+Dataset ||--|o MeasurementSeries : "realized_as"
+Dataset ||--|o Sensor : "was_generated_by"
+Dataset ||--}o Distribution : "has_distribution"
+Dataset ||--}o MeasuredProperty : "observes"
+Distribution ||--|o Host : "hosted_by"
+Distribution ||--|o License : "license"
+MeasurementSeries ||--|o Interval : "interval"
+MeasurementSeries ||--|o SamplingPlan : "has_sampling_plan"
+MeasurementSeries ||--|o Sensor : "was_generated_by"
+Person ||--|o Identifier : "identifier"
+Project ||--|o Identifier : "dmp_id"
+Project ||--|o Interval : "interval"
+Project ||--|o Person : "has_contact"
+Project ||--}o Contribution : "has_contribution"
+Project ||--}o Cost : "has_cost"
+Project ||--}o Dataset : "has_dataset"
+Sensor ||--|o Identifier : "identifier"
+Sensor ||--}o MeasuredProperty : "observes"
+
+```
+

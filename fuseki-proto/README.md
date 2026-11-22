@@ -11,11 +11,11 @@ Choice rationale — this is the "semantically pure" alternative from CF2-002's
 > or `gen-shacl` tools … the translation from your schema to RDF is direct,
 > and your validation happens via SHACL.
 
-It complements `../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/patterns.md` (the SHACL *transformation* patterns)
+It complements `inputs/trafos/patterns.md` (the SHACL *transformation* patterns)
 and the internal-format spec that is its source of truth:
-`../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/internal-format/04_P04_S04_internal-format-spec.md` (§2 entities, §3.2
+`inputs/internal-format/04_P04_S04_internal-format-spec.md` (§2 entities, §3.2
 classes, §3.3 controlled vocabularies) and the LinkML schema from CF1-007
-(`../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml/05_P05_S05_internal-format-schema.yaml`).
+(`inputs/linkml/05_P05_S05_internal-format-schema.yaml`).
 
 ## Layout
 
@@ -136,8 +136,9 @@ and the authoritative validation is the `pyshacl` invocation above.
   typed edge the Dataset/Sensor shapes should assert `prov:wasGeneratedBy`.
 * IRIs are placeholders (`urn:` / `edo:`), per spec open item 6 — concrete IRIs
   are fixed by CF1-007 / CF2-004.
-* The CF2-003 transformation realisation lives in `../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/` (catalogue
-  `patterns.md` + realisation `README.md`) and is executed by this tool's
+* The CF2-003 transformation realisation lives in `inputs/trafos/` (catalogue
+  `patterns.md` + realisation `README.md`, copied verbatim from the
+  projecting_spaces testbed) and is executed by this tool's
   `trip` command (`fuseki-proto trip run`) — see `tool/README.md`. The CF2-004
   **second way** (same transformation, logic in LinkML Map files) is executed
   by `agnostic-trip` (`fuseki-proto agnostic-trip run`), writing to

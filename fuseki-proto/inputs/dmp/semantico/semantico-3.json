@@ -1,0 +1,54 @@
+{
+  "dmp": {
+    "title": "maDMP for semantico",
+    "created": "2024-06-10T08:07:11.352142+00:00",
+    "modified": "2026-11-09T12:21:11.766906+00:00",
+    "dataset": [
+      {
+        "dataset_id": {
+          "identifier": "Document (Research deliverable, mostly pdf)",
+          "type": "other"
+        },
+        "distribution": [
+          {
+            "title": "Preservation after the project",
+            "data_access": "closed"
+          }
+        ],
+        "personal_data": "unknown",
+        "sensitive_data": "unknown",
+        "title": "Document (Research deliverable, mostly pdf)"
+      },
+      {
+        "dataset_id": {
+          "identifier": "CrossRef Metadata",
+          "type": "other"
+        },
+        "distribution": [
+          {
+            "title": "Preservation after the project",
+            "data_access": "closed"
+          }
+        ],
+        "personal_data": "unknown",
+        "sensitive_data": "unknown",
+        "title": "CrossRef Metadata"
+      },
+      {
+        "dataset_id": {
+          "identifier": "LLEC-2025",
+          "type": "other"
+        },
+        "distribution": [
+          {
+            "title": "Preservation after the project",
+            "data_access": "closed"
+          }
+        ],
+        "personal_data": "unknown",
+        "sensitive_data": "unknown",
+        "title": "LLEC-2025"
+      }
+    ]
+  }
+}

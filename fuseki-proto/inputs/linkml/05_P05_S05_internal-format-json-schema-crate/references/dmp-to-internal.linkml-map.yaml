@@ -1,0 +1,246 @@
+id: https://w3id.org/edo/trafos/dmp-to-internal
+title: maDMP → EDO internal format (linkml-map transformation specification, CF2-004)
+description: >
+  Compiles the DMP half of the transformation catalogue
+  `scripts/trafos/patterns.md` (rules P1–P42) into a linkml-map
+  TransformationSpecification (card CF2-004). Executed by
+  `fuseki-proto agnostic-trip` (tool/src/fuseki_proto/agnostic_trip.py) as the
+  map-driven twin of the hand-coded `trip.py` transform (CF2-003): the LinkML
+  Map file is the single container of the transformation logic, the executing
+  tool only provides the engine (linkml-map ObjectTransformer) and the
+  schema-driven graph serialiser.
+
+  Conventions of this specification:
+
+  * Class derivations are keyed by the *target* class name and carry
+    `populated_from` = the *source* class name — linkml-map's ObjectTransformer
+    looks derivations up by the source class (`populated_from == source_type`).
+  * Slot derivations are keyed by the *target* slot name; `populated_from`
+    names the source field, `expr` is a LinkML expression (restricted
+    evaluator; null-propagating operators, `case()`, attribute access via
+    schema-known slots — see linkml_map.utils.eval_utils).
+  * Reaching an enum-typed source slot (via `populated_from`) requires exactly
+    one matching enum derivation — hence the pass-through (`mirror_source`)
+    derivations for the four maDMP CVs below.
+  * `source_schema_patches` reconciles the export JSON with the source schema
+    where CF2-003 documented deviations (F4: `project` as list; F5: `license`
+    as array of objects). The patches are part of the map so that the
+    transformation logic stays self-contained.
+source_schema: 05_P05_S05_madmp-schema.yaml
+target_schema: 05_P05_S05_internal-format-schema.yaml
+prefixes:
+  edo: https://w3id.org/edo/terms/
+  dcterms: http://purl.org/dc/terms/
+  dcat: http://www.w3.org/ns/dcat#
+  foaf: http://xmlns.com/foaf/0.1/
+  prov: http://www.w3.org/ns/prov#
+  time: http://www.w3.org/2006/time#
+  xsd: http://www.w3.org/2001/XMLSchema#
+
+# ---------------------------------------------------------------------------
+# Reconciliation patches (findings of card CF2-003 against the export JSON)
+# ---------------------------------------------------------------------------
+source_schema_patches:
+  classes:
+    DMP:
+      attributes:
+        project:
+          description: "F4: the RDMO export carries dmp/project as a single-element list; the schema models one inlined Project. Multivalued here so that expressions can address project[0]."
+          multivalued: true
+          inlined_as_list: true
+    Distribution:
+      attributes:
+        license:
+          description: "F5: the export carries an array of {license_ref, start_date} objects; the schema has flat license_ref/license_start_date. Modeled as a multivalued LicenseRef reference."
+          range: LicenseRef
+          multivalued: true
+          inlined_as_list: true
+    LicenseRef:
+      description: "F5 (cont.): licence reference object as carried by the export."
+      attributes:
+        license_ref:
+          range: uriorcurie
+        start_date:
+          range: date
+
+# ---------------------------------------------------------------------------
+# CV pass-through: every source enum reachable via populated_from needs
+# exactly one enum derivation (linkml-map raises otherwise).
+# ---------------------------------------------------------------------------
+enum_derivations:
+  IdentifierTypeEnum:
+    description: "P16/P17/P18/P36: maDMP identifier-type CV passes through unchanged."
+    mirror_source: true
+  DataAccessEnum:
+    description: "P33: data-access CV passes through unchanged."
+    mirror_source: true
+  CertificationEnum:
+    description: "P35: certified-with CV passes through unchanged (absent in this export)."
+    mirror_source: true
+  LanguageEnum:
+    description: "P3: ISO 639-3 codes pass through unchanged (the default 'eng' is injected by the Project/language expression)."
+    mirror_source: true
+
+# ---------------------------------------------------------------------------
+# class derivations
+# ---------------------------------------------------------------------------
+class_derivations:
+  Project:
+    populated_from: DMP
+    description: "Root derivation: maDMP `dmp` (+ `dmp/project`) -> edo:Project. NB: the project title/description come from dmp/project, not from the maDMP-level `title` (catalogue decision, finding F3 of CF2-003)."
+    slot_derivations:
+      title:
+        description: "P1: project/title -> dcterms:title (NOT the maDMP-level dmp/title)."
+        expr: project[0].title
+      description:
+        description: "P2: project/description -> dcterms:description (1:1)."
+        expr: project[0].description
+      language:
+        description: "P3: dmp/language, absent in this export -> default 'eng' (omit → default)."
+        expr: language or "eng"
+      interval:
+        description: "P4: project/start,end -> time:hasInterval Interval node (dates cast to xsd:date by the serialiser)."
+        expr: "{'interval_begin': project[0].start, 'interval_end': project[0].end}"
+      dmp_id:
+        description: "P5/P16/P17: dmp_id -> edo:dmpId Identifier node (see Identifier derivation)."
+        populated_from: dmp_id
+      has_contact:
+        description: "P6/P10/P11: dmp/contact -> edo:hasContact Person node; absent in this export -> omitted (faithful; trips the SHACL sh:minCount 1 — documented conflict, CF2-003 finding F1)."
+        populated_from: contact
+      has_contribution:
+        description: "P7/P8/P10/P11: dmp/contributor -> edo:hasContribution Contribution nodes (see Contribution derivation)."
+        populated_from: contributor
+      has_cost:
+        description: "P9: dmp/cost -> edo:hasCost Cost nodes; absent in this export -> omitted."
+        populated_from: cost
+      has_dataset:
+        description: "P18–P39: dmp/dataset -> dcat:dataset Dataset nodes (see Dataset derivation)."
+        populated_from: dataset
+
+  Identifier:
+    populated_from: Identifier
+    description: "Shared identifier shape: dmp_id and dataset_id (source class Identifier) -> edo:Identifier (identifier_value/identifier_type)."
+    slot_derivations:
+      identifier_value:
+        description: "P16/P18: identifier -> dcterms:identifier (1:1)."
+        populated_from: identifier
+      identifier_type:
+        description: "P17/P18: type -> dcterms:type (CV pass-through via IdentifierTypeEnum)."
+        populated_from: type
+
+  Contribution:
+    populated_from: Contributor
+    description: "maDMP contributor -> edo:Contribution (Person agent + RDA CV role)."
+    slot_derivations:
+      agent:
+        description: "P10/P11: name/mbox -> prov:agent foaf:Person node (mbox cast to a mailto: URI; null-propagating, absent mbox -> key dropped)."
+        expr: "{'name': name, 'mbox': 'mailto:' + mbox}"
+      role:
+        description: "P8: role_template free text -> RDA maDMP contributor-type CV. Compiles trip.py's ROLE_TRANSLATION table (case-insensitive substring over the joined roles, first match wins, fallback 'Other'); both roles of this export resolve to 'Data Curator'."
+        expr: >-
+          case(('responsible for preservation' in (' / '.join(role or [''])).lower(), 'Data Curator'),
+               ('responsible for metadata' in (' / '.join(role or [''])).lower(), 'Data Curator'),
+               (True, 'Other'))
+
+  Dataset:
+    populated_from: Dataset
+    description: "maDMP dataset -> dcat:Dataset."
+    slot_derivations:
+      identifier:
+        description: "P18: dataset_id -> edo:identifier Identifier node (also mints the Dataset IRI in the serialiser)."
+        populated_from: dataset_id
+      title:
+        description: "P19: dataset title -> dcterms:title (1:1)."
+        populated_from: title
+      description:
+        description: "P20: dataset description -> dcterms:description (1:1)."
+        populated_from: description
+      issued:
+        description: "P21: issued -> dcterms:issued (cast to xsd:date)."
+        populated_from: issued
+      dataset_type:
+        description: "P22: dataset `type` -> dcterms:type (1:1 CV); absent in this export -> omitted."
+        populated_from: type
+      keyword:
+        description: "P23: keyword array -> dcat:keyword (array passthrough)."
+        populated_from: keyword
+      personal_data:
+        description: "P24: maDMP yes/no CV -> xsd:boolean; unknown/absent -> false (compiles trip.py's {'yes': True, 'no': False} map)."
+        expr: >-
+          case((personal_data == "yes", True), (personal_data == "no", False), (True, False))
+      sensitive_data:
+        description: "P25: maDMP yes/no CV -> xsd:boolean; unknown/absent -> false."
+        expr: >-
+          case((sensitive_data == "yes", True), (sensitive_data == "no", False), (True, False))
+      quality_assurance:
+        description: "P26: data_quality_assurance array -> edo:qualityAssurance (split into one triple per item)."
+        populated_from: data_quality_assurance
+      preservation_statement:
+        description: "P27: preservation_statement -> edo:preservationStatement (1:1)."
+        populated_from: preservation_statement
+      has_distribution:
+        description: "P29/P31–P42: distribution array -> dcat:distribution Distribution nodes (see Distribution derivation)."
+        populated_from: distribution
+      # P28 (documented loss): security_and_privacy has no target class in
+      # internal-format v0.2 — deliberately NOT derived.
+      # P30 (gap #18): the dataset<->sensor link (PIDINST free text) is not
+      # representable as a slot derivation — deliberately NOT derived.
+
+  Distribution:
+    populated_from: Distribution
+    description: "maDMP distribution -> dcat:Distribution."
+    slot_derivations:
+      title:
+        description: "P31: distribution title -> dcterms:title (fixed constants carried by the export)."
+        populated_from: title
+      access_url:
+        description: "P32: access_url -> dcat:accessURL (1:1 URI)."
+        populated_from: access_url
+      data_access:
+        description: "P33: data_access -> edo:dataAccess (CV pass-through via DataAccessEnum)."
+        populated_from: data_access
+      format:
+        description: "P34: RDMO free-text format labels -> IANA media-type IRIs. Compiles trip.py's FORMAT_TRANSLATION table (case-insensitive substring over the joined format labels; no match -> None, dropped by the serialiser; 'CSV and JSON' -> text/csv AND application/json)."
+        expr: >-
+          [case(('csv' in (' '.join(format or [])).lower(), 'http://purl.org/NET/mediatypes/text/csv'), (True, None)),
+           case(('json' in (' '.join(format or [])).lower(), 'http://purl.org/NET/mediatypes/application/json'), (True, None)),
+           case((('xls' in (' '.join(format or [])).lower()) or ('excel' in (' '.join(format or [])).lower()), 'http://purl.org/NET/mediatypes/application/vnd.ms-excel'), (True, None)),
+           case(('netcdf' in (' '.join(format or [])).lower(), 'http://purl.org/NET/mediatypes/application/netcdf'), (True, None)),
+           case(('pdf' in (' '.join(format or [])).lower(), 'http://purl.org/NET/mediatypes/application/pdf'), (True, None)),
+           case(('xml' in (' '.join(format or [])).lower(), 'http://purl.org/NET/mediatypes/application/xml'), (True, None))]
+      certified_with:
+        description: "P35: certified_with -> edo:certifiedWith (CV pass-through; absent in this export)."
+        populated_from: certified_with
+      pid_system:
+        description: "P36: pid_system -> edo:pidSystem (CV pass-through via IdentifierTypeEnum; the export carries it as a string — coerced to a list by the engine)."
+        populated_from: pid_system
+      hosted_by:
+        description: "P37/P40: host -> edo:hostedBy Host node (url nullable, absent -> omitted)."
+        populated_from: host
+      license:
+        description: "P38/P39/P41/P42: license array -> edo:license License node (see License derivation)."
+        populated_from: license
+      # license_start_date stays on the License node (P39/P42) — not repeated
+      # at distribution level (matches the internal-format License class).
+
+  Host:
+    populated_from: Host
+    description: "maDMP distribution host -> edo:Host."
+    slot_derivations:
+      title:
+        description: "P37: host title -> dcterms:title (1:1)."
+        populated_from: title
+      url:
+        description: "P40: host url -> edo:url (1:1 URI; nullable)."
+        populated_from: url
+
+  License:
+    populated_from: LicenseRef
+    description: "Export licence object (source_schema_patch F5) -> dcterms:LicenseDocument."
+    slot_derivations:
+      license_uri:
+        description: "P38/P41: license_ref -> dcterms:license (option CV URI)."
+        populated_from: license_ref
+      license_start_date:
+        description: "P39/P42: start_date -> time:hasBeginning (cast to xsd:date)."
+        populated_from: start_date

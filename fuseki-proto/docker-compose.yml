@@ -20,7 +20,7 @@
 #
 # Validate the graph against the claim shapes (host pyshacl):
 #   pyshacl -s shapes/project-claim-shapes.ttl \
-#           -d projecting_spaces/EDO/Artefacts/07_Fragments/scripts/internal-format/measurement-02.ttl \
+#           -d inputs/internal-format/measurement-02.ttl \
 #           -e shapes/project-claim-shapes.ttl
 #
 # ---------------------------------------------------------------------------

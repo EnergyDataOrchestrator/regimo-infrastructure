@@ -14,6 +14,16 @@ dependencies = [
 ]
 license = { text = "MIT" }
 
+[project.optional-dependencies]
+# The agnostic-trip command (CF2-004) compiles the transformation logic from
+# LinkML Map files and therefore needs the LinkML toolchain. Install it in a
+# standalone tool venv with: uv sync --extra agnostic
+# (When running from the edo root venv, linkml-map is already provided there.)
+agnostic = [
+    "linkml-map>=0.5",
+    "linkml-runtime>=1.7",
+]
+
 [project.scripts]
 fuseki-proto = "fuseki_proto.cli:cli"
 

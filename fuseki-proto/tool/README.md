@@ -3,7 +3,8 @@
 Maintenance CLI for the EDO/Regimo Fuseki prototype (see the parent
 `../README.md`). Wraps `docker compose` for lifecycle and the Fuseki HTTP
 admin/data endpoints for backup/restore/load, with a small stdlib-only
-`urllib` HTTP client (the only third-party dependency is `click`).
+`urllib` HTTP client (the only hard third-party dependencies are `click` and
+`rocrate`).
 
 ## Install
 
@@ -12,6 +13,22 @@ cd tool
 python -m venv .venv && . .venv/bin/activate
 pip install -e .
 ```
+
+**Dependencies of the two round-trip commands:**
+
+* `trip` (CF2-003) and `crate` (CF2-006) run with the base install.
+* `agnostic-trip` (CF2-004) additionally needs the LinkML toolchain
+  (`linkml-map`, `linkml-runtime`), declared as the optional `agnostic`
+  extra. Either install it in the tool venv:
+
+  ```bash
+  uv sync --active --extra agnostic   # or: pip install -e '.[agnostic]'
+  ```
+
+  … or run the tool from the **edo root venv**, which already provides
+  linkml-map (from the edo root, `uv run fuseki-proto ...`). Without the
+  extra, calling `agnostic-trip` aborts with an explanatory message instead
+  of an import error; the rest of the CLI works unchanged.
 
 ## Usage
 
@@ -37,13 +54,13 @@ fuseki-proto restore <file> # empty the dataset then re-upload a backup/ttl dump
 fuseki-proto load <file.ttl> [--graph <name>]   # POST a graph into /projects
 fuseki-proto wipe [--yes]   # CLEAR ALL over /projects (destructive!)
 
-# CF2-003 round trip (see ../../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/README.md)
+# CF2-003 round trip (see ../inputs/trafos/README.md)
 fuseki-proto trip transform   # DMP + SMS -> internal-format graph (scenario 1)
 fuseki-proto trip store       # store it in /projects + SPARQL/SHACL check (scenario 2)
 fuseki-proto trip verify      # dump /projects, replay, field-level checks (scenario 3)
 fuseki-proto trip run         # all three stages, artifacts in ../data/trip/<ts>/
 
-# CF2-004 round trip, map-driven (see ../../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/README.md §8–§13)
+# CF2-004 round trip, map-driven (see ../inputs/trafos/README.md §8–§13)
 fuseki-proto agnostic-trip transform   # same scenarios, logic from the LinkML Maps
 fuseki-proto agnostic-trip store       # (default: latest agnostic-trip artifacts)
 fuseki-proto agnostic-trip verify      # replay graph urn:edo:agnostic-trip:replay
@@ -68,7 +85,7 @@ defaults and can be overridden (e.g. `--port`, `--user`, `--password`,
 
 `trip.py` (module `fuseki_proto.trip`) realises the three acceptance scenarios
 of card CF2-003 end-to-end against the maDMP export
-`projecting_spaces/EDO/Artefacts/07_Fragments/scripts/dmp/measurement_02/Measurement_02-13.json` and the SMS device 67
+`inputs/dmp/measurement_02/Measurement_02-13.json` and the SMS device 67
 records: transform (applies the `trafos/patterns.md` catalogue), store (into
 `/projects`, with pyshacl validation when available — install it into the venv
 with `uv pip install pyshacl`, it is optional), verify (dump → replay graph →
@@ -77,19 +94,19 @@ Sources are overridable (`--dmp`, `--sms-device`, repeatable `--sms-property`).
 Artifacts (`project-graph.ttl`, `roundtrip-dump.ttl`, `trip-report.json`) land
 in `../data/trip/<timestamp>/`; the exit code is 0 only if every round-trip
 check passes (the SHACL verdict is recorded in the report but does not fail the
-run). Full documentation: `../../../projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/README.md`.
+run). Full documentation: `../inputs/trafos/README.md`.
 
 ## The `agnostic-trip` command (CF2-004)
 
 `agnostic_trip.py` (module `fuseki_proto.agnostic_trip`) performs the **same
 round trip as `trip`**, but the transformation logic is **not** in the code: it
 lives in the two LinkML Map files
-`projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/dmp-to-internal.linkml-map.yaml` (rules P1–P42) and
-`projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/sms-to-internal.linkml-map.yaml` (rules S1–S16), which compile
+`inputs/trafos/dmp-to-internal.linkml-map.yaml` (rules P1–P42) and
+`inputs/trafos/sms-to-internal.linkml-map.yaml` (rules S1–S16), which compile
 the `trafos/patterns.md` catalogue. The tool only wires the linkml-map
 `ObjectTransformer` (`--dmp-map` / `--sms-map` override the map files) and
 serialises the transformed objects into Turtle, driven entirely by the
-internal-format schema (`projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml/05_P05_S05_internal-format-schema.yaml`:
+internal-format schema (`inputs/linkml/05_P05_S05_internal-format-schema.yaml`:
 slot `mappings` → predicates, ranges → datatyping, `class_uri` → node types).
 
 Stage and CLI shape are identical to `trip` (`transform` / `store` / `verify` /

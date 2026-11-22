@@ -1,0 +1,105 @@
+id: https://w3id.org/edo/trafos/sms-to-internal
+title: SMS device → EDO internal format (linkml-map transformation specification, CF2-004)
+description: >
+  Compiles the SMS half of the transformation catalogue
+  `scripts/trafos/patterns.md` (rules S1–S16) into a linkml-map
+  TransformationSpecification (card CF2-004). Executed by
+  `fuseki-proto agnostic-trip` (tool/src/fuseki_proto/agnostic_trip.py) as the
+  map-driven twin of the hand-coded `trip.py` transform (CF2-003).
+
+  Conventions of this specification (same as dmp-to-internal.linkml-map.yaml):
+
+  * Class derivations are keyed by the *target* class name and carry
+    `populated_from` = the *source* class name.
+  * Slot derivations are keyed by the *target* slot name; `populated_from`
+    names the source field, `expr` is a LinkML expression (restricted
+    evaluator: null-propagating operators, `case()`, schema-known attribute
+    access — method calls like `.strip()`, `.join()`, `.lower()` work on
+    string values because the evaluator resolves slot values through the
+    source schema's DynObj bindings).
+  * Engine-level adaptation (not expressible in the map): the SMS JSON:API
+    envelope is unwrapped by the executing tool — `data/attributes` are
+    filtered to schema-known Device slots and the `device_properties` list
+    (the per-property JSON:API records) is assembled under the
+    `device_properties` key before `map_object` runs. The device IRI
+    (`https://sms.atmohub.kit.edu/devices/<id>`) is minted by the serialiser
+    from the JSON:API `data/id`, outside the map (S6).
+source_schema: 05_P05_S05_sms-schema.yaml
+target_schema: 05_P05_S05_internal-format-schema.yaml
+prefixes:
+  edo: https://w3id.org/edo/terms/
+  dcterms: http://purl.org/dc/terms/
+  sosa: http://www.w3.org/ns/sosa/
+  smscv: https://sms-cv.helmholtz.cloud/sms/cv/api/v1/
+  xsd: http://www.w3.org/2001/XMLSchema#
+
+class_derivations:
+  Sensor:
+    populated_from: Device
+    description: "SMS device record -> sosa:Sensor."
+    slot_derivations:
+      title:
+        description: "S1: short_name, falling back to long_name / device_type_name (null-propagating or-chain; all absent -> omitted by the serialiser)."
+        expr: short_name or long_name or device_type_name
+      model:
+        description: "S2: model -> edo:model (1:1)."
+        populated_from: model
+      manufacturer:
+        description: "S3: manufacturer_name -> edo:manufacturer (1:1, whitespace normalised — the export carries a trailing blank)."
+        expr: manufacturer_name.strip() if manufacturer_name else None
+      sensor_type:
+        description: "S4: device_type_uri -> dcterms:type (SMS-CV URI passthrough; device_type_name label dropped — documented loss)."
+        populated_from: device_type_uri
+      identifier:
+        description: "S5: persistent_identifier -> edo:identifier Identifier node (type 'handle' — the SMS PID is a B2INST Handle)."
+        expr: "{'identifier_value': persistent_identifier, 'identifier_type': 'handle'}"
+      observes:
+        description: "S7–S15: device_properties -> sosa:observes MeasuredProperty nodes (see MeasuredProperty derivation)."
+        populated_from: device_properties
+      # S6 (device IRI minting) is realised by the serialiser from the
+      # JSON:API data/id — see the description above.
+
+  MeasuredProperty:
+    populated_from: DeviceProperty
+    description: "SMS device property -> sosa:ObservableProperty. CV URIs pass through verbatim; the datasheet overrides (S10–S12) are compiled from trip.py's DATASHEET_OVERRIDES table, keyed by the SMS-CV measured-quantity URI (authority per CF1-005 / spec open item 7: the datasheet wins over the SMS record)."
+    slot_derivations:
+      measured_quantity:
+        description: "S7: property_uri -> smscv:measuredQuantity (URI passthrough)."
+        populated_from: property_uri
+      measured_quantity_name:
+        description: "S8: property_name -> dcterms:title (1:1)."
+        populated_from: property_name
+      unit:
+        description: "S9: unit_uri -> edo:unit (SMS-CV URI passthrough; unit_name dropped — documented loss)."
+        populated_from: unit_uri
+      measuring_range_min:
+        description: "S10: SMS value overridden by the datasheet for the air-temperature quantity (smscv:measuredquantities/4/ -> -40.0)."
+        expr: >-
+          case((property_uri == "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/measuredquantities/4/", -40.0),
+               (True, measuring_range_min))
+      measuring_range_max:
+        description: "S10: SMS value overridden by the datasheet for the air-temperature quantity (…measuredquantities/4/ -> 80.0)."
+        expr: >-
+          case((property_uri == "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/measuredquantities/4/", 80.0),
+               (True, measuring_range_max))
+      accuracy:
+        description: "S11: SMS null overridden by the datasheet for the air-temperature quantity (…measuredquantities/4/ -> '±0.3 K @ 25 °C; ±1.0 K over -40…+80 °C')."
+        expr: >-
+          case((property_uri == "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/measuredquantities/4/", "±0.3 K @ 25 °C; ±1.0 K over -40…+80 °C"),
+               (True, accuracy))
+      resolution:
+        description: "S12: SMS null overridden by the datasheet for the air-temperature quantity (…measuredquantities/4/ -> 0.1)."
+        expr: >-
+          case((property_uri == "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/measuredquantities/4/", 0.1),
+               (True, resolution))
+      sampling_media:
+        description: "S13: sampling_media_uri -> smscv:samplingMedia (URI passthrough; sampling_media_name dropped — documented loss)."
+        populated_from: sampling_media_uri
+      compartment:
+        description: "S14: compartment_uri -> smscv:compartment (URI passthrough; compartment_name dropped — documented loss)."
+        populated_from: compartment_uri
+      aggregation_type:
+        description: "S15: aggregation_type_uri -> edo:aggregationType (URI passthrough; aggregation_type_name dropped — documented loss)."
+        populated_from: aggregation_type_uri
+      # S16 (one MeasuredProperty node per device property) is realised by the
+      # engine (one map_object call per list element) plus the serialiser.

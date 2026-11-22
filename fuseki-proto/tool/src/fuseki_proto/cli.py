@@ -86,16 +86,16 @@ def cli(ctx, compose_dir, service, dataset, port, user, password, backups_dir):
 
 
 # CF2-003 round trip (transform -> store -> verify), see trip.py and
-# scripts/trafos/README.md.
+# inputs/trafos/README.md.
 cli.add_command(trip_cmd)
 
 # CF2-004 map-driven round trip (same scenarios, LinkML Map as the container
 # of the transformation logic), see agnostic_trip.py and
-# scripts/trafos/README.md.
+# inputs/trafos/README.md.
 cli.add_command(agnostic_trip_cmd)
 
 # CF2-006 RO-Crate generation from the internal format (see ro_crate.py,
-# scripts/ro_crate documentation).
+# inputs/internal-format documentation).
 cli.add_command(crate_cmd)
 
 

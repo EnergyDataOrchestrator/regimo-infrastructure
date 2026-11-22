@@ -1,0 +1,717 @@
+{
+    "$defs": {
+        "CertificationEnum": {
+            "description": "maDMP certified-with CV.",
+            "enum": [
+                "din31644",
+                "dini-zertifikat",
+                "dsa",
+                "iso16363",
+                "iso16919",
+                "trac",
+                "wds",
+                "coretrustseal"
+            ],
+            "title": "CertificationEnum",
+            "type": "string"
+        },
+        "Contribution": {
+            "additionalProperties": false,
+            "description": "Person + role (RDA maDMP contributor-type CV; free-text role_template translation happens in CF2-003).",
+            "properties": {
+                "agent": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Person"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "role": {
+                    "$ref": "#/$defs/ContributorTypeEnum"
+                }
+            },
+            "required": [
+                "role"
+            ],
+            "title": "Contribution",
+            "type": "object"
+        },
+        "ContributorTypeEnum": {
+            "description": "RDA maDMP contributor-type CV (DataCite contributor types) \u2014 CF1-006 decision 2026-11-19.",
+            "enum": [
+                "Contact Person",
+                "Data Collector",
+                "Data Curator",
+                "Data Manager",
+                "Distributor",
+                "Editor",
+                "Hosting Institution",
+                "Producer",
+                "Project Leader",
+                "Project Member",
+                "Project Manager",
+                "Related Person",
+                "Researcher",
+                "Research Group",
+                "Rights Holder",
+                "Sponsor",
+                "Supervisor",
+                "Work Package Leader",
+                "Other"
+            ],
+            "title": "ContributorTypeEnum",
+            "type": "string"
+        },
+        "Cost": {
+            "additionalProperties": false,
+            "description": "Cost entry; values come from RDMO `project/costs/**` (gap register",
+            "properties": {
+                "currency": {
+                    "description": "ISO 4217 currency code.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "Cost",
+            "type": "object"
+        },
+        "DataAccessEnum": {
+            "description": "maDMP data-access CV.",
+            "enum": [
+                "open",
+                "shared",
+                "closed"
+            ],
+            "title": "DataAccessEnum",
+            "type": "string"
+        },
+        "Dataset": {
+            "additionalProperties": false,
+            "description": "EDO dataset level, fed by maDMP `dmp/dataset`.",
+            "properties": {
+                "dataset_type": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "has_distribution": {
+                    "items": {
+                        "$ref": "#/$defs/Distribution"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "identifier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Identifier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "issued": {
+                    "format": "date",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "keyword": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "observes": {
+                    "items": {
+                        "$ref": "#/$defs/MeasuredProperty"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "personal_data": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "preservation_statement": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "quality_assurance": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "realized_as": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/MeasurementSeries"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "sensitive_data": {
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                },
+                "was_generated_by": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Sensor"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "Dataset",
+            "type": "object"
+        },
+        "Distribution": {
+            "additionalProperties": false,
+            "description": "Storage during / preservation after the project (two per dataset).",
+            "properties": {
+                "access_url": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "certified_with": {
+                    "items": {
+                        "$ref": "#/$defs/CertificationEnum"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "data_access": {
+                    "$ref": "#/$defs/DataAccessEnum"
+                },
+                "format": {
+                    "description": "Reconciled in CF2-004: IANA media type as IRI (http://purl.org/NET/mediatypes/<type>), matching the realisation in CF2-003 (trip.py, P34). RDMO free text is translated into these IRIs by the transformation.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "hosted_by": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Host"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "license": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/License"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "license_start_date": {
+                    "description": "Reconciled in CF2-004: license start date maps to time:hasBeginning, matching the realisation in CF2-003 (trip.py, P39/P42).",
+                    "format": "date",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "pid_system": {
+                    "items": {
+                        "$ref": "#/$defs/IdentifierTypeEnum"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "Distribution",
+            "type": "object"
+        },
+        "Host": {
+            "additionalProperties": false,
+            "description": "Repository/storage hosting a distribution.",
+            "properties": {
+                "title": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "Host",
+            "type": "object"
+        },
+        "Identifier": {
+            "additionalProperties": false,
+            "description": "Typed identifier (dmp_id, dataset_id, sensor PID).",
+            "properties": {
+                "identifier_type": {
+                    "$ref": "#/$defs/IdentifierTypeEnum"
+                },
+                "identifier_value": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "identifier_value",
+                "identifier_type"
+            ],
+            "title": "Identifier",
+            "type": "object"
+        },
+        "IdentifierTypeEnum": {
+            "description": "maDMP identifier-type CV; same value set as the maDMP schema.",
+            "enum": [
+                "doi",
+                "handle",
+                "ark",
+                "purl",
+                "url",
+                "urn",
+                "other"
+            ],
+            "title": "IdentifierTypeEnum",
+            "type": "string"
+        },
+        "Interval": {
+            "additionalProperties": false,
+            "description": "Closed date interval (project timeframe, measurement-series timeframe).",
+            "properties": {
+                "interval_begin": {
+                    "format": "date",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "interval_end": {
+                    "description": "Reconciled in CF2-004: time:hasEnd (not time:hasEnding), matching the realisation in CF2-003 (trip.py) and the SHACL IntervalShape.",
+                    "format": "date",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Interval",
+            "type": "object"
+        },
+        "License": {
+            "additionalProperties": false,
+            "description": "License URI + start date (license_start_date from RDMO data_publication_date).",
+            "properties": {
+                "license_start_date": {
+                    "description": "Reconciled in CF2-004: license start date maps to time:hasBeginning, matching the realisation in CF2-003 (trip.py, P39/P42).",
+                    "format": "date",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "license_uri": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "License",
+            "type": "object"
+        },
+        "MeasuredProperty": {
+            "additionalProperties": false,
+            "description": "Measured quantity of a sensor, fed by the SMS device property. CV URIs are reused verbatim from the SMS CV.",
+            "properties": {
+                "accuracy": {
+                    "description": "Free text in v0.2 (\"\u00b10.3 K @ 25 \u00b0C\"); structured form decided with the CF2 transformations.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "aggregation_type": {
+                    "description": "SMS CV aggregation-type URI (e.g. smscv:aggregationtypes/1/).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "compartment": {
+                    "description": "SMS CV compartment URI (e.g. smscv:compartments/1/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S14).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "measured_quantity": {
+                    "description": "SMS CV measured-quantity URI (e.g. smscv:measuredquantities/4/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S7).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "measured_quantity_name": {
+                    "description": "Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S8).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "measuring_range_max": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "measuring_range_min": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "resolution": {
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "sampling_media": {
+                    "description": "SMS CV sampling-media URI (e.g. smscv:samplingmedia/9/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S13).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "unit": {
+                    "description": "SMS CV unit URI (e.g. smscv:units/51/).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "MeasuredProperty",
+            "type": "object"
+        },
+        "MeasurementSeries": {
+            "additionalProperties": false,
+            "description": "The concrete series realized as a dataset (EDO-specific). Sampling interval and timeframe currently have no machine-readable source (gap register",
+            "properties": {
+                "has_sampling_plan": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/SamplingPlan"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "interval": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Interval"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                },
+                "was_generated_by": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Sensor"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "MeasurementSeries",
+            "type": "object"
+        },
+        "Person": {
+            "additionalProperties": false,
+            "description": "A person; contact or contributor agent.",
+            "properties": {
+                "identifier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Identifier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "mbox": {
+                    "description": "Email address of a person (mailto: URI recommended).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "title": "Person",
+            "type": "object"
+        },
+        "Project": {
+            "additionalProperties": false,
+            "description": "EDO project level, fed by maDMP `dmp` + `dmp/project`.",
+            "properties": {
+                "description": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "dmp_id": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Identifier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "description": "Deterministically minted `urn:uuid` (uuid5, seed `rdmo:project:<pk>`)."
+                },
+                "has_contact": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Person"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "has_contribution": {
+                    "items": {
+                        "$ref": "#/$defs/Contribution"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "has_cost": {
+                    "items": {
+                        "$ref": "#/$defs/Cost"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "has_dataset": {
+                    "items": {
+                        "$ref": "#/$defs/Dataset"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "interval": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Interval"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "language": {
+                    "description": "BCP-47 / ISO 639-3 code.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "Project",
+            "type": "object"
+        },
+        "SamplingPlan": {
+            "additionalProperties": false,
+            "description": "How the series is sampled (EDO-specific).",
+            "properties": {
+                "sampling_interval": {
+                    "description": "ISO 8601 duration, e.g. \"PT15M\".",
+                    "pattern": "^(-)?P(?=.)(\\d+Y)?(\\d+M)?(\\d+W)?(\\d+D)?(T(?=.)(\\d+H)?(\\d+M)?(\\d+(\\.\\d+)?S)?)?$",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "sampling_media": {
+                    "description": "SMS CV sampling-media URI (e.g. smscv:samplingmedia/9/). Mapping reconciled in CF2-004 with the realisation in CF2-003 (trip.py, S13).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "title": "SamplingPlan",
+            "type": "object"
+        },
+        "Sensor": {
+            "additionalProperties": false,
+            "description": "Instrument, fed by the SMS device record.",
+            "properties": {
+                "identifier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Identifier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "manufacturer": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "model": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "observes": {
+                    "items": {
+                        "$ref": "#/$defs/MeasuredProperty"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "sensor_type": {
+                    "description": "SMS CV equipment type URI (e.g. smscv:equipmenttypes/54/).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "title"
+            ],
+            "title": "Sensor",
+            "type": "object"
+        }
+    },
+    "$id": "https://w3id.org/edo/schemas/internal-format",
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "additionalProperties": true,
+    "metamodel_version": "1.11.0",
+    "title": "edo-internal-format-schema",
+    "type": "object",
+    "version": null
+}
+

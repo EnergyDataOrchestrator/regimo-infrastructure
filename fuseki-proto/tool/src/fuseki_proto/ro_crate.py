@@ -48,7 +48,8 @@ from . import docker as D
 # ---------------------------------------------------------------------------
 TOOL_DIR = D.TOOL_DIR                      # .../fuseki-proto/tool
 PROTO_DIR = TOOL_DIR.parent                # .../fuseki-proto
-SCRIPTS_DIR = PROTO_DIR.parent             # .../scripts
+# research inputs copied verbatim from the projecting_spaces testbed
+SCRIPTS_DIR = PROTO_DIR / "inputs"
 # the linked DMP+SMS internal-format instance (CF2-005) is the default input
 LINKED_DEFAULT = SCRIPTS_DIR / "internal-format" / "linked-instance.example.json"
 

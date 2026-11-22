@@ -1,0 +1,79 @@
+```mermaid
+erDiagram
+Contact {
+    string name  
+    uriorcurie mbox  
+}
+Contributor {
+    string name  
+    uriorcurie mbox  
+    string role  
+    string set  
+}
+Cost {
+    string currency  
+    string title  
+    decimal value  
+}
+DMP {
+    date created  
+    LanguageEnum language  
+    date modified  
+    string title  
+}
+Dataset {
+    string description  
+    stringList data_quality_assurance  
+    date issued  
+    stringList keyword  
+    LanguageEnum language  
+    boolean personal_data  
+    string preservation_statement  
+    boolean sensitive_data  
+    string title  
+    string type  
+}
+Distribution {
+    uriorcurie access_url  
+    CertificationEnumList certified_with  
+    DataAccessEnum data_access  
+    stringList format  
+    uriorcurie license_ref  
+    date license_start_date  
+    IdentifierTypeEnumList pid_system  
+    string title  
+}
+Host {
+    string title  
+    uriorcurie url  
+}
+Identifier {
+    string identifier  
+    IdentifierTypeEnum type  
+}
+Project {
+    string description  
+    date end  
+    date start  
+    string title  
+}
+SecurityAndPrivacy {
+    string description  
+    string title  
+}
+
+Contact ||--|o Identifier : "contact_id"
+Contributor ||--|o Identifier : "contributor_id"
+DMP ||--|o Contact : "contact"
+DMP ||--|o Project : "project"
+DMP ||--|| Identifier : "dmp_id"
+DMP ||--}o Contributor : "contributor"
+DMP ||--}o Cost : "cost"
+DMP ||--}o Dataset : "dataset"
+Dataset ||--|o Identifier : "dataset_id"
+Dataset ||--}o Distribution : "distribution"
+Dataset ||--}o SecurityAndPrivacy : "security_and_privacy"
+Distribution ||--|o Host : "host"
+
+```
+

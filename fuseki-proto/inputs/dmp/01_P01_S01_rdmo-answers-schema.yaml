@@ -1,0 +1,143 @@
+id: https://w3id.org/edo/rdmo-answers
+name: rdmo-answers
+description: >-
+  Step 01 source-of-truth schema for the EDO maDMP production.
+
+  This LinkML schema declares BOTH the raw RDMO export shape (what the RDMO
+  instance at http://127.0.0.1:8000/projects/4/ produces) AND the semantic
+  answers object that step 02 (`02_P02_S02_madmp-mapping.transform.yaml`)
+  maps to a maDMP. The transformation intelligence for step 01 lives here:
+  each semantic slot carries annotations that say which RDMO question it
+  maps from (`rdmo_question`) and how to extract the value (`rdmo_extract`).
+
+  Extraction rules (`rdmo_extract`, implemented generically by the runner):
+    - `direct`     -> use the answer value as-is
+    - `from-set`   -> read the dataset/aggregate name out of the answer's `set`
+    - `split-first`-> take the first `;`-separated segment (e.g. a lead contact)
+    - `lower`      -> lower-case the value (normalises "No" -> "no")
+    - `mime`       -> map a file-format label to a MIME type (CSV -> text/csv)
+    - `default`    -> use `rdmo_default` (no RDMO question maps to this slot)
+imports:
+  - linkml:types
+prefixes:
+  linkml: https://w3id.org/linkml/
+  edo: https://w3id.org/edo/rdmo-answers/
+default_prefix: edo
+default_range: string
+
+classes:
+
+  RdmoAnswers:
+    tree_root: true
+    description: >-
+      Semantic answers for a single RDMO project, one slot per concept needed
+      downstream. Produced by step 01 from the raw RDMO export. Slot names here
+      are what step 02 (`02_P02_S02_madmp-mapping.transform.yaml`) reads.
+    slots:
+      - main_research_question
+      - project_start
+      - project_end
+      - contact_name
+      - contact_email
+      - dataset_title
+      - dataset_description
+      - personal_data
+      - sensitive_data
+      - distribution_title
+      - format
+      - access_url
+
+  RDMOExport:
+    description: >-
+      The raw shape of an RDMO export: a list of question/answer entries, each
+      with `question`, an optional grouping `set`, and the `values` string.
+    slots:
+      - answer
+
+  RDMOAnswer:
+    description: A single RDMO question/answer entry.
+    slots:
+      - question
+      - set
+      - values
+
+  Row:
+    description: >-
+      A single semantic key/value pair, as written to `Measurement_02.json`
+      (`{"row": [{"key": ..., "value": ...}]}`).
+    slots:
+      - key
+      - value
+
+slots:
+  main_research_question:
+    description: The central research question stated in the DMP.
+    annotations:
+      rdmo_question: "What is the main research question of the project?"
+      rdmo_extract: "direct"
+  project_start:
+    description: RDMO project start date (ISO 8601).
+    annotations:
+      rdmo_question: "When does the project start?"
+      rdmo_extract: "direct"
+  project_end:
+    description: RDMO project end date (ISO 8601).
+    annotations:
+      rdmo_question: "When does the project end?"
+      rdmo_extract: "direct"
+  contact_name:
+    description: Lead contact name (first of a `;`-separated responsible list).
+    annotations:
+      rdmo_question: "Which persons or institutions are responsible for the project coordination?"
+      rdmo_extract: "split-first"
+  contact_email:
+    description: Permanent-contact email address.
+    annotations:
+      rdmo_question: "Please enter the email address of the permanent contact named above."
+      rdmo_extract: "direct"
+  dataset_title:
+    description: Title of the (primary) dataset, taken from the RDMO set name.
+    annotations:
+      rdmo_question: "What kind of data set is it?"
+      rdmo_extract: "from-set"
+  dataset_description:
+    description: Free-text description of the dataset.
+    annotations:
+      rdmo_question: "What kind of data set is it?"
+      rdmo_extract: "direct"
+  personal_data:
+    description: Whether the dataset contains personal data (yes | no | unknown).
+    annotations:
+      rdmo_question: "Does this data set contain personal data?"
+      rdmo_extract: "lower"
+  sensitive_data:
+    description: Whether the dataset contains sensitive data (yes | no | unknown).
+    annotations:
+      rdmo_question: "Does this data set contain non-personal sensitive data?"
+      rdmo_extract: "lower"
+  distribution_title:
+    description: Title of the distribution (e.g. a CSV package).
+    annotations:
+      rdmo_question: "What kind of data set is it?"
+      rdmo_extract: "from-set"
+  format:
+    description: MIME type of the distributed files.
+    annotations:
+      rdmo_question: "What file formats are used?"
+      rdmo_extract: "mime"
+  access_url:
+    description: URL where the distribution can be accessed.
+    annotations:
+      rdmo_extract: "default"
+      rdmo_default: "https://oep.example.org/measurement-02.csv"
+
+  answer:
+    range: RDMOAnswer
+    multivalued: true
+    inlined_as_list: true
+  question:
+  set:
+  values:
+  key:
+    identifier: true
+  value:

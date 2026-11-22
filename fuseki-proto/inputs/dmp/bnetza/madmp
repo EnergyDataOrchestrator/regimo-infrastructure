@@ -1,0 +1,50 @@
+{
+  "dmp": {
+    "title": "maDMP for BNetzA power line project points",
+    "created": "2026-11-09T16:55:47.298545+00:00",
+    "modified": "2026-11-09T16:55:47.298549+00:00",
+    "contributor": [
+      {
+        "name": "A. Koubaa",
+        "role": [
+          "Responsible for metadata for bnetza_vorhabenpunkte_bbplg_2"
+        ]
+      },
+      {
+        "name": "A. Koubaa",
+        "role": [
+          "Responsible for preservation"
+        ]
+      }
+    ],
+    "dataset": [
+      {
+        "dataset_id": {
+          "identifier": null,
+          "type": "other"
+        },
+        "distribution": [
+          {
+            "title": "Preservation after the project",
+            "data_access": "closed"
+          }
+        ],
+        "keyword": [
+          "trumph testing ecosystem",
+          "BBPlG"
+        ],
+        "personal_data": "unknown",
+        "sensitive_data": "unknown",
+        "title": "Dataset #1"
+      }
+    ],
+    "project": [
+      {
+        "title": "BNetzA power line project points",
+        "description": "",
+        "start": "2017-01-01",
+        "end": "2017-07-31"
+      }
+    ]
+  }
+}

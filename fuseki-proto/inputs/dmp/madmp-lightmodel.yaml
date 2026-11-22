@@ -1,0 +1,89 @@
+id: https://w3id.org/edo/madmp-lightmodel
+name: madmp-lightmodel
+description: >-
+  Minimal, self-contained maDMP target schema used by the EDO feasibility study
+  (step 02, DMP Erstellung). Intentionally smaller than the full RDA maDMP 1.2
+  standard so the transform can be exercised end-to-end with the RDMO answers.
+imports:
+  - linkml:types
+prefixes:
+  linkml: https://w3id.org/linkml/
+  edomadmp: https://w3id.org/edo/madmp/
+default_prefix: edomadmp
+default_range: string
+
+classes:
+
+  DMP:
+    tree_root: true
+    description: A machine-actionable Data Management Plan.
+    slots:
+      - dmp_id
+      - title
+      - created
+      - modified
+      - contact
+      - dataset
+
+  Contact:
+    slots:
+      - name
+      - mbox
+
+  Dataset:
+    slots:
+      - dataset_id
+      - title
+      - description
+      - personal_data
+      - sensitive_data
+      - distribution
+
+  Distribution:
+    slots:
+      - title
+      - format
+      - access_url
+
+slots:
+  dmp_id:
+    identifier: true
+    description: Identifier of the DMP.
+  title:
+    required: true
+  created:
+    description: ISO 8601 date the DMP was first created.
+  modified:
+    description: ISO 8601 date the DMP was last modified.
+  contact:
+    range: Contact
+  dataset:
+    range: Dataset
+
+  name:
+  mbox:
+    description: Mail address of the contact.
+
+  dataset_id:
+    identifier: true
+  description:
+  personal_data:
+    description: 'Whether the dataset contains personal data (yes | no | unknown).'
+    range: yes_no_unknown
+  sensitive_data:
+    description: 'Whether the dataset contains sensitive data (yes | no | unknown).'
+    range: yes_no_unknown
+  distribution:
+    range: Distribution
+
+  format:
+    description: MIME type of the distributed dataset.
+  access_url:
+    description: URL to access the distributed dataset.
+
+enums:
+  yes_no_unknown:
+    permissible_values:
+      yes: {}
+      no: {}
+      unknown: {}

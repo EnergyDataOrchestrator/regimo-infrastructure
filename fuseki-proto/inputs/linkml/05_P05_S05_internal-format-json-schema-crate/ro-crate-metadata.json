@@ -1,0 +1,309 @@
+{
+    "@context": [
+        "https://w3id.org/ro/crate/1.1/context",
+        {
+            "prov": "http://www.w3.org/ns/prov#",
+            "dcterms": "http://purl.org/dc/terms/"
+        }
+    ],
+    "@graph": [
+        {
+            "@id": "ro-crate-metadata.json",
+            "@type": "CreativeWork",
+            "about": {
+                "@id": "./"
+            },
+            "conformsTo": {
+                "@id": "https://w3id.org/ro/crate/1.1"
+            }
+        },
+        {
+            "@id": "./",
+            "@type": "Dataset",
+            "name": "Provenance crate for 05_P05_S05_internal-format.schema.json (F11)",
+            "description": "RO-Crate 1.1 documenting the regeneration of the EDO internal-format JSON Schema and the provenance of this version. The crate is fully self-contained: it contains COPIES of the two files that constitute the version (the generated JSON Schema and its LinkML source), everything needed to REPEAT the generation from the source alone (reproduce.sh, the pinned Python environment in environment/, and the linkml:types module resolved during the run), and SNAPSHOT COPIES under references/ of the repository files that shaped the version (specification, sibling source-side schemas, transformation patterns and LinkML Maps, the two realisations trip.py and agnostic_trip.py) — each snapshot records the git blob of the copied file. Documents (specification, trafos README, cards) that were not flagged as data entities remain as external CreativeWork references into the repository. Findings catalogue: ../trafos/README.md §13, F11. Repository state: regenerated after e7a8d20; the superseded predecessor of the JSON Schema is commit 09a25eb (blob 14c33a8b9064c8d81d413f45c3dbc3baea7f5917).",
+            "datePublished": "2026-11-19",
+            "license": {
+                "@id": "https://spdx.org/licenses/MIT"
+            },
+            "hasPart": [
+                {
+                    "@id": "05_P05_S05_internal-format.schema.json"
+                },
+                {
+                    "@id": "05_P05_S05_internal-format-schema.yaml"
+                },
+                {
+                    "@id": "reproduce.sh"
+                },
+                {
+                    "@id": "environment/pip-freeze.txt"
+                },
+                {
+                    "@id": "environment/linkml-types.yaml"
+                },
+                {
+                    "@id": "references/05_P05_S05_madmp-schema.yaml"
+                },
+                {
+                    "@id": "references/05_P05_S05_sms-schema.yaml"
+                },
+                {
+                    "@id": "references/patterns.md"
+                },
+                {
+                    "@id": "references/dmp-to-internal.linkml-map.yaml"
+                },
+                {
+                    "@id": "references/sms-to-internal.linkml-map.yaml"
+                },
+                {
+                    "@id": "references/trip.py"
+                },
+                {
+                    "@id": "references/agnostic_trip.py"
+                }
+            ],
+            "mentions": [
+                {
+                    "@id": "#gen-json-schema-run-20261119T1834"
+                },
+                {
+                    "@id": "#cf2-004-schema-reconciliation"
+                }
+            ]
+        },
+        {
+            "@id": "https://spdx.org/licenses/MIT",
+            "@type": "CreativeWork",
+            "name": "MIT License",
+            "description": "The EDO repository and this crate are licensed under the MIT License (MIT), the repository-level LICENSE (Copyright (c) 2026 Mohamed Anis Koubaa). Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, subject to the inclusion of the above copyright notice and this permission notice in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. Full text: the LICENSE file at the repository root.",
+            "identifier": "https://spdx.org/licenses/MIT"
+        },
+        {
+            "@id": "05_P05_S05_internal-format.schema.json",
+            "@type": "File",
+            "name": "EDO internal format \u2014 generated JSON Schema (the version documented by this crate)",
+            "description": "Copy (in the crate) of the file regenerated for F11 at 2026-11-19T18:34:09+01:00 with `gen-json-schema` (linkml 1.11.1, default options: no --top-class, --not-closed, indent 4). JSON Schema draft 2019-09; metamodel_version 1.11.0. Supersedes the version of 2026-11-19 ~13:22 generated with linkml 1.12.0 in commit 09a25eb (predecessor blob 14c33a8b9064c8d81d413f45c3dbc3baea7f5917, current blob d768c94a65ca824260495f6f67c48ae8fd31d2cc). Differences to the predecessor: the CF2-004 reconciliation descriptions (time:hasEnd, license start date = time:hasBeginning, IANA media-type IRIs, SMS CV slot mappings) and the metamodel_version downgrade 1.12.0 -> 1.11.0 caused by the linkml 1.11.1 pinning (F8). Reproducible from the crate contents alone (reproduce.sh; verified byte-identical 2026-11-19).",
+            "encodingFormat": "application/schema+json",
+            "conformsTo": {
+                "@id": "https://json-schema.org/draft/2019-09/schema"
+            },
+            "isBasedOn": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            },
+            "prov:wasDerivedFrom": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            },
+            "prov:wasGeneratedBy": {
+                "@id": "#gen-json-schema-run-20261119T1834"
+            },
+            "subjectOf": {
+                "@id": "../trafos/README.md"
+            }
+        },
+        {
+            "@id": "05_P05_S05_internal-format-schema.yaml",
+            "@type": "File",
+            "name": "EDO internal format \u2014 LinkML schema (source of the generated version)",
+            "description": "Copy (in the crate) of the LinkML schema, edited at 2026-11-19T18:16 in the CF2-004 schema reconciliation (e8b6ee8) to match the CF2-003 realisation (trip.py): time:hasEnd, license_start_date = time:hasBeginning, media-type slot descriptions, SMS CV slot mappings (S7/S8/S13/S14). The schema is the direct source of the JSON Schema version; its own derivation from the specification and the transformation rules is recorded under #cf2-004-schema-reconciliation and in the referenced files.",
+            "encodingFormat": "text/x-yaml",
+            "conformsTo": {
+                "@id": "https://w3id.org/linkml/meta"
+            },
+            "prov:wasGeneratedBy": {
+                "@id": "#cf2-004-schema-reconciliation"
+            },
+            "dcterms:requires": {
+                "@id": "environment/linkml-types.yaml"
+            },
+            "prov:wasDerivedFrom": [
+                {
+                    "@id": "../../internal-format/04_P04_S04_internal-format-spec.md"
+                },
+                {
+                    "@id": "references/trip.py"
+                }
+            ],
+            "subjectOf": {
+                "@id": "../../../../05_Cards/CF1-007.md"
+            }
+        },
+        {
+            "@id": "reproduce.sh",
+            "@type": [
+                "File",
+                "SoftwareSourceCode"
+            ],
+            "name": "Reproduction script for the JSON Schema generation",
+            "description": "COPY (in the crate): shell script repeating the generation of 05_P05_S05_internal-format.schema.json from the archived LinkML source; run from the crate root (`sh reproduce.sh`). Encodes the generation step of #gen-json-schema-run-20261119T1834; requires the environment pinned in environment/pip-freeze.txt. Verified 2026-11-19: the run over the archived source reproduced the archived JSON Schema byte-identically.",
+            "encodingFormat": "text/x-shellscript",
+            "dcterms:requires": [
+                {
+                    "@id": "#linkml-gen-json-schema"
+                },
+                {
+                    "@id": "environment/pip-freeze.txt"
+                }
+            ]
+        },
+        {
+            "@id": "environment/pip-freeze.txt",
+            "@type": "File",
+            "name": "Pinned Python environment of the generation run",
+            "description": "COPY (in the crate): full `pip freeze` of the repository .venv used for the run, with interpreter (Python 3.12.12), platform (Darwin arm64) and generator pinning in the header; installable via `pip install -r`. Copied because the generating library and its dependencies are not referenceable from the repository — this snapshot plus the SoftwareApplication #linkml-gen-json-schema makes the generation process repeatable.",
+            "encodingFormat": "text/plain"
+        },
+        {
+            "@id": "environment/linkml-types.yaml",
+            "@type": "File",
+            "name": "linkml:types module as resolved during the generation",
+            "description": "COPY (in the crate): the types module of the installed linkml-runtime 1.11.1 (linkml_runtime/linkml_model/model/schema/types.yaml) — the resolution target of the `imports: linkml:types` statement in 05_P05_S05_internal-format-schema.yaml during the generation run. Copied because it lives inside the installed library and is not referenceable from the repository; regeneration must use the pinned linkml/linkml-runtime 1.11.1 so that this module (and only this module) is imported.",
+            "encodingFormat": "text/x-yaml"
+        },
+        {
+            "@id": "#gen-json-schema-run-20261119T1834",
+            "@type": "CreateAction",
+            "name": "gen-json-schema run regenerating the internal-format JSON Schema (F11)",
+            "description": "Command: `.venv/bin/gen-json-schema projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml/05_P05_S05_internal-format-schema.yaml > 05_P05_S05_internal-format.schema.json` (run from the repository root, default options). Triggered by finding F11 in the CF2-004 findings catalogue (../trafos/README.md): the schema edits of the reconciliation made the previously generated JSON Schema stale. The process is repeatable from the crate contents alone: reproduce.sh runs the same generator over the archived source under the environment pinned in environment/pip-freeze.txt (with environment/linkml-types.yaml as the resolution target of the source's `imports: linkml:types`); verified 2026-11-19 — the output was byte-identical to the archived result.",
+            "startTime": "2026-11-19T18:34:08+01:00",
+            "endTime": "2026-11-19T18:34:09+01:00",
+            "instrument": [
+                {
+                    "@id": "#linkml-gen-json-schema"
+                },
+                {
+                    "@id": "reproduce.sh"
+                }
+            ],
+            "object": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            },
+            "result": {
+                "@id": "05_P05_S05_internal-format.schema.json"
+            }
+        },
+        {
+            "@id": "#linkml-gen-json-schema",
+            "@type": "SoftwareApplication",
+            "name": "LinkML gen-json-schema",
+            "softwareVersion": "1.11.1",
+            "downloadUrl": "https://pypi.org/project/linkml/1.11.1/",
+            "description": "Installed in the repository .venv. Version pinned to 1.11.1 because linkml-map 0.5.2 (F8, CF2-004) requires it; as a consequence the generated file reports metamodel_version 1.11.0, whereas the superseded predecessor was generated with linkml 1.12.0 (metamodel_version 1.12.0). The library itself is not copied into the crate; it is identified by name and version here and — together with its full dependency closure — by the environment snapshot environment/pip-freeze.txt.",
+            "dcterms:requires": {
+                "@id": "environment/pip-freeze.txt"
+            }
+        },
+        {
+            "@id": "#cf2-004-schema-reconciliation",
+            "@type": "CreateAction",
+            "name": "CF2-004 schema reconciliation (internal-format LinkML schema vs. CF2-003 realisation)",
+            "description": "Editing activity that produced the current LinkML source: slot mappings and descriptions were reconciled with the hand-coded realisation trip.py and its patterns (time:hasEnd, license_start_date = time:hasBeginning, IANA media-type IRIs per P34, SMS CV mappings S7/S8/S13/S14). Documented in the trafos README (section 9, external reference) and logged in the card CF2-004; commit e8b6ee8. The LinkML Maps used by agnostic_trip.py were compiled from the patterns in commit 62f404b and are the map-driven counterpart of the realisation the reconciliation aligned with.",
+            "endTime": "2026-11-19T18:16:00+01:00",
+            "object": [
+                {
+                    "@id": "references/patterns.md"
+                },
+                {
+                    "@id": "references/dmp-to-internal.linkml-map.yaml"
+                },
+                {
+                    "@id": "references/sms-to-internal.linkml-map.yaml"
+                },
+                {
+                    "@id": "references/trip.py"
+                }
+            ],
+            "result": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            }
+        },
+        {
+            "@id": "references/05_P05_S05_madmp-schema.yaml",
+            "@type": "File",
+            "name": "LinkML maDMP schema (source side, sibling artefact)",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob e2b63ef32cb4609771063ca038ebf75de4680575, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml/05_P05_S05_madmp-schema.yaml): source-side schema from the same CF1-007 family; the identifier-type, data-access, contributor-type and certification enums of the internal format mirror its maDMP CV value sets.",
+            "encodingFormat": "text/x-yaml"
+        },
+        {
+            "@id": "references/05_P05_S05_sms-schema.yaml",
+            "@type": "File",
+            "name": "LinkML SMS schema (source side, sibling artefact)",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob e9a3f63418ea2ea7262e33c1876915f68e267f38, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml/05_P05_S05_sms-schema.yaml): source-side schema from the same CF1-007 family; the Sensor/MeasuredProperty part of the internal format is fed by the SMS device record it models.",
+            "encodingFormat": "text/x-yaml"
+        },
+        {
+            "@id": "references/patterns.md",
+            "@type": "File",
+            "name": "Transformation patterns (P1\u2013P42, S1\u2013S16)",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 8d80564460a15e3a255531c7d190c3fca7706274, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/patterns.md): the catalogue of transformation rules; compiled into the two LinkML Maps (commit 62f404b) whose expressiveness drove the schema reconciliation.",
+            "encodingFormat": "text/markdown"
+        },
+        {
+            "@id": "references/dmp-to-internal.linkml-map.yaml",
+            "@type": "File",
+            "name": "LinkML Map DMP -> internal format",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob dca3d106dd958cd2e82e10ae3387e5d33cab5209, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/dmp-to-internal.linkml-map.yaml): map-driven transformation specification (CF2-004); input to the reconciliation that produced the current LinkML source version.",
+            "encodingFormat": "text/x-yaml"
+        },
+        {
+            "@id": "references/sms-to-internal.linkml-map.yaml",
+            "@type": "File",
+            "name": "LinkML Map SMS -> internal format",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 4e73833bd40278a8973fabca60be2b8f21526e91, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/sms-to-internal.linkml-map.yaml): map-driven transformation specification (CF2-004); input to the reconciliation that produced the current LinkML source version.",
+            "encodingFormat": "text/x-yaml"
+        },
+        {
+            "@id": "references/trip.py",
+            "@type": "File",
+            "name": "trip.py \u2014 hand-coded realisation (CF2-003)",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 24c69c281964fa13945b19b59d30fd2ebfaecfc6, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/fuseki-proto/tool/src/fuseki_proto/trip.py): the hand-coded transformation whose behaviour is the reference for the schema reconciliation; the reconciled schema keeps JSON-Schema consumers consistent with it.",
+            "encodingFormat": "text/x-python"
+        },
+        {
+            "@id": "references/agnostic_trip.py",
+            "@type": "File",
+            "name": "agnostic_trip.py \u2014 map-driven realisation (CF2-004)",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob a836de475d7b1baefda5d1b98a4f073784966677, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/fuseki-proto/tool/src/fuseki_proto/agnostic_trip.py): the map-driven executor that reads the LinkML Maps together with this version of the LinkML schema; a JSON-Schema consumer built on the generated file must stay equivalent to it (proven: 82 == 82 triples, 41/41 checks, see card CF2-004).",
+            "encodingFormat": "text/x-python"
+        },
+        {
+            "@id": "../../internal-format/04_P04_S04_internal-format-spec.md",
+            "@type": "CreativeWork",
+            "name": "EDO internal format specification v0.2 (CF1-006)",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): the specification the internal format — and therefore both the LinkML schema and the JSON Schema version — is derived from (R1–R8, 14 classes). Origin and decisions: card CF1-006.",
+            "encodingFormat": "text/markdown"
+        },
+        {
+            "@id": "../trafos/README.md",
+            "@type": "CreativeWork",
+            "name": "trafos README \u2014 transformation documentation and findings catalogue",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): section 9 records the schema reconciliation (with the note that triggered F11), section 13 the findings catalogue; F11 is closed by the regeneration documented in this crate.",
+            "encodingFormat": "text/markdown"
+        },
+        {
+            "@id": "../../../../05_Cards/CF1-006.md",
+            "@type": "CreativeWork",
+            "name": "Card CF1-006 \u2014 internal format specification",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): card in which the internal format and its vocabulary decisions (contributor-type CV, IANA media types) were decided — the content this schema version formalises."
+        },
+        {
+            "@id": "../../../../05_Cards/CF1-007.md",
+            "@type": "CreativeWork",
+            "name": "Card CF1-007 \u2014 LinkML schemas",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): card in which the LinkML schemas (maDMP, SMS, internal format) were created and first generated the JSON Schema (commit 09a25eb)."
+        },
+        {
+            "@id": "../../../../05_Cards/CF2-003.md",
+            "@type": "CreativeWork",
+            "name": "Card CF2-003 \u2014 hand-coded transformation realisation",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): card of the realisation the reconciliation aligned the schema with."
+        },
+        {
+            "@id": "../../../../05_Cards/CF2-004.md",
+            "@type": "CreativeWork",
+            "name": "Card CF2-004 \u2014 map-driven transformation realisation",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): card whose findings catalogue contains F11 (stale JSON Schema), the trigger of the regeneration documented in this crate; the realisation is logged in its activity log."
+        }
+    ]
+}

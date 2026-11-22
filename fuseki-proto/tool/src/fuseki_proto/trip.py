@@ -4,9 +4,9 @@ Implements the three acceptance scenarios of card CF2-003 ("Transformationen
 von DMP und SMS ins interne Format") against a concrete instance:
 
   1. **Transformation rules documented** — `transform` applies the catalogue in
-     `scripts/trafos/patterns.md` (rules P1–P42, S1–S16) to the maDMP export
-     `scripts/dmp/measurement_02/Measurement_02-13.json` and the SMS device
-     `scripts/sms/device-67.json` (+ device-property files) and records every
+     `inputs/trafos/patterns.md` (rules P1–P42, S1–S16) to the maDMP export
+     `inputs/dmp/measurement_02/Measurement_02-13.json` and the SMS device
+     `inputs/sms/device-67.json` (+ device-property files) and records every
      applied rule, translation decision and documented loss in the report.
   2. **The transformed project is stored** — `store` wipes and (re)loads the
      internal-format graph into the `/projects` TDB2 dataset, confirms
@@ -49,9 +49,9 @@ from . import docker as D
 # ---------------------------------------------------------------------------
 TOOL_DIR = D.TOOL_DIR                      # .../fuseki-proto/tool
 PROTO_DIR = TOOL_DIR.parent                # .../fuseki-proto
-# fuseki-proto lives in infrastructure/; the research scripts (dmp/sms inputs)
-# stayed in projecting_spaces — two levels up is the edo root.
-SCRIPTS_DIR = PROTO_DIR.parent.parent / "projecting_spaces" / "EDO" / "Artefacts" / "07_Fragments" / "scripts"
+# the research inputs (dmp/sms) were copied verbatim from the projecting_spaces
+# testbed into inputs/ so the tool is self-contained (see inputs/README.md).
+SCRIPTS_DIR = PROTO_DIR / "inputs"
 DMP_DEFAULT = SCRIPTS_DIR / "dmp" / "measurement_02" / "Measurement_02-13.json"
 SMS_DIR = SCRIPTS_DIR / "sms"
 DEVICE_DEFAULT = SMS_DIR / "device-67.json"
@@ -97,7 +97,7 @@ SPARQL_PREFIXES = (
 )
 
 # ---------------------------------------------------------------------------
-# mapping tables (scripts/trafos/patterns.md)
+# mapping tables (inputs/trafos/patterns.md)
 # ---------------------------------------------------------------------------
 # P8: role_template free text -> RDA maDMP contributor-type CV. First matching
 # regex wins; anything unmatched falls back to "Other" (documented default).
@@ -899,7 +899,7 @@ def trip(ctx, port, user, password, dataset):
 
     Realises the three acceptance scenarios of card CF2-003 against the
     maDMP export Measurement_02-13.json and the SMS device-67 record;
-    see scripts/trafos/README.md for the full documentation.
+    see inputs/trafos/README.md for the full documentation.
     """
     ctx.obj = {
         "base_url": f"http://127.0.0.1:{port}",
@@ -917,7 +917,7 @@ def trip(ctx, port, user, password, dataset):
 @click.option("--sms-property", "property_paths", multiple=True,
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
-              show_default="(all device-*-property-*.json under scripts/sms/)",
+              show_default="(all device-*-property-*.json under inputs/sms/)",
               help="SMS device-property JSON records (repeatable).")
 @click.option("--out", "out_dir", type=click.Path(file_okay=False), default=None,
               help="Artifacts directory (default: data/trip/<timestamp>).")
@@ -1023,7 +1023,7 @@ def store_cmd(obj, graph_path, wipe, validate):
 @click.option("--sms-property", "property_paths", multiple=True,
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
-              show_default="(all device-*-property-*.json under scripts/sms/)")
+              show_default="(all device-*-property-*.json under inputs/sms/)")
 @click.pass_obj
 def verify_cmd(obj, dmp_path, device_path, property_paths):
     """Scenario 3: dump /projects and verify field-level equality with the sources."""

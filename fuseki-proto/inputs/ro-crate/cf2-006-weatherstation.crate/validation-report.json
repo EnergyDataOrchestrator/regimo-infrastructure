@@ -1,0 +1,38 @@
+{
+  "generator": "fuseki-proto crate generate (CF2-006)",
+  "package": "cf2-006-weatherstation.crate",
+  "input": "/Users/ot2661/Documents/01_dev/edo/projecting_spaces/EDO/Artefacts/07_Fragments/scripts/internal-format/linked-instance.example.json",
+  "generated_at": "2026-11-19T20:25:16",
+  "ro_crate_profile": "https://w3id.org/ro/crate/1.1",
+  "checks": [
+    {
+      "id": "root-dataset",
+      "desc": "Root Data Entity is a Dataset (@id './')",
+      "ok": true
+    },
+    {
+      "id": "root-required",
+      "desc": "Root has RO-Crate 1.1 required properties ['name', 'description', 'datePublished', 'license']",
+      "ok": true,
+      "detail": "all present"
+    },
+    {
+      "id": "files-resolve",
+      "desc": "Every File data entity resolves inside the crate",
+      "ok": true,
+      "detail": "all resolve"
+    },
+    {
+      "id": "dmp-sms-link",
+      "desc": "The DMP-SMS link is reflected (a Sensor entity is present)",
+      "ok": true
+    },
+    {
+      "id": "input-preserved",
+      "desc": "Packaged graph equals the internal-format input",
+      "ok": true
+    }
+  ],
+  "verdict": "5/5 structural checks passed",
+  "note": "Structural self-check only. Validate the whole directory with an RO-Crate spec validator such as nova-crate (spec-v1.1)."
+}

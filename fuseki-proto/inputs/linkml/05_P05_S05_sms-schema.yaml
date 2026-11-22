@@ -1,0 +1,129 @@
+id: https://w3id.org/edo/schemas/sms
+name: sms-schema
+title: EDO SMS Schema (Helmholtz Sensor Management System subset)
+description: >
+  LinkML description of the SMS subset EDO consumes (card CF1-005):
+  the device record and its device properties as served by the SMS API
+  (e.g. `https://sms.atmohub.kit.edu/backend/api/v1/devices/67`).
+  Controlled-vocabulary values are carried as URIs into the SMS CV
+  (`https://sms-cv.helmholtz.cloud/sms/cv/api/v1/`). Rough-principle schema
+  (card CF1-007).
+prefixes:
+  linkml: https://w3id.org/linkml/
+  sms: https://w3id.org/edo/sms#
+  smscv: https://sms-cv.helmholtz.cloud/sms/cv/api/v1/
+  edo: https://w3id.org/edo/terms/
+default_prefix: sms
+default_range: string
+
+imports:
+  - linkml:types
+
+classes:
+
+  Device:
+    description: SMS device record (subset of the JSON:API `device` attributes).
+    attributes:
+      id:
+        description: SMS internal numeric id (e.g. "67" for the FS6002 weatherstation).
+        range: string
+      short_name:
+        range: string
+        required: true
+      long_name:
+        range: string
+      description:
+        range: string
+      model:
+        range: string
+      serial_number:
+        range: string
+      manufacturer_name:
+        range: string
+      device_type_uri:
+        description: Equipment type from the SMS CV (e.g. smscv:equipmenttypes/54/ "Weather station").
+        range: uriorcurie
+      device_type_name:
+        range: string
+      persistent_identifier:
+        description: Instrument PID, e.g. the B2INST Handle `21.11157/…`.
+        range: string
+      status_uri:
+        range: uriorcurie
+      website:
+        range: uriorcurie
+      is_public:
+        range: boolean
+      is_private:
+        range: boolean
+      is_internal:
+        range: boolean
+      archived:
+        range: boolean
+      created_at:
+        range: datetime
+      updated_at:
+        range: datetime
+      device_properties:
+        description: Properties this device can measure.
+        range: DeviceProperty
+        multivalued: true
+        inlined_as_list: true
+
+  DeviceProperty:
+    description: SMS device property — one measured quantity of a device.
+    attributes:
+      id:
+        range: string
+      label:
+        range: string
+      property_uri:
+        description: Measured quantity from the SMS CV (e.g. smscv:measuredquantities/4/ "Air temperature").
+        range: uriorcurie
+      property_name:
+        range: string
+      unit_uri:
+        description: Unit from the SMS CV (e.g. smscv:units/51/ "°C").
+        range: uriorcurie
+      unit_name:
+        range: string
+      measuring_range_min:
+        range: double
+      measuring_range_max:
+        range: double
+      accuracy:
+        description: Measurement accuracy; often null in SMS records (CF1-005 — taken from the device datasheet instead).
+        range: double
+      accuracy_unit_uri:
+        range: uriorcurie
+      accuracy_unit_name:
+        range: string
+      resolution:
+        range: double
+      resolution_unit_uri:
+        range: uriorcurie
+      resolution_unit_name:
+        range: string
+      failure_value:
+        range: double
+      sampling_media_uri:
+        description: Sampling medium from the SMS CV (e.g. smscv:samplingmedia/9/ "Air").
+        range: uriorcurie
+      sampling_media_name:
+        range: string
+      compartment_uri:
+        description: Compartment from the SMS CV (e.g. smscv:compartments/1/ "Atmosphere").
+        range: uriorcurie
+      compartment_name:
+        range: string
+      aggregation_type_uri:
+        description: Aggregation type from the SMS CV (e.g. smscv:aggregationtypes/1/ "Average").
+        range: uriorcurie
+      aggregation_type_name:
+        range: string
+      description:
+        range: string
+      created_at:
+        range: datetime
+      updated_at:
+        range: datetime

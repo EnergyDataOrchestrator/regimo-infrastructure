@@ -1,0 +1,82 @@
+{
+  "dmp": {
+    "title": "maDMP for Measurement_02",
+    "created": "2026-03-02T09:54:14.726258+00:00",
+    "modified": "2026-11-19T05:56:35.966220+00:00",
+    "contributor": [
+      {
+        "name": "A. Koubaa",
+        "mbox": "mohamed-anis.koubaa@kit.edu",
+        "role": [
+          "Responsible for preservation"
+        ]
+      },
+      {
+        "name": "A. Koubaa",
+        "role": [
+          "Responsible for metadata for bnetza_vorhabenpunkte_bbplg_2"
+        ]
+      }
+    ],
+    "dataset": [
+      {
+        "data_quality_assurance": [
+          "completeness checks",
+          "data reconciliation",
+          "sampling procedures"
+        ],
+        "description": "Der Datensatz enth\u00e4lt die Netzausbauvorhaben des Bundesbedarfsplangesetzes (BBPlG) als Linienpolygon und weiteren Vorhabeninformationen zum Verfahrensstand Ende des 1. Quartals 2027 (Variant 2).",
+        "dataset_id": {
+          "identifier": "bnetza_vorhabenpunkte_bbplg_2",
+          "type": "other"
+        },
+        "distribution": [
+          {
+            "title": "Storage during the project",
+            "data_access": "open",
+            "format": [
+              "CSV and JSON"
+            ]
+          },
+          {
+            "title": "Preservation after the project",
+            "data_access": "open",
+            "license": [
+              {
+                "license_ref": "https://creativecommons.org/licenses/by/4.0/",
+                "start_date": "2027-01-29"
+              }
+            ]
+          }
+        ],
+        "issued": "2027-01-29",
+        "keyword": [
+          "Testing ecosystem",
+          "BBPlG"
+        ],
+        "personal_data": "no",
+        "preservation_statement": "Basis of a publication / proof of good scientific practice; Legal obligations; Self-commitment",
+        "security_and_privacy": [
+          {
+            "title": "Access authentication",
+            "description": "Data is public under GeoNutzV."
+          }
+        ],
+        "sensitive_data": "unknown",
+        "title": "bnetza_vorhabenpunkte_bbplg_2"
+      }
+    ],
+    "dmp_id": {
+      "identifier": "urn:uuid:d9e575a1-7ae1-588a-be39-b44574958fa0",
+      "type": "urn"
+    },
+    "project": [
+      {
+        "title": "Measurement_02",
+        "description": "Example Measurement, as a child-project of IAI.",
+        "start": "2027-01-01",
+        "end": "2027-07-31"
+      }
+    ]
+  }
+}

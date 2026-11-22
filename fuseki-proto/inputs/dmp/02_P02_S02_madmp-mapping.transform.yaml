@@ -1,0 +1,67 @@
+# LinkML Map specification: RDMO answers -> maDMP-lightmodel
+#
+# Concrete mappings for the EDO feasibility study (step 02, DMP Erstellung).
+# Transforms the wide RDMO answers object (`RdmoAnswers`, produced from the
+# flat export of an RDMO project such as http://127.0.0.1:8000/projects/4/)
+# into a minimal maDMP JSON conforming to `madmp-lightmodel.yaml`.
+#
+# Expression notes
+# ----------------
+# LinkML expressions are evaluated by a restricted evaluator (simpleeval).
+# `the_row` is NOT bound and `next()` is NOT available, so this spec reads
+# slots directly by name: `expr: main_research_question` resolves to the value
+# of that answer. Nested target objects (Contact / Dataset / Distribution) are
+# built with `object_derivations`, each mapping against the same wide answers
+# object (hence every nested derivation also uses `populated_from: RdmoAnswers`).
+
+class_derivations:
+
+  DMP:
+    populated_from: RdmoAnswers
+    slot_derivations:
+      dmp_id:
+        value: "https://w3id.org/edo/madmp/measurement-02"
+      title:
+        expr: main_research_question
+      created:
+        expr: project_start
+      modified:
+        expr: project_end
+      contact:
+        object_derivations:
+          - class_derivations:
+              Contact:
+                populated_from: RdmoAnswers
+                slot_derivations:
+                  name:
+                    expr: contact_name
+                  mbox:
+                    expr: contact_email
+      dataset:
+        object_derivations:
+          - class_derivations:
+              Dataset:
+                populated_from: RdmoAnswers
+                slot_derivations:
+                  dataset_id:
+                    value: "https://w3id.org/edo/madmp/measurement-02-dataset"
+                  title:
+                    expr: dataset_title
+                  description:
+                    expr: dataset_description
+                  personal_data:
+                    expr: personal_data
+                  sensitive_data:
+                    expr: sensitive_data
+                  distribution:
+                    object_derivations:
+                      - class_derivations:
+                          Distribution:
+                            populated_from: RdmoAnswers
+                            slot_derivations:
+                              title:
+                                expr: distribution_title
+                              format:
+                                expr: format
+                              access_url:
+                                expr: access_url

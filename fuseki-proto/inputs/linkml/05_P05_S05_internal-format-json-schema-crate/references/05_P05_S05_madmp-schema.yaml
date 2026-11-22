@@ -1,0 +1,245 @@
+id: https://w3id.org/edo/schemas/madmp
+name: madmp-schema
+title: EDO maDMP Schema (RDA DMP Common Standard subset)
+description: >
+  LinkML description of the maDMP subset that the EDO maDMP exporter
+  (card CF1-004, `03_P03_S03_madmp-export.mapping.yaml`) produces from the
+  standard RDMO catalog. Rough-principle schema (card CF1-007) — it documents
+  the structure the transformations must understand, not the full RDA spec.
+prefixes:
+  linkml: https://w3id.org/linkml/
+  dmp: https://w3id.org/maDMP/
+  dcterms: http://purl.org/dc/terms/
+  edo: https://w3id.org/edo/terms/
+default_prefix: dmp
+default_range: string
+
+imports:
+  - linkml:types
+
+classes:
+
+  DMP:
+    description: Root object of the machine-actionable DMP (maDMP `dmp`).
+    attributes:
+      dmp_id:
+        description: Identifier of the DMP itself (minted deterministically at export time, gap register #6/#7).
+        range: Identifier
+        inlined: true
+        required: true
+      title:
+        description: maDMP `dmp/title`.
+        range: string
+      contact:
+        description: maDMP `dmp/contact` — one person, no role.
+        range: Contact
+        inlined: true
+      contributor:
+        description: maDMP `dmp/contributor` — persons with roles.
+        range: Contributor
+        multivalued: true
+        inlined_as_list: true
+      cost:
+        description: maDMP `dmp/cost` — one entry per answered cost question (gap register #13).
+        range: Cost
+        multivalued: true
+        inlined_as_list: true
+      language:
+        description: maDMP `dmp/language`, ISO 639-3 (gap register #8).
+        range: LanguageEnum
+      created:
+        range: date
+      modified:
+        range: date
+      project:
+        range: Project
+        inlined: true
+      dataset:
+        description: maDMP `dmp/dataset` — one entry per element of the dataset set.
+        range: Dataset
+        multivalued: true
+        inlined_as_list: true
+
+  Identifier:
+    description: Typed identifier (`identifier` + `type`), used for dmp_id, dataset_id, contact_id.
+    attributes:
+      identifier:
+        range: string
+        required: true
+      type:
+        range: IdentifierTypeEnum
+        required: true
+
+  Contact:
+    description: maDMP contact person (name + mbox + optional identifier).
+    attributes:
+      name:
+        range: string
+        required: true
+      mbox:
+        range: uriorcurie
+      contact_id:
+        range: Identifier
+        inlined: true
+
+  Contributor:
+    description: maDMP contributor — a person plus a role. The exporter fills free text from the RDMO `role_template`; the CV transition happens in the internal format (CF1-006 decision).
+    attributes:
+      name:
+        range: string
+        required: true
+      mbox:
+        range: uriorcurie
+      contributor_id:
+        range: Identifier
+        inlined: true
+      role:
+        range: string
+        description: Free text in the maDMP export; CV form (RDA maDMP contributor-type CV) is used in the internal format.
+      set:
+        description: The dataset set element this contributor belongs to (e.g. "Responsible for metadata for {set.text}").
+        range: string
+
+  Cost:
+    description: maDMP cost entry (title + optional value/currency; gap register #13).
+    attributes:
+      title:
+        range: string
+        required: true
+      value:
+        range: decimal
+      currency:
+        range: string
+        description: ISO 4217 currency code.
+
+  Project:
+    description: maDMP `dmp/project`.
+    attributes:
+      title:
+        range: string
+        required: true
+      description:
+        range: string
+      start:
+        range: date
+      end:
+        range: date
+
+  Dataset:
+    description: maDMP `dmp/dataset`.
+    attributes:
+      title:
+        range: string
+        required: true
+      dataset_id:
+        range: Identifier
+        inlined: true
+      description:
+        range: string
+      issued:
+        range: date
+      keyword:
+        range: string
+        multivalued: true
+      language:
+        range: LanguageEnum
+      type:
+        range: string
+      personal_data:
+        range: boolean
+      sensitive_data:
+        range: boolean
+      data_quality_assurance:
+        range: string
+        multivalued: true
+      preservation_statement:
+        range: string
+      distribution:
+        range: Distribution
+        multivalued: true
+        inlined_as_list: true
+      security_and_privacy:
+        range: SecurityAndPrivacy
+        multivalued: true
+        inlined_as_list: true
+
+  Distribution:
+    description: maDMP `dmp/dataset/distribution` — the exporter renders two per dataset (during project / after project).
+    attributes:
+      title:
+        range: string
+      access_url:
+        range: uriorcurie
+      data_access:
+        range: DataAccessEnum
+      format:
+        range: string
+        multivalued: true
+      certified_with:
+        range: CertificationEnum
+        multivalued: true
+      pid_system:
+        range: IdentifierTypeEnum
+        multivalued: true
+      host:
+        range: Host
+        inlined: true
+      license_ref:
+        range: uriorcurie
+      license_start_date:
+        range: date
+
+  Host:
+    description: maDMP `dmp/dataset/distribution/host` — repository/storage of the distribution.
+    attributes:
+      title:
+        range: string
+      url:
+        range: uriorcurie
+
+  SecurityAndPrivacy:
+    description: maDMP `dmp/dataset/security_and_privacy` — one entry per answered question.
+    attributes:
+      title:
+        range: string
+        required: true
+      description:
+        range: string
+
+enums:
+
+  IdentifierTypeEnum:
+    description: maDMP identifier-type CV.
+    permissible_values:
+      doi:
+      handle:
+      ark:
+      purl:
+      url:
+      urn:
+      other:
+
+  DataAccessEnum:
+    description: maDMP data-access CV.
+    permissible_values:
+      open:
+      shared:
+      closed:
+
+  CertificationEnum:
+    description: maDMP certified-with CV (repository certifications).
+    permissible_values:
+      din31644:
+      dini-zertifikat:
+      dsa:
+      iso16363:
+      iso16919:
+      trac:
+      wds:
+      coretrustseal:
+
+  LanguageEnum:
+    description: ISO 639-3 language codes used by EDO.
+    permissible_values:
+      eng:
+      deu:

@@ -1,0 +1,247 @@
+[
+  {
+    "question": "What is the main research question of the project?",
+    "set": "",
+    "values": "This is an example for a measurement to show case the workflow of edo."
+  },
+  {
+    "question": "Please give some keywords describing the research question.",
+    "set": "",
+    "values": "Energy; Orchestrator"
+  },
+  {
+    "question": "To which discipline / disciplines is the project assigned?",
+    "set": "",
+    "values": "Humanities and Social Sciences / Ancient Cultures"
+  },
+  {
+    "question": "When does the project start?",
+    "set": "",
+    "values": "2026-07-01"
+  },
+  {
+    "question": "When does the project end?",
+    "set": "",
+    "values": "2026-09-11"
+  },
+  {
+    "question": "Which persons or institutions are responsible for the project coordination?",
+    "set": "",
+    "values": "A. Koubaa; Institute for Automation and applied Informatics"
+  },
+  {
+    "question": "Who is funding the project?",
+    "set": "Funder \"HMC\"",
+    "values": "Helmholtz Metadata Collaboration"
+  },
+  {
+    "question": "Does the research funding organisation have any specifications or guidelines regarding the handling of research data collected in the project? If so, please briefly outline them and refer to further information if necessary. Please also indicate the extent to which they are binding.",
+    "set": "Funder \"HMC\"",
+    "values": "German Research Foundation (DFG)."
+  },
+  {
+    "question": "What kind of data set is it?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "The data are collected from the sensor with the PIDINST: 21.11157/9b6cdfb9-a4fb-4269-af04-1ef94588f5a8 Data are continuously generated"
+  },
+  {
+    "question": "Is the data set generated or reused?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Created"
+  },
+  {
+    "question": "Who might be interested in this data set (for reuse)? What are the implications of the potential for reuse for the provision of the data?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Data are open to be reused. No PII are published."
+  },
+  {
+    "question": "By whom and in what context is this data set reused?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Research fellow interested in real weather data."
+  },
+  {
+    "question": "Is the data set reproducible, i.e. could it be re-created or recovered if it were lost?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Yes, with little effort"
+  },
+  {
+    "question": "When does the collection or generation of data begin?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "2026-07-01"
+  },
+  {
+    "question": "When does the collection or generation of data end?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "2026-09-30"
+  },
+  {
+    "question": "When does the data cleansing/preparation start?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "2026-10-01"
+  },
+  {
+    "question": "When does the data cleansing/preparation end?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "2026-10-08"
+  },
+  {
+    "question": "When does the data analysis start?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "2026-10-08"
+  },
+  {
+    "question": "When does the data analysis end?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "2026-10-12"
+  },
+  {
+    "question": "What is the size of the data set?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Exact size: 1 MBits"
+  },
+  {
+    "question": "What file formats are used?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "CSV"
+  },
+  {
+    "question": "Which tools, software, technologies or processes are used to generate or collect the data?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "The Energy Data Orchestrator."
+  },
+  {
+    "question": "What software, processes or technologies are required to use the data?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "The Energy Data Orchestrator."
+  },
+  {
+    "question": "Is documentation about relevant software needed to use the data?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Are different versions of the data set created?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "What versioning strategy is used for this data set?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Internal GitLab (KIT)"
+  },
+  {
+    "question": "What technology or tool is used for versioning?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Other: KIT GitLab"
+  },
+  {
+    "question": "What will this data set be used for/how will it be used during the project?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "As An example to show case."
+  },
+  {
+    "question": "Are there actual or potential usage scenarios that could benefit from support by a data management or IT expert, or that even require such support?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Where is the data set stored during the project?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "GitLab."
+  },
+  {
+    "question": "Is this data set interoperable, i.e. can it be shared and reused between researchers, institutions, organisations, countries, etc.?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "The data set adheres to standardised formats: CSV; The data set is usable with available (open) software applications or software applications that are established and widely used in the respective community: Energy; Other aspects in terms of interoperability: Available on OpenEnergyPlatform"
+  },
+  {
+    "question": "What information is necessary for others to understand and reuse the data (i.e., to understand its collection or creation, analysis, and research results based on it)?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Other: DMP"
+  },
+  {
+    "question": "What standards, ontologies, classifications, etc. are used to describe the data and contextual information?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Discipline-specific standards, classifications etc. are used: OEMETADATA Standard; A custom description system is used: Open energy Ontology"
+  },
+  {
+    "question": "If it is unavoidable to use project-specific or rare ontologies, metadata schemas or vocabularies, are mappings to common ontologies etc. created?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Who is responsible for documenting and checking the metadata and contextual information for accuracy and completeness?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "A. Koubaa"
+  },
+  {
+    "question": "Are persistent identifiers (PIDs) used for this data set?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Yes"
+  },
+  {
+    "question": "Does the legal situation of different countries have to be considered?",
+    "set": "",
+    "values": "No"
+  },
+  {
+    "question": "Does this data set contain personal data?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Does this data set contain non-personal sensitive data?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Is a data access committee required to decide whether or not to grant access to data published by the project in response to access requests?",
+    "set": "",
+    "values": "No"
+  },
+  {
+    "question": "Is data used and/or created that is protected by copyright or related rights?",
+    "set": "",
+    "values": "No"
+  },
+  {
+    "question": "What criteria/rules are used to select data for archiving (after the end of the project)?",
+    "set": "",
+    "values": "Publication on the Open Energy Platform."
+  },
+  {
+    "question": "By whom is the selection made?",
+    "set": "",
+    "values": "A. Koubaa"
+  },
+  {
+    "question": "Is the repository or data centre chosen certified (e.g. Data Seal of Approval, nestor Seal or ISO 16363)?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Have appropriate archiving solutions already been discussed with the repository or data centre?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No"
+  },
+  {
+    "question": "Shall the data only be made accessible after an embargo period has expired?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "No. Data is available without embargo."
+  },
+  {
+    "question": "How is the identity of persons accessing the data verified?",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "Data is public."
+  },
+  {
+    "question": "Who is the long-term contact person who can make decisions about the data? Please enter their name.",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "A. Koubaa"
+  },
+  {
+    "question": "Please enter the email address of the permanent contact named above.",
+    "set": "Data Set \"Weatherstation Q3-2026\"",
+    "values": "mohamed-anis.koubaa@kit.edu"
+  }
+]

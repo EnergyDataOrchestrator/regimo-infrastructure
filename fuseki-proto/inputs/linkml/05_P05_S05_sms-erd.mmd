@@ -1,0 +1,53 @@
+```mermaid
+erDiagram
+Device {
+    string id  
+    string description  
+    boolean archived  
+    datetime created_at  
+    string device_type_name  
+    uriorcurie device_type_uri  
+    boolean is_internal  
+    boolean is_private  
+    boolean is_public  
+    string long_name  
+    string manufacturer_name  
+    string model  
+    string persistent_identifier  
+    string serial_number  
+    string short_name  
+    uriorcurie status_uri  
+    datetime updated_at  
+    uriorcurie website  
+}
+DeviceProperty {
+    string id  
+    string description  
+    double accuracy  
+    string accuracy_unit_name  
+    uriorcurie accuracy_unit_uri  
+    string aggregation_type_name  
+    uriorcurie aggregation_type_uri  
+    string compartment_name  
+    uriorcurie compartment_uri  
+    datetime created_at  
+    double failure_value  
+    string label  
+    double measuring_range_max  
+    double measuring_range_min  
+    string property_name  
+    uriorcurie property_uri  
+    double resolution  
+    string resolution_unit_name  
+    uriorcurie resolution_unit_uri  
+    string sampling_media_name  
+    uriorcurie sampling_media_uri  
+    string unit_name  
+    uriorcurie unit_uri  
+    datetime updated_at  
+}
+
+Device ||--}o DeviceProperty : "device_properties"
+
+```
+

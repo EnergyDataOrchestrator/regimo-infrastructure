@@ -1,0 +1,863 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/" created="2026-11-09T16:24:03.747191+01:00" required="2.1.0" version="2.5.2">
+	<title>BBPlG_Vorhabenpunkte_v2</title>
+	<description>Dataset description for BNetzA power line project points (BBPlG) variant 2 files, managed within IAI.</description>
+	<catalog dc:uri="https://rdmorganiser.github.io/terms/questions/rdmo"/>
+	<tasks>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/clarify_consequences_international_law"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_IT_department"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_IT_or_data_management_expert"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_data_security_officer"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/contact_rights_owner"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/create_data_organisation_policy"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/create_naming_policy"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/determine_versioning_tool"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/finish-first-dmp"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/identify_rights_owner"/>
+		<task dc:uri="https://rdmorganiser.github.io/terms/tasks/inform_data_security_officer"/>
+	</tasks>
+	<values>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/coordination/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>A. Koubaa</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:20:14.992802+02:00</created>
+			<updated>2026-11-09T13:23:37.361449+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/coordination/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text>Institute for Automation and Applied Informatics</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:20:25.475370+02:00</created>
+			<updated>2026-11-09T13:23:37.362033+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/creation_methods"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Bundesnetzagentur (BNetzA) BBPlG network expansion variant 2 data extraction pipeline.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:32:20.670284+02:00</created>
+			<updated>2026-11-09T13:23:37.362575+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_analysis_end"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-07-31</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:31:11.977881+02:00</created>
+			<updated>2026-11-09T13:23:37.363110+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_analysis_start"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-06-13</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:30:58.628798+02:00</created>
+			<updated>2026-11-09T13:23:37.363576+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_cleansing_end"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-06-13</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:30:44.168867+02:00</created>
+			<updated>2026-11-09T13:23:37.364036+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_cleansing_start"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-06-01</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:30:32.797765+02:00</created>
+			<updated>2026-11-09T13:23:37.364521+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_collection_end"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-03-31</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:30:21.127683+02:00</created>
+			<updated>2026-11-09T13:23:37.365004+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_collection_start"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-01-01</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:30:13.703707+02:00</created>
+			<updated>2026-11-09T13:23:37.365464+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/description"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Der Datensatz enthält die Netzausbauvorhaben des Bundesbedarfsplangesetzes (BBPlG) als Linienpolygon und weiteren Vorhabeninformationen zum Verfahrensstand Ende des 1. Quartals 2017 (Variant 2).</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:27:09.025748+02:00</created>
+			<updated>2026-11-09T13:23:37.365986+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/format"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>CSV and JSON</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:31:59.393682+02:00</created>
+			<updated>2026-11-09T13:23:37.366604+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>bnetza_vorhabenpunkte_bbplg_2</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:26:38.043651+02:00</created>
+			<updated>2026-11-09T13:23:37.367098+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/interoperability"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>CSV and JSON</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_interoperability_options/259"/>
+			<file/>
+			<value_type>option</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:34:11.962941+02:00</created>
+			<updated>2026-11-09T13:23:37.367572+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/interoperability"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>1</collection_index>
+			<text>trumph testing ecosystem</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_interoperability_options/257"/>
+			<file/>
+			<value_type>option</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:34:22.901358+02:00</created>
+			<updated>2026-11-09T13:23:37.368016+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/interoperability"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>3</collection_index>
+			<text>Available on Open trumph testing ecosystem Platform</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_interoperability_options/256"/>
+			<file/>
+			<value_type>option</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:34:35.524183+02:00</created>
+			<updated>2026-11-09T13:23:37.368512+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/metadata/mappings"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:35:54.830479+02:00</created>
+			<updated>2026-11-09T13:23:37.368923+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/metadata/responsible_person/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>A. Koubaa</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:36:27.709909+02:00</created>
+			<updated>2026-11-09T13:23:37.369376+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/metadata/scope"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>10</collection_index>
+			<text>DMP</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/mandatory_metadata_options/108"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:35:10.449129+02:00</created>
+			<updated>2026-11-09T13:23:37.369869+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/metadata/standards"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>OEMETADATA Standard</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/metadata_standards/111"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:35:22.232063+02:00</created>
+			<updated>2026-11-09T13:23:37.370307+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/metadata/standards"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>1</collection_index>
+			<text>Open trumph testing ecosystem Ontology</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/metadata_standards/112"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:35:40.321920+02:00</created>
+			<updated>2026-11-09T13:23:37.370735+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/origin"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Bundesnetzagentur (BNetzA)</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_origin_options/148"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:27:55.325184+02:00</created>
+			<updated>2026-11-09T13:23:37.371186+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/yesno"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>1</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:36:48.153006+02:00</created>
+			<updated>2026-11-09T13:23:37.371679+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/access_authentication"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Data is public under GeoNutzV.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:39:06.600564+02:00</created>
+			<updated>2026-11-09T13:23:37.372096+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/certification"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:38:27.506008+02:00</created>
+			<updated>2026-11-09T13:23:37.372497+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/embargo_period"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>No. Data is available without embargo.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:38:40.518758+02:00</created>
+			<updated>2026-11-09T13:23:37.372898+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/repository_arrangements"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:38:32.472650+02:00</created>
+			<updated>2026-11-09T13:23:37.373356+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/responsible_person/email"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>mohamed-anis.koubaa@kit.edu</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:39:19.856163+02:00</created>
+			<updated>2026-11-09T13:23:37.373735+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/responsible_person/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>A. Koubaa</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:39:15.545378+02:00</created>
+			<updated>2026-11-09T13:23:37.374140+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/reproducibility"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Fully reproducible via official BNetzA sources[cite: 2] and OEMETADATA specification.</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_reproducible_options/2"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:29:31.645243+02:00</created>
+			<updated>2026-11-09T13:23:37.374509+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/reuse_scenario"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Data are open to be reused under GeoNutzV[cite: 2]. No PII are published.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:28:19.945322+02:00</created>
+			<updated>2026-11-09T13:23:37.374881+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/reuse_scenario_usage"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Research and analysis on power grid expansion projects in Germany.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:29:00.586509+02:00</created>
+			<updated>2026-11-09T13:23:37.375241+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sensitive_data/other/yesno"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:37:17.712087+02:00</created>
+			<updated>2026-11-09T13:23:37.375647+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sensitive_data/personal_data_yesno/yesno"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:37:12.013890+02:00</created>
+			<updated>2026-11-09T13:23:37.376091+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/size/volume"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>2 MBits</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_size_options/250"/>
+			<file/>
+			<value_type>float</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:31:29.558743+02:00</created>
+			<updated>2026-11-09T13:23:37.376519+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/software_documentation"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>1</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:32:32.334652+02:00</created>
+			<updated>2026-11-09T13:23:37.376916+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/storage/type"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>GitLab.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:33:51.980694+02:00</created>
+			<updated>2026-11-09T13:23:37.377316+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/usage_description"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>BBPlG power line project point dataset and metadata schema (variant 2) for trumph testing ecosystem integration.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:33:25.176956+02:00</created>
+			<updated>2026-11-09T13:23:37.377757+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/usage_support"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>No</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/yes_with_text_no/no"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:33:35.084636+02:00</created>
+			<updated>2026-11-09T13:23:37.378164+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/usage_technology"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Python pandas and OEMETADATA specification.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:32:10.521559+02:00</created>
+			<updated>2026-11-09T13:23:37.378563+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/versioning_strategy"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Internal GitLab (KIT)</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:32:50.675219+02:00</created>
+			<updated>2026-11-09T13:23:37.378964+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/versioning_tool"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>KIT GitLab</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/software_versioning_technology_options/163"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:33:03.783610+02:00</created>
+			<updated>2026-11-09T13:23:37.379366+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/versioning_yesno"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>1</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:32:39.282686+02:00</created>
+			<updated>2026-11-09T13:23:37.379747+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>HMC</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:21:18.083383+02:00</created>
+			<updated>2026-11-09T13:23:37.380130+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Helmholtz Metadata Collaboration</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:21:26.238081+02:00</created>
+			<updated>2026-11-09T13:23:37.380527+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/rdm_policy"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>German Research Foundation (DFG).</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:21:55.769539+02:00</created>
+			<updated>2026-11-09T13:23:37.380909+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/legal_aspects/international_yesno"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:37:06.668799+02:00</created>
+			<updated>2026-11-09T13:23:37.381303+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/legal_aspects/ipr/yesno"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:37:38.934109+02:00</created>
+			<updated>2026-11-09T13:23:37.381689+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/legal_aspects/official_approval/data_access_committee"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:37:33.221440+02:00</created>
+			<updated>2026-11-09T13:23:37.382060+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/preservation/responsible_person/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>A. Koubaa</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:38:19.621856+02:00</created>
+			<updated>2026-11-09T13:23:37.382427+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/preservation/selection_criteria"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>Publication under GeoNutzV standards.</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:37:53.338625+02:00</created>
+			<updated>2026-11-09T13:23:37.382824+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_field/title"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>trumph testing ecosystem Infrastructure</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/research_fields/169"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:19:24.677170+02:00</created>
+			<updated>2026-11-09T13:23:37.383307+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>trumph testing ecosystem</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:17:50.034019+02:00</created>
+			<updated>2026-11-09T13:23:37.383857+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text>BBPlG</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:18:07.450098+02:00</created>
+			<updated>2026-11-09T13:23:37.384266+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/title"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>Analysis of BNetzA power line project points (variant 2) under BBPlG[cite: 2].</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:17:23.157775+02:00</created>
+			<updated>2026-11-09T13:23:37.384638+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/schedule/project_end"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-07-31</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:19:52.947949+02:00</created>
+			<updated>2026-11-09T13:23:37.385068+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/schedule/project_start"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>2017-01-01</text>
+			<option/>
+			<file/>
+			<value_type>datetime</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-08-31T13:19:36.228073+02:00</created>
+			<updated>2026-11-09T13:23:37.385558+01:00</updated>
+		</value>
+	</values>
+	<created>2026-03-02T10:54:14.726258+01:00</created>
+	<updated>2026-11-09T13:24:33.927859+01:00</updated>
+</project>
