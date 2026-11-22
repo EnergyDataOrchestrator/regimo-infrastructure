@@ -16,10 +16,29 @@ While other repositories house the system logic (referencing **KITopen-ID: 10001
 
 ## Repository Contents
 * `Servers/`: Local RDMO development instances (see below).
+* `fuseki-proto/`: Containerised Apache Jena Fuseki graph-database stack with the `fuseki-proto` maintenance CLI (see below).
 * `docker/`: Standardised Dockerfiles and `docker-compose.yml` blueprints for local development and laboratory deployment.
 * `k8s/`: (Optional) Kubernetes Helm charts or manifests for scaling the orchestrator in cloud environments.
 * `config/`: Centralised configuration files for Kafka brokers and the Regimo message schema registry.
 * `scripts/`: Maintenance scripts for resetting the bus state or performing bulk data migrations.
+
+## Graph database (`fuseki-proto`)
+The `fuseki-proto/` directory hosts the internal **graph database**: an Apache Jena **Fuseki Full** instance built from source (Apache publishes no registry image), serving
+
+* **`/projects`** — TDB2 dataset with the internal-format project graphs (persisted),
+* **`/shapes`** — in-memory dataset with the SHACL project-claim shapes.
+
+Compose auto-merges nothing — the host port is declared directly in `docker-compose.yml`, so the stack serves on host port **3031** (3030 stays reserved for a system-managed Fuseki).
+
+```bash
+# from the edo root (the CLI lives in the shared edo venv):
+uv run fuseki-proto start    # build + up + seed /shapes → http://localhost:3031/ (web UI)
+# or manually from fuseki-proto/:
+docker compose build
+docker compose up -d
+```
+
+The `fuseki-proto` CLI (installed editable into the edo root venv via `pyproject.toml`, see `fuseki-proto/tool/`) covers lifecycle (`start/status/ping/stop`), backup/restore, loading instance graphs, and the maDMP→internal-format round trips (`trip`, `agnostic-trip`) and RO-Crate generation (`crate`). See `fuseki-proto/README.md` and `fuseki-proto/tool/README.md`.
 
 ## Local RDMO dev instance (`Servers/rdmo-app`)
 The `Servers/` directory hosts the local **RDMO** (Research Data Management Organiser) development instance. It is a clone of the official project skeleton [`rdmorganiser/rdmo-app`](https://github.com/rdmorganiser/rdmo-app), set up with:
@@ -37,6 +56,11 @@ cd Servers/rdmo-app
 source env/bin/activate
 python manage.py runserver        # → http://127.0.0.1:8000/
 ```
+
+Sign in at `http://127.0.0.1:8000/` with `admin` / `admin` (local dev only).
+The maDMP export plugin used by the sync engine (`regimo-core`) lives in
+`components/socket-rdmo/madmp-exporter/`; it is installed **into this
+instance's env** — see that package's README for install and troubleshooting.
 
 ### Rebuild from scratch (e.g. after a fresh clone)
 
