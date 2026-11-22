@@ -20,7 +20,7 @@ While other repositories house the system logic (referencing **KITopen-ID: 10001
 * `docker/`: Standardised Dockerfiles and `docker-compose.yml` blueprints for local development and laboratory deployment.
 * `k8s/`: (Optional) Kubernetes Helm charts or manifests for scaling the orchestrator in cloud environments.
 * `config/`: Centralised configuration files for Kafka brokers and the Regimo message schema registry.
-* `scripts/`: Maintenance scripts for resetting the bus state or performing bulk data migrations.
+* `scripts/`: Maintenance scripts for resetting the bus state, performing bulk data migrations or installing RDMO plugins (`install_madmp_exporter.py`).
 
 ## Graph database (`fuseki-proto`)
 The `fuseki-proto/` directory hosts the internal **graph database**: an Apache Jena **Fuseki Full** instance built from source (Apache publishes no registry image), serving
@@ -59,8 +59,17 @@ python manage.py runserver        # → http://127.0.0.1:8000/
 
 Sign in at `http://127.0.0.1:8000/` with `admin` / `admin` (local dev only).
 The maDMP export plugin used by the sync engine (`regimo-core`) lives in
-`components/socket-rdmo/madmp-exporter/`; it is installed **into this
-instance's env** — see that package's README for install and troubleshooting.
+`components/socket-rdmo/madmp-exporter/`; install it into this instance with
+the admin script (from the repo root, idempotent — installs the package,
+registers the plugin, wires the `GET /api/v1/madmp/projects/{pk}/` API route
+and verifies the result; see that package's README for troubleshooting):
+
+```bash
+python3 scripts/install_madmp_exporter.py          # add --create-token admin for machine access
+```
+
+Note: `uv pip install` needs the exporter's `pyyaml` dep present in the env;
+the script re-runs the editable install automatically whenever the probe fails.
 
 ### Rebuild from scratch (e.g. after a fresh clone)
 
