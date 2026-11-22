@@ -15,8 +15,8 @@ pip install -e .
 
 ## Usage
 
-> **Port:** the CLI defaults to `--port 3031`, matching
-> `docker-compose.override.yml` (the prototype's non-conflicting host port).
+> **Port:** the CLI defaults to `--port 3031`, matching the host binding in
+> `docker-compose.yml` (the prototype's non-conflicting host port).
 > Host `3030` is left for the system-managed Jena Fuseki that serves the ORKG
 > database. Point `fuseki-proto` at that other instance explicitly with
 > `--port 3030` / `--dataset orkg` if you ever need to.
@@ -59,7 +59,7 @@ CLI's `start`/`status`/`ping` probe a data-service `/query` endpoint (which
 works under both server-only and Full), and `backup` uses a CONSTRUCT dump — so
 the tool works unchanged; the Full admin endpoints are just extra conveniences.
 
-Sensible options are derived from `docker-compose.yml`/`docker-compose.override.yml`
+Sensible options are derived from `docker-compose.yml`
 defaults and can be overridden (e.g. `--port`, `--user`, `--password`,
 `--service`, `--dataset`, `--compose-dir`, `--backups-dir`). Run
 `fuseki-proto --help` / `fuseki-proto <cmd> --help` for details.

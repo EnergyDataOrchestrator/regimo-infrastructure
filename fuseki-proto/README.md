@@ -21,8 +21,7 @@ classes, §3.3 controlled vocabularies) and the LinkML schema from CF1-007
 
 ```
 fuseki-proto/
-├── docker-compose.yml            # Fuseki 5 Full (TDB2 + in-memory datasets); container port 3030, NO host publish
-├── docker-compose.override.yml   # AUTO-MERGED: sole host publish, remaps to 3031 (avoids the ORKG Fuseki)
+├── docker-compose.yml            # Fuseki 5 Full (TDB2 + in-memory datasets); host port 3031 (avoids the ORKG Fuseki on 3030)
 ├── docker/
 │   ├── Dockerfile                # builds Fuseki **Full** FROM SOURCE (Apache ships no registry image)
 │   ├── download.sh               #   fetches apache-jena-fuseki-<ver>.zip from Maven Central (checksummed)
@@ -42,9 +41,9 @@ fuseki-proto/
                                   #   round trip (`agnostic_trip.py`, see tool/README.md)
 ```
 
-> **Port:** Docker Compose auto-loads `docker-compose.override.yml`, so the
-> prototype serves on host port **3031** by default. Host `3030` stays free for
-> the system-managed Jena Fuseki that serves the ORKG database
+> **Port:** the stack serves on host port **3031** by default (host
+> publishing is declared directly in `docker-compose.yml`). Host `3030` stays
+> free for the system-managed Jena Fuseki that serves the ORKG database
 > (`/Library/LaunchDaemons/org.apache.jena.fuseki.plist`). `fuseki-proto`
 > defaults to `--port 3031`.
 
@@ -63,6 +62,7 @@ The CLI builds automatically on start:
 
 ```bash
 fuseki-proto start            # = docker compose build && docker compose up -d, then seed /shapes
+# (run as `uv run fuseki-proto …` from the edo root, or activate that venv first)
 ```
 
 or equivalently, manually:

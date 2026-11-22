@@ -1,0 +1,198 @@
+# ---------------------------------------------------------------------------
+# project-claim-shapes.ttl — SHACL node shapes for the EDO *Project claim*
+#
+# Source of truth for the target classes:
+#   scripts/internal-format/04_P04_S04_internal-format-spec.md  (§2, §3.2)
+#   scripts/linkml/05_P05_S05_internal-format-schema.yaml       (CF1-007)
+#
+# A "claim" is the set of statements a Project (and its reachable nodes) must
+# conform to before it may be pushed toward RO-Crate / RDF-star / OEP. These
+# shapes encode:
+#   * which properties are required (sh:minCount)
+#   * which are cardinality-constrained (keywords ≥ 0, exactly-one contribution role)
+#   * which values come from the controlled vocabularies of §3.3
+#     (language, data_access, identifier type, contribution role)
+#   * the required nesting for contact / contribution / cost / dmpId /
+#     dataset→distribution→host / dataset→sensor.
+#
+# Validation:
+#   pyshacl -s shapes/project-claim-shapes.ttl \
+#           -d <instance-graph.ttl> \
+#           -e shapes/project-claim-shapes.ttl   # imports only dcterms; shapes here self-contained
+#   or query the Fuseki /shapes graph and run against the /projects graph.
+#
+# ---------------------------------------------------------------------------
+@prefix sh:    <http://www.w3.org/ns/shacl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix edo:   <https://w3id.org/edo/terms/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat:  <http://www.w3.org/ns/dcat#> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix prov:  <http://www.w3.org/ns/prov#> .
+@prefix time:  <http://www.w3.org/2006/time#> .
+@prefix sosa:  <http://www.w3.org/ns/sosa/> .
+
+# === Project =================================================================
+edo:ProjectShape
+    a sh:NodeShape ;
+    sh:targetClass edo:Project ;
+    sh:name "Project claim" ;
+    sh:description "Claim: a conformant project record under the internal format (spec v0.2, CF1-006)." ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:name "Project title" ;
+        sh:description "Human-readable project title (maDMP project/title)." ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path dcterms:description ;
+        sh:name "Project description" ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path dcterms:language ;
+        sh:name "Project language" ;
+        sh:in ( "eng" "deu" ) ;
+        sh:maxCount 1 ;
+    ] ;
+    # The interval: exactly one, with begin+end dates.
+    sh:property [
+        sh:path time:hasInterval ;
+        sh:name "Project interval" ;
+        sh:node time:IntervalShape ;
+        sh:maxCount 1 ;
+    ] ;
+    # dmp_id must resolve to an Identifier node (typed).
+    sh:property [
+        sh:path edo:dmpId ;
+        sh:name "DMP identifier" ;
+        sh:node edo:IdentifierShape ;
+        sh:maxCount 1 ;
+    ] ;
+    # At least one contact required (Person node).
+    sh:property [
+        sh:path edo:hasContact ;
+        sh:name "Project contact" ;
+        sh:node foaf:PersonShape ;
+        sh:minCount 1 ;
+    ] ;
+    sh:property [
+        sh:path edo:hasContribution ;
+        sh:name "Project contribution" ;
+        sh:node edo:ContributionShape ;
+    ] ;
+    sh:property [
+        sh:path edo:hasCost ;
+        sh:name "Project cost" ;
+        sh:node edo:CostShape ;
+    ] ;
+.
+
+# === Interval ================================================================
+time:IntervalShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path time:hasBeginning ;
+        sh:name "Interval begin" ;
+        sh:datatype xsd:date ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path time:hasEnd ;
+        sh:name "Interval end" ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+    ] ;
+.
+
+# === Identifier ==============================================================
+edo:IdentifierShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path dcterms:identifier ;
+        sh:name "Identifier value" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path dcterms:type ;
+        sh:name "Identifier type (CV)" ;
+        sh:in ( "doi" "handle" "ark" "urn" "url" "other" ) ;
+        sh:maxCount 1 ;
+    ] ;
+.
+
+# === Person =================================================================
+foaf:PersonShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path foaf:name ;
+        sh:name "Person name" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path foaf:mbox ;
+        sh:name "Person e-mail" ;
+        sh:datatype xsd:anyURI ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path edo:identifier ;
+        sh:name "Person identifier" ;
+        sh:node edo:IdentifierShape ;
+        sh:maxCount 1 ;
+    ] ;
+.
+
+# === Contribution ============================================================
+edo:ContributionShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path prov:agent ;
+        sh:name "Contribution agent" ;
+        sh:node foaf:PersonShape ;
+        sh:minCount 1 ;
+    ] ;
+    sh:property [
+        sh:path dcterms:type ;
+        sh:name "Contribution role (RDA maDMP CV)" ;
+        sh:in ( "Contact Person" "Data Collector" "Data Curator" "Data Manager"
+                 "Distributor" "Editor" "Hosting Institution" "Producer"
+                 "Project Leader" "Project Member" "Project Manager"
+                 "Related Person" "Researcher" "Research Group"
+                 "Rights Holder" "Sponsor" "Supervisor"
+                 "Work Package Leader" "Other" ) ;
+        sh:minCount 1 ;
+    ] ;
+.
+
+# === Cost ===================================================================
+edo:CostShape
+    a sh:NodeShape ;
+    sh:property [
+        sh:path dcterms:title ;
+        sh:name "Cost title" ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path edo:value ;
+        sh:name "Cost value" ;
+        sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path edo:currency ;
+        sh:name "Cost currency (ISO 4217)" ;
+        sh:maxCount 1 ;
+    ] ;
+.

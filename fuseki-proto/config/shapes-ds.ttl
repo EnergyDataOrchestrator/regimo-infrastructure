@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# shapes-ds.ttl — Apache Jena Fuseki dataset definition for /shapes
+#
+# Written for **Fuseki Full** (the `apache-jena-fuseki-*.zip` webapp), which
+# auto-scans $FUSEKI_BASE/configuration/ for data-service assemblers (one per
+# file). The complementary /projects service lives in projects-ds.ttl.
+#
+# Serves:
+#   * `/shapes` — an in-memory read side exposing the SHACL project-claim
+#     shapes (../shapes/project-claim-shapes.ttl) via SPARQL.
+#
+# SHACL validation itself is done host-side with `pyshacl` against ../shapes
+# (simplest route for the prototype); /shapes exists so the same content is
+# queryable inside Fuseki.
+#
+# NOTE: the shapes are NOT loaded here via `ja:data`/`ja:externalContent`. The
+# CLI re-seeds /shapes from ../shapes on every `fuseki-proto start` (idempotent)
+# via the same data-service upload endpoint used for /projects — this keeps the
+# read side in lock-step with edits to shapes/project-claim-shapes.ttl.
+#
+# ---------------------------------------------------------------------------
+@prefix ja:   <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix fuseki: <http://jena.apache.org/fuseki#> .
+
+# --- Shapes dataset (read-side): SHACL node shapes for project claims --------
+<#shapesDB> rdf:type ja:MemoryDataset .
+
+<#shapesService> rdf:type fuseki:Service ;
+    fuseki:name   "shapes" ;
+    fuseki:endpoint [ fuseki:operation fuseki:query ;  fuseki:name "sparql" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:query ;  fuseki:name "query" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:gsp_rw ; fuseki:name "data" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:update ; fuseki:name "update" ] ;
+    fuseki:dataset  <#shapesDB> .

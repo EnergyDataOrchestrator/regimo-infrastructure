@@ -1,0 +1,9 @@
+# Local runtime artifacts (were ignored by the edo root .gitignore while this
+# lived under projecting_spaces/; keep the same behavior inside regimo-infrastructure)
+data/
+
+# Python build/test artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+tool/build/

@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+# projects-ds.ttl — Apache Jena Fuseki dataset definition for /projects
+#
+# Written for **Fuseki Full** (the `apache-jena-fuseki-*.zip` webapp, which this
+# prototype builds from ./docker). Full auto-scans $FUSEKI_BASE/configuration/
+# for data-service assemblers — one per file — so this file declares exactly one
+# service. The complementary /shapes service lives in shapes-ds.ttl.
+#
+# Endpoints use the canonical blank-node syntax from
+# https://jena.apache.org/documentation/fuseki2/fuseki-configuration.html :
+# every endpoint is a blank node with `fuseki:operation` + `fuseki:name`.
+#
+# Serves:
+#   * `/projects` — a TDB2 dataset where the EDO internal-format instance
+#     graphs (maDMP + SMS → internal format) are loaded. Persisted under
+#     /fuseki/databases (the `fuseki-data` named volume) so it survives restarts.
+#
+# ---------------------------------------------------------------------------
+@prefix j:    <http://jena.apache.org/config#> .
+@prefix ja:   <http://jena.hpl.hp.com/2005/11/Assembler#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb2: <http://jena.apache.org/2016/tdb#> .
+@prefix fuseki: <http://jena.apache.org/fuseki#> .
+
+# --- Main dataset: EDO internal-format instances -----------------------------
+<#projectsDB> rdf:type tdb2:DatasetTDB2 ;
+    # TDB2 store, persisted under /fuseki/databases (the `fuseki-data` named
+    # volume in docker-compose.yml) so it survives container restarts.
+    # NOTE: no `tdb2:unionDefaultGraph` — union mode makes the *queried* default
+    # graph the union of named graphs and hides data uploaded to the plain
+    # default graph, so default-graph loads appeared empty. Keep plain
+    # default-graph semantics.
+    tdb2:location "/fuseki/databases/projects" .
+
+<#projectsService> rdf:type fuseki:Service ;
+    fuseki:name   "projects" ;
+    fuseki:endpoint [ fuseki:operation fuseki:query ;  fuseki:name "sparql" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:query ;  fuseki:name "query" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:update ; fuseki:name "update" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:gsp_rw ; fuseki:name "data" ] ;
+    fuseki:endpoint [ fuseki:operation fuseki:upload ; fuseki:name "upload" ] ;
+    fuseki:dataset  <#projectsDB> .

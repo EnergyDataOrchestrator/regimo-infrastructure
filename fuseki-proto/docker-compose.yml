@@ -1,0 +1,68 @@
+# ---------------------------------------------------------------------------
+# docker-compose.yml — Apache Jena Fuseki prototype for the EDO/Regimo graph
+#
+# Serves two datasets (Fuseki **full** — web UI + admin endpoints):
+#   /projects  — TDB2 store for internal-format instance graphs (maDMP + SMS
+#                → internal format). Load with `fuseki-proto load` or curl to
+#                /projects/data.
+#   /shapes    — in-memory read side exposing the SHACL claim shapes
+#                (shapes/project-claim-shapes.ttl), seeded by `fuseki-proto
+#                start` on each boot.
+#
+# Fuseki Full auto-scans $FUSEKI_BASE/configuration/ for dataset assemblers, so
+# `config/*.ttl` (mounted below) is picked up on boot — no --config needed.
+#
+# Quick start:
+#   docker compose build                    # build the image (first start)
+#   docker compose up -d                    # start Fuseki on host port 3031
+#   fuseki-proto start                      # build + up + seed /shapes (preferred)
+#   open http://localhost:3031/             # Fuseki web UI
+#
+# Validate the graph against the claim shapes (host pyshacl):
+#   pyshacl -s shapes/project-claim-shapes.ttl \
+#           -d projecting_spaces/EDO/Artefacts/07_Fragments/scripts/internal-format/measurement-02.ttl \
+#           -e shapes/project-claim-shapes.ttl
+#
+# ---------------------------------------------------------------------------
+services:
+  fuseki:
+    # Apache Jena does NOT publish a pre-built Fuseki image to any registry —
+    # the `stainless/jena-fuseki` image previously referenced here 404s on
+    # Docker Hub. We therefore build the **Full** distribution from source
+    # (see ./docker/Dockerfile, JENA_VERSION pinned to 5.1.0).
+    #   docker compose build   # (re)build the image
+    build: ./docker
+    image: edo-fuseki-proto:jena-5.1.0-full   # local tag the build is stored under
+    container_name: edo-fuseki-proto
+    ports:
+      # Single host binding: host 3031 -> container 3030 (Fuseki's internal
+      # default, unchanged). Host 3031 because the host already runs a
+      # root-launchd Jena Fuseki for the ORKG database on port 3030 (see
+      # tool/README.md / `fuseki-proto status`). The matching CLI default is
+      # `fuseki-proto --port 3031`, so the tool talks to this prototype and
+      # not to the unrelated /orkg instance.
+      - "3031:3030"
+    environment:
+      # Fuseki operator password — override with FUSEKI_ADMIN_PASSWORD in .env.
+      ADMIN_PASSWORD: "${FUSEKI_ADMIN_PASSWORD:-edo-proto}"
+      # FUSEKI_BASE is already set in the image (the distribution dir /fuseki);
+      # it is repeated here for clarity. Full auto-scans /fuseki/configuration.
+      FUSEKI_BASE: /fuseki
+      # In-memory for ephemeral /shapes; TDB2 store under /fuseki/databases
+      # persists across restarts via the named volume.
+    # Full auto-scans $FUSEKI_BASE/configuration/ (no --config needed).
+    volumes:
+      - ./config:/fuseki/configuration                                    # *.ttl dataset assemblers
+      - ./shapes:/fuseki/shapes:ro                                         # host seed source for /shapes (CLI)
+      - fuseki-data:/fuseki/databases                                      # TDB2 persistence for /projects
+      - ./data:/data:ro                                                    # seed graphs (e.g. sample-project.ttl)
+    # healthcheck — TDB2 keeps a lock; make sure stop is graceful.
+    # Fuseki Full exposes the /$/ping admin endpoint, so use it for liveness.
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "-o", "/dev/null", "http://localhost:3030/$/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  fuseki-data:
