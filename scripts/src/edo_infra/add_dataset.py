@@ -10,7 +10,8 @@ export) and keeps the file importable by RDMO:
   dataset's display name — RDMO/maDMP show the set row's text as the dataset
   name, and the maDMP exporter falls back to it for ``dataset_id``;
 * ``description``, ``format`` and ``creation_methods`` member values
-  (``set_prefix=project/dataset``, same ``set_index``) describe the dataset
+  (``set_prefix`` empty like the set value — RDMO's set_prefix is a chain of
+  set indexes, not a path — and the same ``set_index``) describe the dataset
   as exactly as possible: a curated three-column list (Author, Publication
   Date, Title), one row per paper, compiled through literature search and
   analysed with the Semantico toolchain;
@@ -204,13 +205,13 @@ def add_dataset(xml_path: Path, out: Path | None, dataset_id: str,
     new_values = [
         make_value(f"{DATASET}/id", set_prefix="", set_index=next_index,
                    set_collection=True, collection_index=0, text=dataset_id),
-        make_value(f"{DATASET}/description", set_prefix=DATASET,
+        make_value(f"{DATASET}/description", set_prefix="",
                    set_index=next_index, set_collection=True,
                    collection_index=0, text=description),
-        make_value(f"{DATASET}/format", set_prefix=DATASET,
+        make_value(f"{DATASET}/format", set_prefix="",
                    set_index=next_index, set_collection=True,
                    collection_index=0, text=format_text),
-        make_value(f"{DATASET}/creation_methods", set_prefix=DATASET,
+        make_value(f"{DATASET}/creation_methods", set_prefix="",
                    set_index=next_index, set_collection=True,
                    collection_index=0, text=creation_methods),
     ]

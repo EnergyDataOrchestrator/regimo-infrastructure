@@ -103,11 +103,13 @@ def build_value_plan(meta: dict) -> list[dict]:
 
     Each entry: attribute path, plus the value payload (text and/or option
     text to resolve against the question's options). Set membership is fixed:
-    top-level values use set_prefix='', dataset values use the
-    'project/dataset' set (set_index 0).
+    top-level values and values inside the first dataset set both use
+    set_prefix='' (RDMO's set_prefix is a chain of set indexes, not a path);
+    the entry dict keeps DATASET_PREFIX as a marker for "inside the dataset
+    set" and _values_for_project turns it into set_collection=True.
     """
     top = ""                      # set_prefix for top-level values
-    ds = f"{DATASET_PREFIX}"      # set_prefix for values inside the dataset set
+    ds = f"{DATASET_PREFIX}"      # marker for values inside the dataset set
 
     # (path, set_prefix, kind, payload, collection_index)
     # kind: "text" | "boolean" ("1"/"0") | "option" (option_text) |
@@ -326,10 +328,11 @@ def child_main(rdmo_app: Path, doi: str, doi_json: str | None,
                 set_collection=True, collection_index=0, text="", value_type="text",
             ))
         for entry in resolved:
+            in_dataset_set = entry["set_prefix"] == DATASET_PREFIX
             created.append(Value(
                 project=project, attribute=entry["attribute"],
-                set_prefix=entry["set_prefix"], set_index=0,
-                set_collection=bool(entry["set_prefix"]),
+                set_prefix="", set_index=0,
+                set_collection=in_dataset_set,
                 collection_index=entry["collection_index"],
                 text=entry["text"], option=entry["option"],
                 value_type=entry["value_type"], unit="",
