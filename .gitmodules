@@ -1,0 +1,3 @@
+[submodule "Servers/rdmo-app"]
+	path = Servers/rdmo-app
+	url = git@github.com:rdmorganiser/rdmo-app.git
