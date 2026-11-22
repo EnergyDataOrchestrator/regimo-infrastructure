@@ -1,61 +1,51 @@
-#!/usr/bin/env python3
-"""Admin script — create an RDMO project from a DataCite DOI and export it as RDMO XML.
+"""Create an RDMO project from a DataCite DOI and export it as RDMO XML.
+
+Stdlib only — this module runs inside the RDMO instance env (no click), both
+as the child phase dispatched by ``edo_infra.child_dispatch`` and for its own
+option parsing (argparse).
 
 Fetches the DataCite metadata for a DOI (default: 10.5445/IR/1000162908,
 "Semantico – Toolchain for literature classification"), maps it onto the
 questions of the RDMO standard questionary ("RDMO" catalog) that is imported
-into `infrastructure/Servers/rdmo-app`, and:
+into ``infrastructure/Servers/rdmo-app``, and:
 
-1. **Project creation** — creates `Project` (title/description from the DOI),
-   an owner `Membership` (default user `admin`), and `Value` rows for every
-   question that can be answered from the DOI metadata (single values and
-   `project/dataset` set values, incl. the `project/dataset/id` set value).
-   Options are stored as `Value.option` FKs like the interview does; yesno
-   questions store text `1`/`0` with value_type `boolean`.
-2. **XML export** — renders the project through RDMO's own
-   `RDMOXMLExport` (the same serializer/renderer as the web UI export) and
-   writes it to `infrastructure/fixtures/rdmo/`. The file can be re-imported
-   into any RDMO instance (project create -> "Import from file").
+1. **Project creation** — creates ``Project`` (title/description from the
+   DOI), an owner ``Membership`` (default user ``admin``), and ``Value`` rows
+   for every question that can be answered from the DOI metadata (single
+   values and ``project/dataset`` set values, incl. the
+   ``project/dataset/id`` set value). Options are stored as ``Value.option``
+   FKs like the interview does; yesno questions store text ``1``/``0`` with
+   value_type ``boolean``.
+2. **XML export** — renders the project through RDMO's own ``RDMOXMLExport``
+   (the same serializer/renderer as the web UI export) and writes it to
+   ``infrastructure/fixtures/rdmo/``. The file can be re-imported into any
+   RDMO instance (project create -> "Import from file").
 
 The mapping only answers questions that actually exist in the questionary and
 warns (and skips) whenever a question or option is missing. Values that would
 require guessing (exact dates, ethics/legal details, …) are left out. The
 funder (Helmholtz Metadata Collaboration, HMC) is added out-of-band via the
 FUNDER_NAME / FUNDER_ID constants — the DOI record carries no funding info.
-`project/funder/id` has no question in the standard questionary, but the
+``project/funder/id`` has no question in the standard questionary, but the
 domain attribute exists and the XML import stores it as a plain text value.
 
-Run with any Python 3 interpreter — the script re-executes itself with the
-RDMO instance env (`env/bin/python`) for the Django ORM work:
-
-    python3 infrastructure/scripts/create_project_from_doi.py [--dry-run]
-
-Network: DataCite API (api.datacite.org), unless `--doi-json` is given.
+Network: DataCite API (api.datacite.org), unless ``--doi-json`` is given.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import os
-import subprocess
 import sys
 import urllib.parse
 import urllib.request
 from pathlib import Path
 
-# ---------------------------------------------------------------------------
-# layout
-# ---------------------------------------------------------------------------
-SCRIPT_DIR = Path(__file__).resolve().parent          # infrastructure/scripts
-INFRA_DIR = SCRIPT_DIR.parent                         # infrastructure/
-DEFAULT_RDMO_APP = INFRA_DIR / "Servers" / "rdmo-app"
-DEFAULT_XML_DIR = INFRA_DIR / "fixtures" / "rdmo"
+from .paths import DEFAULT_RDMO_APP, DEFAULT_XML_DIR
 
 DEFAULT_DOI = "10.5445/IR/1000162908"
 DATACITE_API = "https://api.datacite.org/dois/"
 DEFAULT_OWNER = "admin"
-CHILD_ENV_VAR = "RDMO_PROJECT_FROM_DOI_CHILD"
 
 DATASET_PREFIX = "project/dataset"
 
@@ -66,7 +56,7 @@ FUNDER_ID = "https://helmholtz-metadaten.de/about-hmc"
 
 
 # ---------------------------------------------------------------------------
-# phase 1 (outer, stdlib only): DOI fetch + metadata extraction + value plan
+# DOI fetch + metadata extraction + value plan
 # ---------------------------------------------------------------------------
 def fetch_doi_metadata(doi: str, doi_json: str | None) -> dict:
     if doi_json:
@@ -137,7 +127,7 @@ def build_value_plan(meta: dict) -> list[dict]:
     for i, kw in enumerate(meta["keywords"]):
         add("project/research_question/keywords", top, "text", [kw], i)
     # research field is an inference from the topic (literature classification
-    # toolchain); adjust via --research-field if needed.
+    # toolchain); adjust via the web UI if needed.
     add("project/research_field/title", top, "option", ["Engineering Sciences / Computer Science"], 0)
 
     # ---- funder (out-of-band, see FUNDER_NAME / FUNDER_ID) ------------------
@@ -191,34 +181,45 @@ def describe_plan(meta: dict, plan: list[dict]) -> str:
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------------------
-# phase 2 (re-exec): hand over to the instance env python
-# ---------------------------------------------------------------------------
-def reexec_in_instance_env(rdmo_app: Path) -> int:
-    env_python = rdmo_app / "env" / "bin" / "python"
-    if not env_python.is_file():
-        print(f"ERROR: instance env python not found at {env_python}", file=sys.stderr)
-        return 1
-    env = os.environ.copy()
-    env[CHILD_ENV_VAR] = "1"
-    env["DJANGO_SETTINGS_MODULE"] = "config.settings"
-    print(f"Running ORM phase with {env_python}")
-    return subprocess.run(
-        [str(env_python), str(Path(__file__).resolve()), *sys.argv[1:]],
-        cwd=str(rdmo_app), env=env,
-    ).returncode
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(
+        prog="edo-infra create-project-from-doi",
+        description="Create an RDMO project from a DataCite DOI and export it "
+                    "as RDMO XML.")
+    parser.add_argument("--doi", default=DEFAULT_DOI, help="DOI to fetch (default: %(default)s)")
+    parser.add_argument("--doi-json", default=None,
+                        help="Read cached DataCite JSON instead of the API (offline mode).")
+    parser.add_argument("--rdmo-app", type=Path, default=DEFAULT_RDMO_APP,
+                        help="RDMO instance directory (default: %(default)s)")
+    parser.add_argument("--catalog", default=None,
+                        help="Catalog URI (default: first available catalog).")
+    parser.add_argument("--owner", default=DEFAULT_OWNER,
+                        help="Username for the owner membership (default: %(default)s)")
+    parser.add_argument("--xml-out", type=Path, default=None,
+                        help="Where to write the RDMO XML export "
+                             "(default: infrastructure/fixtures/rdmo/<doi-slug>.project.xml)")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Fetch metadata and print the value plan; no DB writes, no XML.")
+    parser.add_argument("--force", action="store_true",
+                        help="Create the project even if one with the same title exists.")
+    args = parser.parse_args(argv)
+
+    if args.xml_out is None:
+        slug = args.doi.lower().replace("/", "-")
+        args.xml_out = DEFAULT_XML_DIR / f"doi-{slug}.project.xml"
+
+    # we are already in the instance env child (dispatched by child_dispatch)
+    from .instance import instance_child
+
+    rdmo_app = args.rdmo_app.resolve()
+    instance_child(rdmo_app)
+    return child_main(rdmo_app, args.doi, args.doi_json, args.catalog,
+                      args.owner, args.xml_out, args.dry_run, args.force)
 
 
-# ---------------------------------------------------------------------------
-# phase 3 (child, instance env): Django ORM work + XML export
-# ---------------------------------------------------------------------------
-def child_main(rdmo_app: Path, args: argparse.Namespace) -> int:
-    sys.path.insert(0, str(rdmo_app))
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-
-    import django
-    django.setup()
-
+def child_main(rdmo_app: Path, doi: str, doi_json: str | None,
+               catalog_uri: str | None, owner_name: str, xml_out: Path,
+               dry_run: bool, force: bool) -> int:
     from django.contrib.auth import get_user_model
     from django.db import transaction
 
@@ -229,11 +230,11 @@ def child_main(rdmo_app: Path, args: argparse.Namespace) -> int:
     from rdmo.questions.models import Catalog, Question
 
     # -- 1. DOI metadata ------------------------------------------------------
-    payload = fetch_doi_metadata(args.doi, args.doi_json)
+    payload = fetch_doi_metadata(doi, doi_json)
     meta = extract_metadata(payload)
     plan = build_value_plan(meta)
 
-    if args.dry_run:
+    if dry_run:
         print(describe_plan(meta, plan))
         print("\n(dry-run) no project created, no XML written")
         return 0
@@ -241,10 +242,10 @@ def child_main(rdmo_app: Path, args: argparse.Namespace) -> int:
     print(describe_plan(meta, plan))
 
     # -- 2. resolve catalog, questions, options -------------------------------
-    catalog = Catalog.objects.get(uri=args.catalog) if args.catalog else Catalog.objects.first()
+    catalog = Catalog.objects.get(uri=catalog_uri) if catalog_uri else Catalog.objects.first()
     if catalog is None:
-        print("ERROR: no catalog found (import a questionary first, see infrastructure/README.md)",
-              file=sys.stderr)
+        print("ERROR: no catalog found (import a questionary first, see "
+              "infrastructure/README.md)", file=sys.stderr)
         return 1
     print(f"Using catalog: {catalog.uri} ({catalog.title})")
 
@@ -291,8 +292,8 @@ def child_main(rdmo_app: Path, args: argparse.Namespace) -> int:
             option_text = entry["payload"][0]
             option = option_for(question, option_text)
             if option is None:
-                print(f"WARN: option '{option_text}' not found for '{entry['path']}' — skipped",
-                      file=sys.stderr)
+                print(f"WARN: option '{option_text}' not found for "
+                      f"'{entry['path']}' — skipped", file=sys.stderr)
                 continue
             if entry["kind"] == "option+text":
                 text = entry["payload"][1]
@@ -300,14 +301,14 @@ def child_main(rdmo_app: Path, args: argparse.Namespace) -> int:
                          "text": text, "option": option})
 
     # -- 3. create the project ------------------------------------------------
-    if Project.objects.filter(title=meta["title"]).exists() and not args.force:
+    if Project.objects.filter(title=meta["title"]).exists() and not force:
         print(f"ERROR: a project titled '{meta['title']}' already exists "
               f"(use --force to create a duplicate)", file=sys.stderr)
         return 1
 
-    owner = get_user_model().objects.filter(username=args.owner).first()
+    owner = get_user_model().objects.filter(username=owner_name).first()
     if owner is None:
-        print(f"ERROR: user '{args.owner}' not found", file=sys.stderr)
+        print(f"ERROR: user '{owner_name}' not found", file=sys.stderr)
         return 1
 
     with transaction.atomic():
@@ -338,51 +339,14 @@ def child_main(rdmo_app: Path, args: argparse.Namespace) -> int:
             value.save()
 
     print(f"OK: created project #{project.pk} '{project.title}' "
-          f"with {len(created)} values (owner: {args.owner})")
+          f"with {len(created)} values (owner: {owner_name})")
 
     # -- 4. export XML via RDMO's own export plugin ---------------------------
     exporter = RDMOXMLExport("xml", "RDMO XML", "rdmo.projects.exports.RDMOXMLExport")
     exporter.project = project
     xml_bytes = exporter.render().content
-    args.xml_out.parent.mkdir(parents=True, exist_ok=True)
-    args.xml_out.write_bytes(xml_bytes)
-    print(f"OK: wrote {args.xml_out} ({args.xml_out.stat().st_size} bytes)")
+    xml_out.parent.mkdir(parents=True, exist_ok=True)
+    xml_out.write_bytes(xml_bytes)
+    print(f"OK: wrote {xml_out} ({xml_out.stat().st_size} bytes)")
 
     return 0
-
-
-# ---------------------------------------------------------------------------
-# entry point
-# ---------------------------------------------------------------------------
-def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Create an RDMO project from a DataCite DOI and export it as RDMO XML.")
-    parser.add_argument("--doi", default=DEFAULT_DOI, help=f"DOI to fetch (default: %(default)s)")
-    parser.add_argument("--doi-json", default=None,
-                        help="Read cached DataCite JSON instead of the API (offline mode).")
-    parser.add_argument("--rdmo-app", type=Path, default=DEFAULT_RDMO_APP,
-                        help="RDMO instance directory (default: %(default)s)")
-    parser.add_argument("--catalog", default=None,
-                        help="Catalog URI (default: first available catalog).")
-    parser.add_argument("--owner", default=DEFAULT_OWNER,
-                        help=f"Username for the owner membership (default: %(default)s)")
-    parser.add_argument("--xml-out", type=Path, default=None,
-                        help="Where to write the RDMO XML export "
-                             "(default: infrastructure/fixtures/rdmo/<doi-slug>.project.xml)")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Fetch metadata and print the value plan; no DB writes, no XML.")
-    parser.add_argument("--force", action="store_true",
-                        help="Create the project even if one with the same title exists.")
-    args = parser.parse_args()
-
-    if args.xml_out is None:
-        slug = args.doi.lower().replace("/", "-")
-        args.xml_out = DEFAULT_XML_DIR / f"doi-{slug}.project.xml"
-
-    if os.environ.get(CHILD_ENV_VAR) != "1":
-        return reexec_in_instance_env(args.rdmo_app)
-    return child_main(args.rdmo_app, args)
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

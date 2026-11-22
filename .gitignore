@@ -1,1 +1,3 @@
 fuseki-proto/tool/src/fuseki_proto_tool.egg-info/
+scripts/.venv/
+scripts/src/edo_infra.egg-info/

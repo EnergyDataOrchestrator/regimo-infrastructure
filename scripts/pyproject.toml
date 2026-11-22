@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edo-infra"
+version = "0.1.0"
+description = "Maintenance CLI for the EDO infrastructure (local RDMO instance admin, fixture XMLs, plugin installation)."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.1",
+]
+license = { text = "MIT" }
+
+[project.scripts]
+edo-infra = "edo_infra.cli:cli"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.uv]
+package = true

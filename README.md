@@ -20,7 +20,7 @@ While other repositories house the system logic (referencing **KITopen-ID: 10001
 * `docker/`: Standardised Dockerfiles and `docker-compose.yml` blueprints for local development and laboratory deployment.
 * `k8s/`: (Optional) Kubernetes Helm charts or manifests for scaling the orchestrator in cloud environments.
 * `config/`: Centralised configuration files for Kafka brokers and the Regimo message schema registry.
-* `scripts/`: Maintenance scripts for resetting the bus state, performing bulk data migrations or installing RDMO plugins (`install_madmp_exporter.py`, `create_project_from_doi.py`).
+* `scripts/`: The `edo-infra` maintenance CLI (Python package, src layout) for the local RDMO instance — installing RDMO plugins, creating projects from DOIs and resetting the projects database (see below).
 * `fixtures/`: Importable reference artifacts, e.g. RDMO project XML exports (see below).
 
 ## Graph database (`fuseki-proto`)
@@ -66,13 +66,14 @@ registers the plugin, wires the `GET /api/v1/madmp/projects/{pk}/` API route
 and verifies the result; see that package's README for troubleshooting):
 
 ```bash
-python3 scripts/install_madmp_exporter.py          # add --create-token admin for machine access
+uv run --project scripts edo-infra install-exporter   # add --create-token admin for machine access
 ```
 
 Note: `uv pip install` needs the exporter's `pyyaml` dep present in the env;
-the script re-runs the editable install automatically whenever the probe fails.
+the command re-runs the editable install automatically whenever the probe
+fails.
 
-### RDMO projects from DOIs (`scripts/create_project_from_doi.py`)
+### RDMO projects from DOIs (`edo-infra create-project-from-doi`)
 Fetches DataCite metadata for a DOI, maps it onto the RDMO standard questionary
 ("RDMO" catalog; import the [rdmo-catalog](https://github.com/rdmorganiser/rdmo-catalog)
 first: `domain/attributes.xml`, `conditions/conditions.xml`, `options/optionsets.xml`,
@@ -80,8 +81,8 @@ first: `domain/attributes.xml`, `conditions/conditions.xml`, `options/optionsets
 instance (owner membership for `admin`) and exports it via RDMO's own XML exporter:
 
 ```bash
-python3 scripts/create_project_from_doi.py             # default DOI: 10.5445/IR/1000162908
-python3 scripts/create_project_from_doi.py --dry-run   # show the value plan only
+uv run --project scripts edo-infra create-project-from-doi             # default DOI: 10.5445/IR/1000162908
+uv run --project scripts edo-infra create-project-from-doi --dry-run   # show the value plan only
 ```
 
 The export lands in `fixtures/rdmo/` (e.g. `doi-10.5445-ir-1000162908.project.xml`,
@@ -92,7 +93,15 @@ metadata (exact dates, ethics/legal details) are left empty; the funder
 (Helmholtz Metadata Collaboration, `https://helmholtz-metadaten.de/about-hmc`)
 is added out-of-band. Inferences are limited to research field, coordination
 contact (first creator) and personal-data questions and are marked in the
-script docstring.
+command's docstring.
+
+### Reset the projects database (`edo-infra reset-projects`)
+
+```bash
+uv run --project scripts edo-infra reset-projects --list     # just show
+uv run --project scripts edo-infra reset-projects --keep 5   # keep project 5
+uv run --project scripts edo-infra reset-projects --yes      # confirm, wipe
+```
 
 ### Rebuild from scratch (e.g. after a fresh clone)
 
