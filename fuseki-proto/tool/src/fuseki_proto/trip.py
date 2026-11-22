@@ -49,7 +49,9 @@ from . import docker as D
 # ---------------------------------------------------------------------------
 TOOL_DIR = D.TOOL_DIR                      # .../fuseki-proto/tool
 PROTO_DIR = TOOL_DIR.parent                # .../fuseki-proto
-SCRIPTS_DIR = PROTO_DIR.parent             # .../scripts
+# fuseki-proto lives in infrastructure/; the research scripts (dmp/sms inputs)
+# stayed in projecting_spaces — two levels up is the edo root.
+SCRIPTS_DIR = PROTO_DIR.parent.parent / "projecting_spaces" / "EDO" / "Artefacts" / "07_Fragments" / "scripts"
 DMP_DEFAULT = SCRIPTS_DIR / "dmp" / "measurement_02" / "Measurement_02-13.json"
 SMS_DIR = SCRIPTS_DIR / "sms"
 DEVICE_DEFAULT = SMS_DIR / "device-67.json"

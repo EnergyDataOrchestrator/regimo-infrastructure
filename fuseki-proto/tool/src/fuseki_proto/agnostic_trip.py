@@ -82,7 +82,9 @@ from .trip import (DMP_DEFAULT, DEVICE_DEFAULT, SHAPES_FILE, SPARQL_PREFIXES,
 # ---------------------------------------------------------------------------
 TOOL_DIR = D.TOOL_DIR                      # .../fuseki-proto/tool
 PROTO_DIR = TOOL_DIR.parent                # .../fuseki-proto
-SCRIPTS_DIR = PROTO_DIR.parent             # .../scripts
+# fuseki-proto lives in infrastructure/; the research scripts (dmp/sms/trafos/
+# linkml inputs) stayed in projecting_spaces — two levels up is the edo root.
+SCRIPTS_DIR = PROTO_DIR.parent.parent / "projecting_spaces" / "EDO" / "Artefacts" / "07_Fragments" / "scripts"
 TRAFO_DIR = SCRIPTS_DIR / "trafos"
 LINKML_DIR = SCRIPTS_DIR / "linkml"
 DMP_MAP_DEFAULT = TRAFO_DIR / "dmp-to-internal.linkml-map.yaml"
