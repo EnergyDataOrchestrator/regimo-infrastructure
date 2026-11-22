@@ -66,6 +66,10 @@ right-most columns:
 | # | Source (maDMP) | Target (internal) | Pattern (Category) | 1:1? | Missing → |
 |---|---|---|---|---|---|
 | P1 | `project/title` | Project `dcterms:title` | `direct-property-mapping` (Property-Level) | 1:1 | default (maDMP title template) |
+>
+> **F3:** `dcterms:title` wird aus `project/title` gespeist **nicht** aus dem
+> DMP-Dokumententitel (`dmp/title`). Die Spezifikation §4 Example ist
+> entsprechend harmonisiert (2026-11-19).
 | P2 | `project/description` | Project `dcterms:description` | `direct-property-mapping` (Property-Level) | 1:1 | null (optional) |
 | P3 | `language` | Project `dcterms:language` | `direct-property-mapping` (Property-Level) | 1:1 (CV) | omit → fall back to `eng` |
 | P4 | `project/start`, `project/end` | Project `time:hasInterval` → **Interval** node (`begin`/`end`) | `nesting` (Structural) + `direct-property-mapping` per date | cast (→date) | null (interval optional) |
@@ -75,8 +79,20 @@ right-most columns:
 | P8 | `contributor.role_template` (free text) | Contribution `dcterms:type` (RDA maDMP contributor-type CV) | `literal-transformation` (free text → CV lookup, Property-Level) | translate | default `Other` (unmapped template) |
 | P9 | `cost[]` | Project `edo:hasCost` → **Cost** nodes | `nesting` (Structural) | n/a | omit |
 
-> **Lost (Project):** funder (`dmp/project/funder`), grant id, and the RDMO
-> `role_template` free text itself are not carried into the v0.2 Project class.
+> **Lost (Project):** the RDMO `role_template` free text itself is not carried
+> into the v0.2 Project class (only its CV translation, P8). Since the
+> CF2-004 v0.2 follow-up the funder/grant information **is** carried
+> (P43–P47) — schema and map extended accordingly.
+
+### Funding / Funder class (from `dmp/funding`)
+
+| # | Source (maDMP) | Target (internal) | Pattern (Category) | 1:1? | Missing → |
+|---|---|---|---|---|---|
+| P43 | `funding[]` | Project `edo:hasFunding` → **Funding** nodes | `nesting` (Structural) | n/a | omit (funding optional; not yet exported by the plugin) |
+| P44 | `funding/funder/name` | Funding `edo:funder` → **Funder** node `foaf:name` | `nesting` (Structural) + `direct-property-mapping` per field | 1:1 | omit (funder without name) |
+| P45 | `funding/funder/funder_id` | Funder `edo:identifier` → **Identifier** node (`fundref`/`url`/`other` CV) | `nesting` (Structural) + `direct-property-mapping` (CV) | 1:1 (CV type) | omit |
+| P46 | `funding/grantId[]` | Funding `edo:grantId` → **Identifier** nodes | `nesting` (Structural) | n/a | omit |
+| P47 | `funding/funding_status` | Funding `edo:fundingStatus` (planned / applied / granted / rejected) | `direct-property-mapping` (Property-Level) | 1:1 | omit (optional) |
 
 ### Person class (contact / contributor agent)
 
@@ -117,12 +133,15 @@ right-most columns:
 | P27 | `preservation_statement` (joined `value_list`) | Dataset `edo:preservationStatement` | `direct-property-mapping` (join, Property-Level) | join (multi-value → string) | omit |
 | P28 | `security_and_privacy` | (*no target in v0.2 — carried as free text / later*) | — | n/a (lost) | n/a |
 | P29 | `distribution` (during + after) | Dataset `dcat:distribution` → **Distribution** nodes × 2 | `nesting` (Structural) | n/a (structural) | default (two distributions always emitted) |
-| P30 | dataset↔sensor (today only `PIDINST:` free text in `description`) | Dataset `prov:wasGeneratedBy` → **Sensor** | `existence-conditional` (guard on present PID) / future — gap #18 | derive (extract PID) | omit (today lost; gap #18) |
+| P30 | dataset↔sensor (today only `PIDINST:` free text in `description`) | Dataset `prov:wasGeneratedBy` → **Sensor** | `existence-conditional` (guard on present PID) / future — gap #18 | derive (extract PID) | **provisioned on EDO level / manual (CF2-005)** — machine-readable PID (gap #18) would make it map-able |
 
 > **Lost (Dataset):** `security_and_privacy` has no v0.2 target (P28, carried as
 > free text / future spec revision); the machine-readable dataset↔sensor link is
-> not yet captured — today only a `PIDINST:` free-text fragment in `description`
-> survives (P30, gap #18).
+> not yet transformed from the source documents — today only a `PIDINST:`
+> free-text fragment in `description` survives (P30, gap #18). The link is
+> **provisioned on the EDO level / manually** per the CF2-005 decision (reference
+> `Dataset prov:wasGeneratedBy Sensor`, join key = sensor PID; see
+> `../internal-format/linkage-strategy.md` + `linked-instance.example.json`).
 
 ### Distribution class
 
@@ -131,17 +150,18 @@ right-most columns:
 | P31 | during/after `title` (fixed constants) | Distribution `dcterms:title` | `default-injection` (fixed value, Structural) | fixed | always present |
 | P32 | during `access_url` | Distribution `dcat:accessURL` | `direct-property-mapping` (Property-Level) | 1:1 (URI) | null (optional) |
 | P33 | `data_access` (during: option CV; after: **derived** open⇔during-open else closed) | Distribution `edo:dataAccess` | `direct-property-mapping` (during) + `literal-transformation` (after: value derivation, Property-Level) | 1:1 (during) / derive (after) | default (`closed` when derivation ambiguous) |
-| P34 | `format[]` | Distribution `dcat:format[]` | `direct-property-mapping` (CV/IANA translation of free text later — CF2-003) | translate (CV → IANA, later) | omit |
+| P34 | `format[]` | Distribution `dcat:format[]` (Media-Type-**IRI**, §3.3/F5) | `direct-property-mapping` + `literal-transformation` (Freitext → IANA-Media-Type-IRI `http://purl.org/NET/mediatypes/<type>`; substring-basiert wie F10/CF2-004) | translate (CV → IANA-IRI) | omit |
 | P35 | after `certified_with` | Distribution `edo:certifiedWith[]` | `direct-property-mapping` (CV, Property-Level) | 1:1 (CV) | omit (none certified) |
 | P36 | after `pid_system` | Distribution `edo:pidSystem[]` | `direct-property-mapping` (CV, Property-Level) | 1:1 (CV) | omit |
 | P37 | after `host` (repository title) | Distribution `edo:hostedBy` → **Host** node | `nesting` + `direct-property-mapping` (title) | 1:1 | omit (host optional) |
 | P38 | after `license_ref` (option CV) | Distribution `edo:license` → **License** node | `nesting` + `direct-property-mapping` (value-conditional via license options) | translate (option CV) | omit (not licensed) |
 | P39 | after `license_start_date` | License `time:hasBeginning` | `literal-transformation` (date, Property-Level) | cast (→date) | omit |
 
-> **Lost (Distribution):** exact `format` free-text labels are dropped where the
-> IANA media-type translation is not yet implemented (P34); the internally-vs-
-> externally-accessible distinction carried by the during/after `data_access`
-> derivation (P33) is a simplification of the RDMO source options.
+> **Lost (Distribution):** the exact `format` free-text *label* (e.g. „CSV“) is
+> dropped — P34 maps it to the Media-Type-**IRI** only (substring-based, F10),
+> not to both; the internally-vs- externally-accessible distinction carried by
+> the during/after `data_access` derivation (P33) is a simplification of the
+> RDMO source options.
 
 ### Host class
 
@@ -210,13 +230,15 @@ on the EDO level:
 | N3 | sampling interval "PT15M" | SamplingPlan `edo:samplingInterval` | `default-injection` (manual) — `existence-conditional` once routed via RDMO/ELN (gap #16) | n/a (human) | manual — `existence-conditional` later (gap #16) |
 | N4 | `sampling_interval_source` (manual / ELN / catalog) | SamplingPlan `edo:samplingIntervalSource` | `default-injection` (provenance marker, interim) | fixed | `manual` (default marker) |
 | N5 | sampling media (SMS-CV URI reuse) | SamplingPlan `edo:samplingMedia` | `direct-property-mapping` (reuse SMS-CV, derived alongside #16) | 1:1 (URI) | manual |
-| N6 | dataset↔sensor link | Dataset `prov:wasGeneratedBy` → Sensor / MeasurementSeries | future `reification` or direct link — gap #18 (today free text) | n/a | `existence-conditional` later (gap #18) |
+| N6 | dataset↔sensor link | Dataset `prov:wasGeneratedBy` → Sensor / MeasurementSeries | future `reification` or direct link — gap #18 (today free text); decision (CF2-005): **reference** unless-listed | n/a | `existence-conditional` later (gap #18); provisioned on EDO level / manual today (CF2-005) |
 
 > **Lost / manual (R4):** these target classes have no machine-readable source, so
 > the values are provisioned **manually on the EDO level** (`default-injection`)
 > rather than transformed. The dataset↔sensor link (N6) is not representable
 > today (gap #18) and would move from a manual link to a concrete pattern once a
-> catalog/ELN source exists.
+> catalog/ELN source exists. Linkage **decision** made in CF2-005: reference
+> (`Dataset prov:wasGeneratedBy Sensor`), join key = sensor PID; see
+> `../internal-format/linkage-strategy.md` + `linked-instance.example.json`.
 
 ## Notes
 

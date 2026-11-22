@@ -40,6 +40,7 @@ classes:
       - has_contact
       - has_contribution
       - has_cost
+      - has_funding
       - has_dataset
 
   Person:
@@ -66,6 +67,21 @@ classes:
       - title
       - value
       - currency
+
+  Funder:
+    description: Funding organisation (e.g. Helmholtz Metadata Collaboration); fed by maDMP `dmp/funding/funder`.
+    class_uri: edo:Funder
+    slots:
+      - name
+      - identifier
+
+  Funding:
+    description: Funding relation of the project (funder + optional grant identifiers + status); fed by maDMP `dmp/funding`.
+    class_uri: edo:Funding
+    slots:
+      - funder
+      - grant_id
+      - funding_status
 
   Identifier:
     description: Typed identifier (dmp_id, dataset_id, sensor PID).
@@ -260,6 +276,23 @@ slots:
     range: string
     description: ISO 4217 currency code.
 
+  has_funding:
+    mappings:
+      - edo:hasFunding
+    range: Funding
+    multivalued: true
+    inlined_as_list: true
+  funder:
+    range: Funder
+    inlined: true
+  grant_id:
+    range: Identifier
+    multivalued: true
+    inlined_as_list: true
+  funding_status:
+    range: string
+    description: maDMP funding-status CV (planned / applied / granted / rejected).
+
   has_dataset:
     mappings:
       - dcat:dataset
@@ -413,6 +446,7 @@ enums:
       handle:
       ark:
       purl:
+      fundref:
       url:
       urn:
       other:

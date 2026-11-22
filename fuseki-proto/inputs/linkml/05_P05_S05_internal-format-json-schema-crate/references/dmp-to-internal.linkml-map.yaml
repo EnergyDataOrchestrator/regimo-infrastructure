@@ -2,7 +2,7 @@ id: https://w3id.org/edo/trafos/dmp-to-internal
 title: maDMP → EDO internal format (linkml-map transformation specification, CF2-004)
 description: >
   Compiles the DMP half of the transformation catalogue
-  `scripts/trafos/patterns.md` (rules P1–P42) into a linkml-map
+  `scripts/trafos/patterns.md` (rules P1–P47) into a linkml-map
   TransformationSpecification (card CF2-004). Executed by
   `fuseki-proto agnostic-trip` (tool/src/fuseki_proto/agnostic_trip.py) as the
   map-driven twin of the hand-coded `trip.py` transform (CF2-003): the LinkML
@@ -90,17 +90,17 @@ class_derivations:
     description: "Root derivation: maDMP `dmp` (+ `dmp/project`) -> edo:Project. NB: the project title/description come from dmp/project, not from the maDMP-level `title` (catalogue decision, finding F3 of CF2-003)."
     slot_derivations:
       title:
-        description: "P1: project/title -> dcterms:title (NOT the maDMP-level dmp/title)."
-        expr: project[0].title
+        description: "P1: project/title -> dcterms:title (NOT the maDMP-level dmp/title — finding F3). Partial maDMPs without a dmp/project array (other RDMO catalogs) fall back to the maDMP-level title so the Project node stays addressable."
+        expr: project and project[0].title or title
       description:
-        description: "P2: project/description -> dcterms:description (1:1)."
-        expr: project[0].description
+        description: "P2: project/description -> dcterms:description (1:1); absent project -> omitted."
+        expr: project and project[0].description or None
       language:
         description: "P3: dmp/language, absent in this export -> default 'eng' (omit → default)."
         expr: language or "eng"
       interval:
-        description: "P4: project/start,end -> time:hasInterval Interval node (dates cast to xsd:date by the serialiser)."
-        expr: "{'interval_begin': project[0].start, 'interval_end': project[0].end}"
+        description: "P4: project/start,end -> time:hasInterval Interval node (dates cast to xsd:date by the serialiser); absent project -> omitted."
+        expr: "project and {'interval_begin': project[0].start, 'interval_end': project[0].end} or None"
       dmp_id:
         description: "P5/P16/P17: dmp_id -> edo:dmpId Identifier node (see Identifier derivation)."
         populated_from: dmp_id
@@ -113,6 +113,9 @@ class_derivations:
       has_cost:
         description: "P9: dmp/cost -> edo:hasCost Cost nodes; absent in this export -> omitted."
         populated_from: cost
+      has_funding:
+        description: "P43: dmp/funding -> edo:hasFunding Funding nodes (see Funding derivation). Not yet exported by the plugin -> absent in this export -> omitted."
+        populated_from: funding
       has_dataset:
         description: "P18–P39: dmp/dataset -> dcat:dataset Dataset nodes (see Dataset derivation)."
         populated_from: dataset
@@ -222,6 +225,31 @@ class_derivations:
         populated_from: license
       # license_start_date stays on the License node (P39/P42) — not repeated
       # at distribution level (matches the internal-format License class).
+
+  Funding:
+    populated_from: Funding
+    description: "maDMP funding entry -> edo:Funding (funder + grant ids + status). Not yet exported by the plugin; the derivation is ready for when the exporter ships `dmp/funding`."
+    slot_derivations:
+      funder:
+        description: "P44: funding/funder -> edo:Funding/funder Funder node (see Funder derivation)."
+        populated_from: funder
+      grant_id:
+        description: "P46: funding/grantId array -> edo:Funding/grantId Identifier nodes (CV pass-through via IdentifierTypeEnum)."
+        populated_from: grant_id
+      funding_status:
+        description: "P47: funding_status -> edo:fundingStatus (1:1; maDMP status CV planned/applied/granted/rejected as string); absent -> omitted."
+        populated_from: funding_status
+
+  Funder:
+    populated_from: Funder
+    description: "maDMP funding organisation -> edo:Funder."
+    slot_derivations:
+      name:
+        description: "P44: funder/name -> foaf:name (1:1)."
+        populated_from: name
+      identifier:
+        description: "P45: funder/funder_id -> edo:identifier Identifier node (CV fundref/url/other via IdentifierTypeEnum)."
+        populated_from: funder_id
 
   Host:
     populated_from: Host

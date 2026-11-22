@@ -1,74 +1,80 @@
 # 05_P05_S05 — LinkML-Diagramme (CF1-007)
 
 Status: ✅
-Datum: 2026-11-19
+Datum: 2026-11-19 (2026-11-22: Funding/Funder ergänzt — maDMP 12 Klassen, internes Format 16 Klassen)
 
 Mermaid-ER-Diagramme der drei LinkML-Schemas (Klassen mit Slots/Ranges, Beziehungen mit Kardinalitäten). Die `.mmd`-Dateien liegen daneben; die Diagramme unten rendern direkt in Obsidian.
 
-## DMP-Schema (`05_P05_S05_madmp-schema.yaml`, 10 Klassen)
+## DMP-Schema (`05_P05_S05_madmp-schema.yaml`, 12 Klassen)
 
 ```mermaid
 erDiagram
 Contact {
-    string name
-    uriorcurie mbox
+    string name  
+    uriorcurie mbox  
 }
 Contributor {
-    string name
-    uriorcurie mbox
-    string role
-    string set
+    string name  
+    uriorcurie mbox  
+    string role  
+    string set  
 }
 Cost {
-    string currency
-    string title
-    decimal value
+    string currency  
+    string title  
+    decimal value  
 }
 DMP {
-    date created
-    LanguageEnum language
-    date modified
-    string title
+    date created  
+    LanguageEnum language  
+    date modified  
+    string title  
 }
 Dataset {
-    string description
-    stringList data_quality_assurance
-    date issued
-    stringList keyword
-    LanguageEnum language
-    boolean personal_data
-    string preservation_statement
-    boolean sensitive_data
-    string title
-    string type
+    string description  
+    stringList data_quality_assurance  
+    date issued  
+    stringList keyword  
+    LanguageEnum language  
+    boolean personal_data  
+    string preservation_statement  
+    boolean sensitive_data  
+    string title  
+    string type  
 }
 Distribution {
-    uriorcurie access_url
-    CertificationEnumList certified_with
-    DataAccessEnum data_access
-    stringList format
-    uriorcurie license_ref
-    date license_start_date
-    IdentifierTypeEnumList pid_system
-    string title
+    uriorcurie access_url  
+    CertificationEnumList certified_with  
+    DataAccessEnum data_access  
+    stringList format  
+    uriorcurie license_ref  
+    date license_start_date  
+    IdentifierTypeEnumList pid_system  
+    string title  
+}
+Funder {
+    string name  
+}
+Funding {
+    string funding_status  
 }
 Host {
-    string title
-    uriorcurie url
+    string title  
+    uriorcurie url  
 }
 Identifier {
-    string identifier
-    IdentifierTypeEnum type
+    string identifier  
+    IdentifierTypeEnum type  
 }
 Project {
-    string description
-    date end
-    date start
-    string title
+    string description  
+    date end  
+    date start  
+    string title  
 }
 SecurityAndPrivacy {
-    string description
-    string title
+    string description  
+    string title  
 }
 
 Contact ||--|o Identifier : "contact_id"
@@ -79,10 +85,16 @@ DMP ||--|| Identifier : "dmp_id"
 DMP ||--}o Contributor : "contributor"
 DMP ||--}o Cost : "cost"
 DMP ||--}o Dataset : "dataset"
+DMP ||--}o Funding : "funding"
 Dataset ||--|o Identifier : "dataset_id"
 Dataset ||--}o Distribution : "distribution"
 Dataset ||--}o SecurityAndPrivacy : "security_and_privacy"
 Distribution ||--|o Host : "host"
+Funder ||--|o Identifier : "funder_id"
+Funding ||--|o Funder : "funder"
+Funding ||--}o Identifier : "grant_id"
+
+
 ```
 
 ## SMS-Schema (`05_P05_S05_sms-schema.yaml`, 2 Klassen)
@@ -139,87 +151,93 @@ DeviceProperty {
 Device ||--}o DeviceProperty : "device_properties"
 ```
 
-## Internes-Format-Schema (`05_P05_S05_internal-format-schema.yaml`, 14 Klassen)
+## Internes-Format-Schema (`05_P05_S05_internal-format-schema.yaml`, 16 Klassen)
 
 ```mermaid
 erDiagram
 Contribution {
-    ContributorTypeEnum role
+    ContributorTypeEnum role  
 }
 Cost {
-    string currency
-    string title
-    decimal value
+    string currency  
+    string title  
+    decimal value  
 }
 Dataset {
-    string description
-    string dataset_type
-    date issued
-    stringList keyword
-    boolean personal_data
-    string preservation_statement
-    stringList quality_assurance
-    boolean sensitive_data
-    string title
+    string description  
+    string dataset_type  
+    date issued  
+    stringList keyword  
+    boolean personal_data  
+    string preservation_statement  
+    stringList quality_assurance  
+    boolean sensitive_data  
+    string title  
 }
 Distribution {
-    uriorcurie access_url
-    CertificationEnumList certified_with
-    DataAccessEnum data_access
-    stringList format
-    date license_start_date
-    IdentifierTypeEnumList pid_system
-    string title
+    uriorcurie access_url  
+    CertificationEnumList certified_with  
+    DataAccessEnum data_access  
+    uriorcurieList format  
+    date license_start_date  
+    IdentifierTypeEnumList pid_system  
+    string title  
+}
+Funder {
+    string name  
+}
+Funding {
+    string funding_status  
 }
 Host {
-    string title
-    uriorcurie url
+    string title  
+    uriorcurie url  
 }
 Identifier {
-    IdentifierTypeEnum identifier_type
-    string identifier_value
+    IdentifierTypeEnum identifier_type  
+    string identifier_value  
 }
 Interval {
-    date interval_begin
-    date interval_end
+    date interval_begin  
+    date interval_end  
 }
 License {
-    date license_start_date
-    uriorcurie license_uri
+    date license_start_date  
+    uriorcurie license_uri  
 }
 MeasuredProperty {
-    string accuracy
-    uriorcurie aggregation_type
-    uriorcurie compartment
-    uriorcurie measured_quantity
-    string measured_quantity_name
-    double measuring_range_max
-    double measuring_range_min
-    double resolution
-    uriorcurie sampling_media
-    uriorcurie unit
+    string accuracy  
+    uriorcurie aggregation_type  
+    uriorcurie compartment  
+    uriorcurie measured_quantity  
+    string measured_quantity_name  
+    decimal measuring_range_max  
+    decimal measuring_range_min  
+    decimal resolution  
+    uriorcurie sampling_media  
+    uriorcurie unit  
 }
 MeasurementSeries {
-    string title
+    string title  
 }
 Person {
-    string name
-    uriorcurie mbox
+    string name  
+    uriorcurie mbox  
 }
 Project {
-    string description
-    string language
-    string title
+    string description  
+    string language  
+    string title  
 }
 SamplingPlan {
-    string sampling_interval
-    uriorcurie sampling_media
+    string sampling_interval  
+    uriorcurie sampling_media  
 }
 Sensor {
-    string manufacturer
-    string model
-    uriorcurie sensor_type
-    string title
+    string manufacturer  
+    string model  
+    uriorcurie sensor_type  
+    string title  
 }
 
 Contribution ||--|o Person : "agent"
@@ -230,6 +248,9 @@ Dataset ||--}o Distribution : "has_distribution"
 Dataset ||--}o MeasuredProperty : "observes"
 Distribution ||--|o Host : "hosted_by"
 Distribution ||--|o License : "license"
+Funder ||--|o Identifier : "identifier"
+Funding ||--|o Funder : "funder"
+Funding ||--}o Identifier : "grant_id"
 MeasurementSeries ||--|o Interval : "interval"
 MeasurementSeries ||--|o SamplingPlan : "has_sampling_plan"
 MeasurementSeries ||--|o Sensor : "was_generated_by"
@@ -240,19 +261,25 @@ Project ||--|o Person : "has_contact"
 Project ||--}o Contribution : "has_contribution"
 Project ||--}o Cost : "has_cost"
 Project ||--}o Dataset : "has_dataset"
+Project ||--}o Funding : "has_funding"
 Sensor ||--|o Identifier : "identifier"
 Sensor ||--}o MeasuredProperty : "observes"
+
+
 ```
 
 ## Regenerierung
 
 ```sh
-cd projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml
-PY=/Users/ot2661/Documents/01_dev/edo/.venv/bin/python3
+cd infrastructure/fuseki-proto/inputs/linkml
 for s in madmp sms internal-format; do
-  PYTHONPATH=/tmp/linkmllib $PY -m linkml.generators.erdiagramgen "05_P05_S05_${s}-schema.yaml" > "05_P05_S05_${s}-erd.mmd"
+  <linkml-1.11.1-venv>/bin/gen-erdiagram "05_P05_S05_${s}-schema.yaml" > "05_P05_S05_${s}-erd.mmd"
 done
 ```
+
+(2026-11-22: mit linkml 1.11.1 `gen-erdiagram` regeneriert — `gen-erdiagram` ist der
+CLI-Wrapper von `linkml.generators.erdiagramgen`; die 1.11.1-Pinning gilt wie beim
+JSON-Schema-Crate, siehe `05_P05_S05_internal-format-json-schema-crate/environment/`.)
 
 Pro-Klassen-Diagramme (eine Mermaid-Datei je Klasse):
 

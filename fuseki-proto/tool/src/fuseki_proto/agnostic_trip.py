@@ -6,7 +6,7 @@ instead of hand-coding every rule of `inputs/trafos/patterns.md` in Python
 Map** files (linkml-map TransformationSpecifications) that compile the
 catalogue:
 
-  * ``inputs/trafos/dmp-to-internal.linkml-map.yaml``  — rules P1–P42
+  * ``inputs/trafos/dmp-to-internal.linkml-map.yaml``  — rules P1–P47
   * ``inputs/trafos/sms-to-internal.linkml-map.yaml``  — rules S1–S16
 
 The executing tool (`fuseki-proto agnostic-trip`) is *agnostic* with respect
@@ -427,7 +427,7 @@ def agnostic_trip(ctx, port, user, password, dataset):
               help="SMS device-property JSON:API records (repeatable).")
 @click.option("--dmp-map", "dmp_map", type=click.Path(exists=True, dir_okay=False),
               default=str(DMP_MAP_DEFAULT), show_default=True,
-              help="LinkML Map for the DMP half (rules P1–P42).")
+              help="LinkML Map for the DMP half (rules P1–P47).")
 @click.option("--sms-map", "sms_map", type=click.Path(exists=True, dir_okay=False),
               default=str(SMS_MAP_DEFAULT), show_default=True,
               help="LinkML Map for the SMS half (rules S1–S16).")

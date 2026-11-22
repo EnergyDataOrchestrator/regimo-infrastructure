@@ -23,10 +23,16 @@ Distribution {
     uriorcurie access_url  
     CertificationEnumList certified_with  
     DataAccessEnum data_access  
-    stringList format  
+    uriorcurieList format  
     date license_start_date  
     IdentifierTypeEnumList pid_system  
     string title  
+}
+Funder {
+    string name  
+}
+Funding {
+    string funding_status  
 }
 Host {
     string title  
@@ -50,9 +56,9 @@ MeasuredProperty {
     uriorcurie compartment  
     uriorcurie measured_quantity  
     string measured_quantity_name  
-    double measuring_range_max  
-    double measuring_range_min  
-    double resolution  
+    decimal measuring_range_max  
+    decimal measuring_range_min  
+    decimal resolution  
     uriorcurie sampling_media  
     uriorcurie unit  
 }
@@ -87,6 +93,9 @@ Dataset ||--}o Distribution : "has_distribution"
 Dataset ||--}o MeasuredProperty : "observes"
 Distribution ||--|o Host : "hosted_by"
 Distribution ||--|o License : "license"
+Funder ||--|o Identifier : "identifier"
+Funding ||--|o Funder : "funder"
+Funding ||--}o Identifier : "grant_id"
 MeasurementSeries ||--|o Interval : "interval"
 MeasurementSeries ||--|o SamplingPlan : "has_sampling_plan"
 MeasurementSeries ||--|o Sensor : "was_generated_by"
@@ -97,6 +106,7 @@ Project ||--|o Person : "has_contact"
 Project ||--}o Contribution : "has_contribution"
 Project ||--}o Cost : "has_cost"
 Project ||--}o Dataset : "has_dataset"
+Project ||--}o Funding : "has_funding"
 Sensor ||--|o Identifier : "identifier"
 Sensor ||--}o MeasuredProperty : "observes"
 

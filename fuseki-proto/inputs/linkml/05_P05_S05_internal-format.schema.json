@@ -298,6 +298,64 @@
             "title": "Distribution",
             "type": "object"
         },
+        "Funder": {
+            "additionalProperties": false,
+            "description": "Funding organisation (e.g. Helmholtz Metadata Collaboration); fed by maDMP `dmp/funding/funder`.",
+            "properties": {
+                "identifier": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Identifier"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "title": "Funder",
+            "type": "object"
+        },
+        "Funding": {
+            "additionalProperties": false,
+            "description": "Funding relation of the project (funder + optional grant identifiers + status); fed by maDMP `dmp/funding`.",
+            "properties": {
+                "funder": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/$defs/Funder"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ]
+                },
+                "funding_status": {
+                    "description": "maDMP funding-status CV (planned / applied / granted / rejected).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
+                "grant_id": {
+                    "items": {
+                        "$ref": "#/$defs/Identifier"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                }
+            },
+            "title": "Funding",
+            "type": "object"
+        },
         "Host": {
             "additionalProperties": false,
             "description": "Repository/storage hosting a distribution.",
@@ -343,6 +401,7 @@
                 "handle",
                 "ark",
                 "purl",
+                "fundref",
                 "url",
                 "urn",
                 "other"
@@ -597,6 +656,15 @@
                 "has_dataset": {
                     "items": {
                         "$ref": "#/$defs/Dataset"
+                    },
+                    "type": [
+                        "array",
+                        "null"
+                    ]
+                },
+                "has_funding": {
+                    "items": {
+                        "$ref": "#/$defs/Funding"
                     },
                     "type": [
                         "array",

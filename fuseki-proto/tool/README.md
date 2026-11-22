@@ -101,7 +101,7 @@ run). Full documentation: `../inputs/trafos/README.md`.
 `agnostic_trip.py` (module `fuseki_proto.agnostic_trip`) performs the **same
 round trip as `trip`**, but the transformation logic is **not** in the code: it
 lives in the two LinkML Map files
-`inputs/trafos/dmp-to-internal.linkml-map.yaml` (rules P1–P42) and
+`inputs/trafos/dmp-to-internal.linkml-map.yaml` (rules P1–P47) and
 `inputs/trafos/sms-to-internal.linkml-map.yaml` (rules S1–S16), which compile
 the `trafos/patterns.md` catalogue. The tool only wires the linkml-map
 `ObjectTransformer` (`--dmp-map` / `--sms-map` override the map files) and

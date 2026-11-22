@@ -21,8 +21,8 @@
             "@id": "./",
             "@type": "Dataset",
             "name": "Provenance crate for 05_P05_S05_internal-format.schema.json (F11)",
-            "description": "RO-Crate 1.1 documenting the regeneration of the EDO internal-format JSON Schema and the provenance of this version. The crate is fully self-contained: it contains COPIES of the two files that constitute the version (the generated JSON Schema and its LinkML source), everything needed to REPEAT the generation from the source alone (reproduce.sh, the pinned Python environment in environment/, and the linkml:types module resolved during the run), and SNAPSHOT COPIES under references/ of the repository files that shaped the version (specification, sibling source-side schemas, transformation patterns and LinkML Maps, the two realisations trip.py and agnostic_trip.py) — each snapshot records the git blob of the copied file. Documents (specification, trafos README, cards) that were not flagged as data entities remain as external CreativeWork references into the repository. Findings catalogue: ../trafos/README.md §13, F11. Repository state: regenerated after e7a8d20; the superseded predecessor of the JSON Schema is commit 09a25eb (blob 14c33a8b9064c8d81d413f45c3dbc3baea7f5917).",
-            "datePublished": "2026-11-19",
+            "description": "RO-Crate 1.1 documenting the regeneration of the EDO internal-format JSON Schema and the provenance of this version. The crate is fully self-contained: it contains COPIES of the two files that constitute the version (the generated JSON Schema and its LinkML source), everything needed to REPEAT the generation from the source alone (reproduce.sh, the pinned Python environment in environment/, and the linkml:types module resolved during the run), and SNAPSHOT COPIES under references/ of the repository files that shaped the version (specification, sibling source-side schemas, transformation patterns and LinkML Maps, the two realisations trip.py and agnostic_trip.py) — each snapshot records the git blob of the copied file. Documents (specification, trafos README, cards) that were not flagged as data entities remain as external CreativeWork references into the repository. Findings catalogue: ../trafos/README.md §13, F11. Refreshed 2026-11-22 for the funder/funding extension of the internal format (Project `edo:hasFunding` -> Funding/Funder, patterns P43–P47; see #gen-json-schema-run-20261122): all copies and snapshot copies updated to that state; the 2026-11-19 regeneration (after e7a8d20, superseding commit 09a25eb) remains documented in the entity descriptions and the CreateActions below.",
+            "datePublished": "2026-11-22",
             "license": {
                 "@id": "https://spdx.org/licenses/MIT"
             },
@@ -66,6 +66,12 @@
             ],
             "mentions": [
                 {
+                    "@id": "#gen-json-schema-run-20261122"
+                },
+                {
+                    "@id": "#funder-funding-extension"
+                },
+                {
                     "@id": "#gen-json-schema-run-20261119T1834"
                 },
                 {
@@ -84,7 +90,7 @@
             "@id": "05_P05_S05_internal-format.schema.json",
             "@type": "File",
             "name": "EDO internal format \u2014 generated JSON Schema (the version documented by this crate)",
-            "description": "Copy (in the crate) of the file regenerated for F11 at 2026-11-19T18:34:09+01:00 with `gen-json-schema` (linkml 1.11.1, default options: no --top-class, --not-closed, indent 4). JSON Schema draft 2019-09; metamodel_version 1.11.0. Supersedes the version of 2026-11-19 ~13:22 generated with linkml 1.12.0 in commit 09a25eb (predecessor blob 14c33a8b9064c8d81d413f45c3dbc3baea7f5917, current blob d768c94a65ca824260495f6f67c48ae8fd31d2cc). Differences to the predecessor: the CF2-004 reconciliation descriptions (time:hasEnd, license start date = time:hasBeginning, IANA media-type IRIs, SMS CV slot mappings) and the metamodel_version downgrade 1.12.0 -> 1.11.0 caused by the linkml 1.11.1 pinning (F8). Reproducible from the crate contents alone (reproduce.sh; verified byte-identical 2026-11-19).",
+            "description": "Copy (in the crate) of the file regenerated at 2026-11-22T20:3x with `gen-json-schema` (linkml 1.11.1, default options: no --top-class, --not-closed, indent 4; current git blob 18f213a692d825c06da88aa41b548046dba5b87b). JSON Schema draft 2019-09; metamodel_version 1.11.0. Differences to the 2026-11-19 version (blob d768c94a65ca824260495f6f67c48ae8fd31d2cc): the funder/funding extension of the internal format — new classes Funding (`edo:Funding`) and Funder (`edo:Funder`), new Project slot `has_funding` (`edo:hasFunding`), new slots funder/grant_id/funding_status, and the `fundref` value in IdentifierTypeEnum (patterns P43–P47, see #gen-json-schema-run-20261122). The 2026-11-19 regeneration for F11 (with its own differences: CF2-004 reconciliation descriptions and the metamodel_version downgrade 1.12.0 -> 1.11.0 caused by the linkml 1.11.1 pinning, F8) remains described under #gen-json-schema-run-20261119T1834. Reproducible from the crate contents alone (reproduce.sh; verified byte-identical 2026-11-22 against the archived result).",
             "encodingFormat": "application/schema+json",
             "conformsTo": {
                 "@id": "https://json-schema.org/draft/2019-09/schema"
@@ -96,7 +102,7 @@
                 "@id": "05_P05_S05_internal-format-schema.yaml"
             },
             "prov:wasGeneratedBy": {
-                "@id": "#gen-json-schema-run-20261119T1834"
+                "@id": "#gen-json-schema-run-20261122"
             },
             "subjectOf": {
                 "@id": "../trafos/README.md"
@@ -106,7 +112,7 @@
             "@id": "05_P05_S05_internal-format-schema.yaml",
             "@type": "File",
             "name": "EDO internal format \u2014 LinkML schema (source of the generated version)",
-            "description": "Copy (in the crate) of the LinkML schema, edited at 2026-11-19T18:16 in the CF2-004 schema reconciliation (e8b6ee8) to match the CF2-003 realisation (trip.py): time:hasEnd, license_start_date = time:hasBeginning, media-type slot descriptions, SMS CV slot mappings (S7/S8/S13/S14). The schema is the direct source of the JSON Schema version; its own derivation from the specification and the transformation rules is recorded under #cf2-004-schema-reconciliation and in the referenced files.",
+            "description": "Copy (in the crate) of the LinkML schema. History: edited at 2026-11-19T18:16 in the CF2-004 schema reconciliation (e8b6ee8) to match the CF2-003 realisation (trip.py): time:hasEnd, license_start_date = time:hasBeginning, media-type slot descriptions, SMS CV slot mappings (S7/S8/S13/S14); extended at 2026-11-22 with the funder/funding part of the internal format (new classes Funding/Funder, Project slot has_funding, slots funder/grant_id/funding_status, enum value fundref — source `references/05_P05_S05_madmp-schema.yaml` extended accordingly, map derivations P43–P47). The schema is the direct source of the JSON Schema version; its own derivation from the specification and the transformation rules is recorded under #cf2-004-schema-reconciliation, #funder-funding-extension and in the referenced files.",
             "encodingFormat": "text/x-yaml",
             "conformsTo": {
                 "@id": "https://w3id.org/linkml/meta"
@@ -180,6 +186,49 @@
                 "@id": "05_P05_S05_internal-format-schema.yaml"
             },
             "result": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            }
+        },
+        {
+            "@id": "#funder-funding-extension",
+            "@type": "CreateAction",
+            "name": "Funder/funding extension of the internal format (schema + map + patterns, 2026-11-22)",
+            "description": "Editing activity that extended the internal format with the funder/funding part: the maDMP source schema gained `dmp/funding` (Funding/Funder classes, `fundref` enum value — not yet exported by the maDMP plugin), the internal-format schema gained the Funding/Funder classes, the Project slot `has_funding` (`edo:hasFunding`), the slots funder/grant_id/funding_status and the `fundref` value, and the LinkML Map dmp-to-internal gained the derivations for patterns P43–P47 (catalogue ../trafos/patterns.md). Previously the funder/grant information was declared lost by design (v0.2); the spec (../internal-format/04_P04_S04_internal-format-spec.md, §6) records the decision of 2026-11-22.",
+            "endTime": "2026-11-22T20:30:00+01:00",
+            "object": [
+                {
+                    "@id": "references/05_P05_S05_madmp-schema.yaml"
+                },
+                {
+                    "@id": "references/patterns.md"
+                },
+                {
+                    "@id": "references/dmp-to-internal.linkml-map.yaml"
+                }
+            ],
+            "result": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            }
+        },
+        {
+            "@id": "#gen-json-schema-run-20261122",
+            "@type": "CreateAction",
+            "name": "gen-json-schema run regenerating the internal-format JSON Schema (funder/funding extension)",
+            "description": "Command: `gen-json-schema inputs/linkml/05_P05_S05_internal-format-schema.yaml > 05_P05_S05_internal-format.schema.json` (linkml 1.11.1 from a temporary environment pinned to the crate environment, default options). Triggered by the funder/funding extension (#funder-funding-extension): the schema edits made the previously generated JSON Schema stale. The process is repeatable from the crate contents alone: reproduce.sh runs the same generator over the archived source under the environment pinned in environment/pip-freeze.txt; verified 2026-11-22 — the pinned 1.11.1 run over the pre-extension archived source was byte-identical, and the post-extension output was regenerated with the same pinning.",
+            "startTime": "2026-11-22T20:35:00+01:00",
+            "endTime": "2026-11-22T20:36:00+01:00",
+            "instrument": [
+                {
+                    "@id": "#linkml-gen-json-schema"
+                },
+                {
+                    "@id": "reproduce.sh"
+                }
+            ],
+            "object": {
+                "@id": "05_P05_S05_internal-format-schema.yaml"
+            },
+            "result": {
                 "@id": "05_P05_S05_internal-format.schema.json"
             }
         },
@@ -222,7 +271,7 @@
             "@id": "references/05_P05_S05_madmp-schema.yaml",
             "@type": "File",
             "name": "LinkML maDMP schema (source side, sibling artefact)",
-            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob e2b63ef32cb4609771063ca038ebf75de4680575, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/linkml/05_P05_S05_madmp-schema.yaml): source-side schema from the same CF1-007 family; the identifier-type, data-access, contributor-type and certification enums of the internal format mirror its maDMP CV value sets.",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob ba4d5015b97c0179e45734cefb69601d0264d99b, repository path inputs/linkml/05_P05_S05_madmp-schema.yaml): source-side schema from the same CF1-007 family; the identifier-type, data-access, contributor-type and certification enums of the internal format mirror its maDMP CV value sets. 2026-11-22: extended with `dmp/funding` (Funding/Funder classes, `fundref` enum value) — not yet exported by the maDMP plugin.",
             "encodingFormat": "text/x-yaml"
         },
         {
@@ -235,43 +284,43 @@
         {
             "@id": "references/patterns.md",
             "@type": "File",
-            "name": "Transformation patterns (P1\u2013P42, S1\u2013S16)",
-            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 8d80564460a15e3a255531c7d190c3fca7706274, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/patterns.md): the catalogue of transformation rules; compiled into the two LinkML Maps (commit 62f404b) whose expressiveness drove the schema reconciliation.",
+            "name": "Transformation patterns (P1–P47, S1–S16)",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob e84b2332e41b583b91049904b9a3c580273dec87, repository path inputs/trafos/patterns.md): the catalogue of transformation rules; compiled into the two LinkML Maps. 2026-11-22: extended with the funder/funding rules P43–P47.",
             "encodingFormat": "text/markdown"
         },
         {
             "@id": "references/dmp-to-internal.linkml-map.yaml",
             "@type": "File",
             "name": "LinkML Map DMP -> internal format",
-            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob dca3d106dd958cd2e82e10ae3387e5d33cab5209, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/dmp-to-internal.linkml-map.yaml): map-driven transformation specification (CF2-004); input to the reconciliation that produced the current LinkML source version.",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 1c418f889a10fa74c1eaaf841c4f24ba7812e9a7, repository path inputs/trafos/dmp-to-internal.linkml-map.yaml): map-driven transformation specification (CF2-004); input to the reconciliation that produced the 2026-11-19 LinkML source version. 2026-11-22: extended with the Funding/Funder class derivations and the Project `has_funding` slot derivation (P43–P47).",
             "encodingFormat": "text/x-yaml"
         },
         {
             "@id": "references/sms-to-internal.linkml-map.yaml",
             "@type": "File",
             "name": "LinkML Map SMS -> internal format",
-            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 4e73833bd40278a8973fabca60be2b8f21526e91, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/trafos/sms-to-internal.linkml-map.yaml): map-driven transformation specification (CF2-004); input to the reconciliation that produced the current LinkML source version.",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 4e73833bd40278a8973fabca60be2b8f21526e91, repository path inputs/trafos/sms-to-internal.linkml-map.yaml): map-driven transformation specification (CF2-004); input to the reconciliation that produced the 2026-11-19 LinkML source version.",
             "encodingFormat": "text/x-yaml"
         },
         {
             "@id": "references/trip.py",
             "@type": "File",
             "name": "trip.py \u2014 hand-coded realisation (CF2-003)",
-            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 24c69c281964fa13945b19b59d30fd2ebfaecfc6, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/fuseki-proto/tool/src/fuseki_proto/trip.py): the hand-coded transformation whose behaviour is the reference for the schema reconciliation; the reconciled schema keeps JSON-Schema consumers consistent with it.",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 6d8342ec3ace5569bf630f094a11199ddb2dbe92, repository path tool/src/fuseki_proto/trip.py): the hand-coded transformation whose behaviour is the reference for the schema reconciliation; the reconciled schema keeps JSON-Schema consumers consistent with it.",
             "encodingFormat": "text/x-python"
         },
         {
             "@id": "references/agnostic_trip.py",
             "@type": "File",
             "name": "agnostic_trip.py \u2014 map-driven realisation (CF2-004)",
-            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob a836de475d7b1baefda5d1b98a4f073784966677, repository path projecting_spaces/EDO/Artefacts/07_Fragments/scripts/fuseki-proto/tool/src/fuseki_proto/agnostic_trip.py): the map-driven executor that reads the LinkML Maps together with this version of the LinkML schema; a JSON-Schema consumer built on the generated file must stay equivalent to it (proven: 82 == 82 triples, 41/41 checks, see card CF2-004).",
+            "description": "SNAPSHOT COPY (references/, copied from the repository into the crate; git blob 2df1d564086ed88fb3941993c0a51b4843d148e6, repository path tool/src/fuseki_proto/agnostic_trip.py): the map-driven executor that reads the LinkML Maps together with this version of the LinkML schema; a JSON-Schema consumer built on the generated file must stay equivalent to it (proven for the 2026-11-19 version: 82 == 82 triples, 41/41 checks, see card CF2-004).",
             "encodingFormat": "text/x-python"
         },
         {
             "@id": "../../internal-format/04_P04_S04_internal-format-spec.md",
             "@type": "CreativeWork",
             "name": "EDO internal format specification v0.2 (CF1-006)",
-            "description": "REFERENCE (not copied; CreativeWork, not a data entity): the specification the internal format — and therefore both the LinkML schema and the JSON Schema version — is derived from (R1–R8, 14 classes). Origin and decisions: card CF1-006.",
+            "description": "REFERENCE (not copied; CreativeWork, not a data entity): the specification the internal format — and therefore both the LinkML schema and the JSON Schema version — is derived from (R1–R8; 14 classes at v0.2, extended 2026-11-22 by Funding/Funder). Origin and decisions: card CF1-006.",
             "encodingFormat": "text/markdown"
         },
         {

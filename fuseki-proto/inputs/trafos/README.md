@@ -14,7 +14,7 @@ This directory documents and drives the realisation of cards **CF2-003**
 
 * `patterns.md` — the **transformation catalogue** (scenario 1 deliverable of
   CF2-003): every transformation from the sources into the internal format,
-  tagged with a pattern identifier (P1–P42 for DMP, S1–S16 for SMS, N1–N6 for
+  tagged with a pattern identifier (P1–P47 for DMP, S1–S16 for SMS, N1–N6 for
   the new R4 classes).
 * `dmp-to-internal.linkml-map.yaml` / `sms-to-internal.linkml-map.yaml` — the
   **LinkML Map files** (CF2-004 deliverable): the catalogue compiled into
@@ -225,7 +225,7 @@ Deliverables (all in place):
 
 | Deliverable | File |
 |---|---|
-| LinkML Map, DMP half (rules P1–P42) | `dmp-to-internal.linkml-map.yaml` (this directory) |
+| LinkML Map, DMP half (rules P1–P47) | `dmp-to-internal.linkml-map.yaml` (this directory) |
 | LinkML Map, SMS half (rules S1–S16) | `sms-to-internal.linkml-map.yaml` (this directory) |
 | Executing tool | `../fuseki-proto/tool/src/fuseki_proto/agnostic_trip.py` (`fuseki-proto agnostic-trip …`) |
 | Test results + validation report | run `../fuseki-proto/data/agnostic-trip/20261119-182411/` (+ §12) |

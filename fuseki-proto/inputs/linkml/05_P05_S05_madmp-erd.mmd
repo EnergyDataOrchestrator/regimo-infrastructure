@@ -43,6 +43,12 @@ Distribution {
     IdentifierTypeEnumList pid_system  
     string title  
 }
+Funder {
+    string name  
+}
+Funding {
+    string funding_status  
+}
 Host {
     string title  
     uriorcurie url  
@@ -70,10 +76,14 @@ DMP ||--|| Identifier : "dmp_id"
 DMP ||--}o Contributor : "contributor"
 DMP ||--}o Cost : "cost"
 DMP ||--}o Dataset : "dataset"
+DMP ||--}o Funding : "funding"
 Dataset ||--|o Identifier : "dataset_id"
 Dataset ||--}o Distribution : "distribution"
 Dataset ||--}o SecurityAndPrivacy : "security_and_privacy"
 Distribution ||--|o Host : "host"
+Funder ||--|o Identifier : "funder_id"
+Funding ||--|o Funder : "funder"
+Funding ||--}o Identifier : "grant_id"
 
 ```
 

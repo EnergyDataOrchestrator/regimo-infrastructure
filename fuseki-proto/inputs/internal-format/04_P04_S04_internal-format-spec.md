@@ -31,6 +31,8 @@ erDiagram
     Project ||--|| Contact : has
     Project ||--o{ Contribution : has
     Project ||--o{ Cost : has
+    Project ||--o{ Funding : has
+    Funding }o--|| Funder : funder
     Project ||--o| Identifier : dmpId
     Contribution }o--|| Person : agent
     Dataset ||--o{ Distribution : has
@@ -50,6 +52,9 @@ Entitäten:
 - **Person / Contact / Contribution** — Contact = Person ohne Rolle am Project;
   Contribution = Person + Rolle (maDMP `contributor` mit `role_template`)
 - **Cost** — Titel + Wert (+ Currency, CF1-008 offen)
+- **Funding / Funder** — Förderbeziehung des Projekts: Funder (Name + typed
+  Identifier) + grant ids + Status (Quelle: maDMP `dmp/funding`; im Export des
+  Plugins noch nicht enthalten — Schema/Map sind vorbereitet, P43–P47)
 - **Identifier** — typed identifier (dmp_id, dataset_id, sensor PID); Typ aus
   kontrolliertem Vokabular (doi, handle, urn, url, other …)
 - **Dataset** — aus R2
@@ -87,10 +92,12 @@ Contribution, Kostenzuordnung).
 
 | Klasse | IRI (Vorschlag) | Quelle | Properties (→ Datentyp) |
 |---|---|---|---|
-| Project | `edo:Project` | maDMP `dmp` + `dmp/project` | `dcterms:title` (xsd:string), `dcterms:description` (xsd:string), `time:hasInterval` → Interval (xsd:date ×2), `dcterms:language` (BCP-47, CV), `edo:dmpId` → Identifier, `edo:hasContact` → Person, `edo:hasContribution` → Contribution, `edo:hasCost` → Cost |
+| Project | `edo:Project` | maDMP `dmp` + `dmp/project` | `dcterms:title` (xsd:string), `dcterms:description` (xsd:string), `time:hasInterval` → Interval (xsd:date ×2), `dcterms:language` (BCP-47, CV), `edo:dmpId` → Identifier, `edo:hasContact` → Person, `edo:hasContribution` → Contribution, `edo:hasCost` → Cost, `edo:hasFunding` → Funding |
 | Person | `foaf:Person` | maDMP `contact`/`contributor` | `foaf:name` (xsd:string), `foaf:mbox` (xsd:anyURI), `edo:identifier` → Identifier (ORCID etc., CV `person_id_type`) |
 | Contribution | `prov:Attribution`-Spezialisierung `edo:Contribution` | maDMP contributor + `role_template` | `prov:agent` → Person, `dcterms:type` → Rolle (RDA maDMP contributor-type CV, §3.3) |
 | Cost | `edo:Cost` | maDMP `dmp/cost` | `dcterms:title` (xsd:string), `edo:value` (xsd:decimal, nullable), `edo:currency` (ISO-4217, CV) |
+| Funding | `edo:Funding` | maDMP `dmp/funding` | `edo:funder` → Funder, `edo:grantId` → Identifier ×n, `edo:fundingStatus` (planned/applied/granted/rejected) |
+| Funder | `edo:Funder` | maDMP `dmp/funding/funder` | `foaf:name` (xsd:string), `edo:identifier` → Identifier (CV `fundref`/`url`/`other`) |
 | Identifier | `edo:Identifier` | dmp_id, dataset_id, SMS PID | `dcterms:identifier` (xsd:string), `dcterms:type` (CV: doi/handle/urn/url/other) |
 | Dataset | `dcat:Dataset` | maDMP `dmp/dataset` | `dcterms:title`, `dcterms:description`, `dcterms:issued` (xsd:date), `dcterms:type` (xsd:string, v0.1), `dcat:keyword` (xsd:string ×n), `edo:personalData` (xsd:boolean), `edo:sensitiveData` (xsd:boolean), `edo:qualityAssurance` (xsd:string ×n), `edo:preservationStatement` (xsd:string), `dcat:distribution` → Distribution, `edo:identifier` → Identifier, `sosa:observes` → MeasuredProperty, `prov:wasGeneratedBy` → Sensor |
 | Distribution | `dcat:Distribution` | maDMP `dmp/dataset/distribution` | `dcterms:title`, `dcat:accessURL` (xsd:anyURI), `edo:dataAccess` (CV: open/shared/closed), `dcat:format` (IANA Media Type ×n, §3.3), `edo:certifiedWith` (CV), `edo:pidSystem` (CV), `edo:license` → License, `dcterms:issued` als license_start_date |
@@ -106,7 +113,7 @@ Contribution, Kostenzuordnung).
 | CV | Quelle | Werte (aus Mapping/Instanz) |
 |---|---|---|
 | data_access | RDA maDMP | `open`, `shared`, `closed` |
-| pid/dmp/dataset id type | RDA maDMP | `doi`, `handle`, `ark`, `urn`, `url`, `other` |
+| pid/dmp/dataset id type | RDA maDMP | `doi`, `handle`, `ark`, `purl`, `fundref`, `urn`, `url`, `other` |
 | certified_with | RDA maDMP | `din31644`, `dini-zertifikat`, `dsa`, `iso16363`, `iso16919`, `trac`, `wds`, `coretrustseal` |
 | funder id type | RDA maDMP | `fundref`, `url`, `other` |
 | language | ISO-639-3 | `eng`, `deu` |
@@ -234,6 +241,15 @@ Das bleibt v0.1 als Ausblick; konkret wird es in CF2-003 (Transformationen).
    Register-Eintrag **#16/#17** in `scripts/dmp/05_P05_S05_madmp-catalog-gaps.md`
    (Lücke getragen); alternativ Quelle: **ELN**. Bis dahin manuelle Versorgung
    auf der EDO-Ebene.
+
+**Entschieden 2026-11-22 (v0.2-Follow-up):**
+
+9. **Funder/Funding:** Die v0.2 Project-Klasse trägt nun die Förderinformation
+   (`edo:hasFunding` → Funding → Funder + grant ids + Status) statt sie wie
+   zuvor als „lost“ zu führen — Quelle ist maDMP `dmp/funding`; der
+   maDMP-Export des Plugins liefert `dmp/funding` noch nicht (Export-Lücke,
+   separat zu schließen). Umgesetzt in Schema (`05_P05_S05_internal-format-`
+   `schema.yaml`, `…madmp-schema.yaml`) und LinkML Map (P43–P47).
 
 **Weiter offen:**
 

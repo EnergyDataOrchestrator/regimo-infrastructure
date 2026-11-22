@@ -79,8 +79,20 @@ right-most columns:
 | P8 | `contributor.role_template` (free text) | Contribution `dcterms:type` (RDA maDMP contributor-type CV) | `literal-transformation` (free text → CV lookup, Property-Level) | translate | default `Other` (unmapped template) |
 | P9 | `cost[]` | Project `edo:hasCost` → **Cost** nodes | `nesting` (Structural) | n/a | omit |
 
-> **Lost (Project):** funder (`dmp/project/funder`), grant id, and the RDMO
-> `role_template` free text itself are not carried into the v0.2 Project class.
+> **Lost (Project):** the RDMO `role_template` free text itself is not carried
+> into the v0.2 Project class (only its CV translation, P8). Since the
+> CF2-004 v0.2 follow-up the funder/grant information **is** carried
+> (P43–P47) — schema and map extended accordingly.
+
+### Funding / Funder class (from `dmp/funding`)
+
+| # | Source (maDMP) | Target (internal) | Pattern (Category) | 1:1? | Missing → |
+|---|---|---|---|---|---|
+| P43 | `funding[]` | Project `edo:hasFunding` → **Funding** nodes | `nesting` (Structural) | n/a | omit (funding optional; not yet exported by the plugin) |
+| P44 | `funding/funder/name` | Funding `edo:funder` → **Funder** node `foaf:name` | `nesting` (Structural) + `direct-property-mapping` per field | 1:1 | omit (funder without name) |
+| P45 | `funding/funder/funder_id` | Funder `edo:identifier` → **Identifier** node (`fundref`/`url`/`other` CV) | `nesting` (Structural) + `direct-property-mapping` (CV) | 1:1 (CV type) | omit |
+| P46 | `funding/grantId[]` | Funding `edo:grantId` → **Identifier** nodes | `nesting` (Structural) | n/a | omit |
+| P47 | `funding/funding_status` | Funding `edo:fundingStatus` (planned / applied / granted / rejected) | `direct-property-mapping` (Property-Level) | 1:1 | omit (optional) |
 
 ### Person class (contact / contributor agent)
 

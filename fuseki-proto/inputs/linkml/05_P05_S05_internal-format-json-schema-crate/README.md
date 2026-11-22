@@ -7,6 +7,15 @@ This directory is a RO-Crate 1.1 (`ro-crate-metadata.json`) that documents the
 generated JSON Schema stale; regenerate before the next JSON-Schema consumer",
 see `../trafos/README.md`, section 13).
 
+**Refreshed 2026-11-22** for the funder/funding extension of the internal
+format (Project `edo:hasFunding` → Funding/Funder, patterns P43–P47; spec §6,
+decision 2026-11-22): the archived JSON Schema and its LinkML source were
+regenerated with the same pinned environment (linkml 1.11.1; new
+`CreateAction` `#gen-json-schema-run-20261122`), and the snapshot copies under
+`references/` were updated to the current repository state (their git blobs
+are re-recorded). The 2026-11-19 regeneration remains documented in the
+entity descriptions and the `CreateAction`s of the metadata graph.
+
 ## What the crate contains
 
 **Copies** (the files that *are* the version, plus everything needed to
@@ -17,7 +26,7 @@ process):
 |---|---|
 | `05_P05_S05_internal-format.schema.json` | The generated JSON Schema (this version). Draft 2019-09, `metamodel_version 1.11.0`. |
 | `05_P05_S05_internal-format-schema.yaml` | The LinkML schema — the direct source this version was generated from. |
-| `reproduce.sh` | Shell script repeating the generation from the archived source; run from the crate root (`sh reproduce.sh`). Verified 2026-11-19: output byte-identical to the archived JSON Schema. |
+| `reproduce.sh` | Shell script repeating the generation from the archived source; run from the crate root (`sh reproduce.sh` — note: it resolves `gen-json-schema` from `PATH`, so activate the pinned environment first). Verified 2026-11-22: the pinned-1.11.1 run over the pre-extension archived source reproduced the 2026-11-19 JSON Schema byte-identically; the post-extension output was generated with the same pinning. |
 | `environment/pip-freeze.txt` | Full `pip freeze` of the repository `.venv` used for the run (Python 3.12.12, Darwin arm64; `linkml==1.11.1`, `linkml-runtime==1.11.1`, pinned for `linkml-map==0.5.2` per F8), with the interpreter/platform in the header; installable via `pip install -r`. Copied because the generating library and its dependencies are not referenceable from the repository. |
 | `environment/linkml-types.yaml` | The `linkml:types` module as resolved during the run — for the pinned versions it is the bundled `linkml_runtime/linkml_model/model/schema/types.yaml` of linkml-runtime 1.11.1, the resolution target of the source's `imports: linkml:types`. Copied because it lives inside the installed library. |
 
@@ -30,7 +39,7 @@ the git blob of the copied file):
 |---|---|
 | `05_P05_S05_madmp-schema.yaml` | LinkML maDMP schema — source-side sibling (CF1-007 family); its CV value sets are mirrored by the internal-format enums. |
 | `05_P05_S05_sms-schema.yaml` | LinkML SMS schema — source-side sibling; the Sensor/MeasuredProperty part is fed by the SMS device record it models. |
-| `patterns.md` | Transformation rules (P1–P42, S1–S16); compiled into the two LinkML Maps (commit `62f404b`). |
+| `patterns.md` | Transformation rules (P1–P47, S1–S16); compiled into the two LinkML Maps (P1–P42 part: commit `62f404b`). |
 | `dmp-to-internal.linkml-map.yaml` | LinkML Map DMP → internal (CF2-004); input to the schema reconciliation. |
 | `sms-to-internal.linkml-map.yaml` | LinkML Map SMS → internal (CF2-004); input to the schema reconciliation. |
 | `trip.py` | Hand-coded realisation (CF2-003) — the behavioural reference of the reconciliation. |
@@ -67,6 +76,10 @@ and these markdown documents stay where they are maintained):
    (linkml **1.11.1**, pinned for linkml-map 0.5.2 per F8) run 2026-11-19
    18:34 +01:00, recorded as `CreateAction` `#gen-json-schema-run-20261119T1834`
    with `instrument`, `object`, `result`, `startTime`/`endTime`.
+4. **2026-11-22 refresh**: funder/funding extension (new `CreateAction`
+   `#funder-funding-extension` — maDMP schema, patterns P43–P47, LinkML Map)
+   → regeneration recorded as `#gen-json-schema-run-20261122`; all copies and
+   snapshot copies updated, blob hashes re-recorded.
 
 ## Repeating the generation from the crate alone
 
@@ -79,10 +92,12 @@ contents it is possible to repeat the process end to end:
    `gen-json-schema 05_P05_S05_internal-format-schema.yaml >
    05_P05_S05_internal-format.schema.json`;
 3. the output is byte-identical to the archived
-   `05_P05_S05_internal-format.schema.json` (verified 2026-11-19).
+   `05_P05_S05_internal-format.schema.json` (pinned-1.11.1 run verified
+   2026-11-22 against the 2026-11-19 source; the archived JSON Schema now
+   includes the 2026-11-22 funder/funding extension).
 
 The relationship chain in `ro-crate-metadata.json` encodes this:
-`#gen-json-schema-run-20261119T1834` (`CreateAction`) has `instrument` →
+`#gen-json-schema-run-20261122` (`CreateAction`) has `instrument` →
 `#linkml-gen-json-schema` (SoftwareApplication, version 1.11.1) and
 `reproduce.sh`, `object` → the LinkML source copy, `result` → the JSON Schema
 copy; `reproduce.sh` and the software `dcterms:requires` the environment
@@ -99,10 +114,14 @@ Version identity for reproducibility:
 
 - predecessor blob: `14c33a8b9064c8d81d413f45c3dbc3baea7f5917`
   (generated with linkml 1.12.0, `metamodel_version 1.12.0`, commit `09a25eb`)
-- this version's blob: `d768c94a65ca824260495f6f67c48ae8fd31d2cc`
-- differences: the reconciliation descriptions, one generator-behaviour change
-  (`data_access`: `anyOf` with `null` → direct `$ref`), and the
-  `metamodel_version` downgrade caused by the pinning.
+- 2026-11-19 version blob: `d768c94a65ca824260495f6f67c48ae8fd31d2cc`
+  (differences to the predecessor: the reconciliation descriptions, one
+  generator-behaviour change (`data_access`: `anyOf` with `null` → direct
+  `$ref`), and the `metamodel_version` downgrade caused by the pinning)
+- this version's blob: `18f213a692d825c06da88aa41b548046dba5b87b`
+  (differences to the 2026-11-19 version: the funder/funding extension —
+  classes Funding/Funder, Project slot `has_funding`, slots
+  funder/grant_id/funding_status, enum value `fundref`)
 
 ## Conventions and caveats
 

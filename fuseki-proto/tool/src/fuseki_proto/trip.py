@@ -4,7 +4,7 @@ Implements the three acceptance scenarios of card CF2-003 ("Transformationen
 von DMP und SMS ins interne Format") against a concrete instance:
 
   1. **Transformation rules documented** — `transform` applies the catalogue in
-     `inputs/trafos/patterns.md` (rules P1–P42, S1–S16) to the maDMP export
+     `inputs/trafos/patterns.md` (rules P1–P47, S1–S16) to the maDMP export
      `inputs/dmp/measurement_02/Measurement_02-13.json` and the SMS device
      `inputs/sms/device-67.json` (+ device-property files) and records every
      applied rule, translation decision and documented loss in the report.

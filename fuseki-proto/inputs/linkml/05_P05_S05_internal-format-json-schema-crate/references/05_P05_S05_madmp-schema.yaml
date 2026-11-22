@@ -44,6 +44,11 @@ classes:
         range: Cost
         multivalued: true
         inlined_as_list: true
+      funding:
+        description: maDMP `dmp/funding` — funder and grant information. Not yet exported by the plugin (exporter gap); the schema documents the target structure.
+        range: Funding
+        multivalued: true
+        inlined_as_list: true
       language:
         description: maDMP `dmp/language`, ISO 639-3 (gap register #8).
         range: LanguageEnum
@@ -111,6 +116,32 @@ classes:
       currency:
         range: string
         description: ISO 4217 currency code.
+
+  Funding:
+    description: maDMP `dmp/funding` — one entry per funding relation of the project.
+    attributes:
+      funder:
+        description: maDMP `dmp/funding/funder` — the funding organisation.
+        range: Funder
+        inlined: true
+      grant_id:
+        description: maDMP `dmp/funding/grantId` — grant identifiers of this funding.
+        range: Identifier
+        multivalued: true
+        inlined_as_list: true
+      funding_status:
+        description: maDMP `dmp/funding/funding_status` — planned / applied / granted / rejected.
+        range: string
+
+  Funder:
+    description: maDMP funding organisation (name + typed identifier).
+    attributes:
+      name:
+        range: string
+        required: true
+      funder_id:
+        range: Identifier
+        inlined: true
 
   Project:
     description: maDMP `dmp/project`.
@@ -215,6 +246,7 @@ enums:
       handle:
       ark:
       purl:
+      fundref:
       url:
       urn:
       other:

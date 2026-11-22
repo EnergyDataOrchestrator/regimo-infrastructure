@@ -4,9 +4,9 @@ Implements the three acceptance scenarios of card CF2-003 ("Transformationen
 von DMP und SMS ins interne Format") against a concrete instance:
 
   1. **Transformation rules documented** — `transform` applies the catalogue in
-     `scripts/trafos/patterns.md` (rules P1–P42, S1–S16) to the maDMP export
-     `scripts/dmp/measurement_02/Measurement_02-13.json` and the SMS device
-     `scripts/sms/device-67.json` (+ device-property files) and records every
+     `inputs/trafos/patterns.md` (rules P1–P47, S1–S16) to the maDMP export
+     `inputs/dmp/measurement_02/Measurement_02-13.json` and the SMS device
+     `inputs/sms/device-67.json` (+ device-property files) and records every
      applied rule, translation decision and documented loss in the report.
   2. **The transformed project is stored** — `store` wipes and (re)loads the
      internal-format graph into the `/projects` TDB2 dataset, confirms
@@ -49,7 +49,9 @@ from . import docker as D
 # ---------------------------------------------------------------------------
 TOOL_DIR = D.TOOL_DIR                      # .../fuseki-proto/tool
 PROTO_DIR = TOOL_DIR.parent                # .../fuseki-proto
-SCRIPTS_DIR = PROTO_DIR.parent             # .../scripts
+# the research inputs (dmp/sms) were copied verbatim from the projecting_spaces
+# testbed into inputs/ so the tool is self-contained (see inputs/README.md).
+SCRIPTS_DIR = PROTO_DIR / "inputs"
 DMP_DEFAULT = SCRIPTS_DIR / "dmp" / "measurement_02" / "Measurement_02-13.json"
 SMS_DIR = SCRIPTS_DIR / "sms"
 DEVICE_DEFAULT = SMS_DIR / "device-67.json"
@@ -95,13 +97,13 @@ SPARQL_PREFIXES = (
 )
 
 # ---------------------------------------------------------------------------
-# mapping tables (scripts/trafos/patterns.md)
+# mapping tables (inputs/trafos/patterns.md)
 # ---------------------------------------------------------------------------
 # P8: role_template free text -> RDA maDMP contributor-type CV. First matching
 # regex wins; anything unmatched falls back to "Other" (documented default).
 ROLE_TRANSLATION = [
-    (re.compile(r"responsible for preservation", re.I), "Data Curator"),
-    (re.compile(r"responsible for metadata", re.I), "Data Curator"),
+    (re.compile(r"responsible for preservation", re.IGNORECASE), "Data Curator"),
+    (re.compile(r"responsible for metadata", re.IGNORECASE), "Data Curator"),
 ]
 ROLE_FALLBACK = "Other"
 
@@ -109,12 +111,12 @@ ROLE_FALLBACK = "Other"
 # 2026-11-19). Emitted as IANA media-type IRIs, following
 # fuseki-proto/data/sample-project.ttl.
 FORMAT_TRANSLATION = [
-    (re.compile(r"\bcsv\b", re.I), "text/csv"),
-    (re.compile(r"\bjson\b", re.I), "application/json"),
-    (re.compile(r"\bxls(x)?\b|\bexcel\b", re.I), "application/vnd.ms-excel"),
-    (re.compile(r"\bnetcdf\b", re.I), "application/netcdf"),
-    (re.compile(r"\bpdf\b", re.I), "application/pdf"),
-    (re.compile(r"\bxml\b", re.I), "application/xml"),
+    (re.compile(r"\bcsv\b", re.IGNORECASE), "text/csv"),
+    (re.compile(r"\bjson\b", re.IGNORECASE), "application/json"),
+    (re.compile(r"\bxls(x)?\b|\bexcel\b", re.IGNORECASE), "application/vnd.ms-excel"),
+    (re.compile(r"\bnetcdf\b", re.IGNORECASE), "application/netcdf"),
+    (re.compile(r"\bpdf\b", re.IGNORECASE), "application/pdf"),
+    (re.compile(r"\bxml\b", re.IGNORECASE), "application/xml"),
 ]
 
 # S10–S12: datasheet overrides (authority per CF1-005 / spec open item 7),
@@ -129,7 +131,7 @@ DATASHEET_OVERRIDES = {
     },
 }
 
-PIDINST_RE = re.compile(r"PIDINST:\s*(\S+)", re.I)
+PIDINST_RE = re.compile(r"PIDINST:\s*(\S+)", re.IGNORECASE)
 
 
 # ---------------------------------------------------------------------------
@@ -595,11 +597,14 @@ def _build_checks(b: Builder, dmp: dict, device: dict | None,
                   properties: list[dict]) -> None:
     """Field-level checks comparing the (dumped) graph against the sources."""
     d = dmp["dmp"]
-    proj = d["project"][0]
+    proj_list = d.get("project") or []
+    proj = proj_list[0] if proj_list else {}
     dmp_id = d["dmp_id"]["identifier"]
 
     P = "edo:Project"
-    p_title = proj["title"]
+    # F3: project/title is canonical; partial maDMPs without a dmp/project
+    # array fall back to the maDMP-level title (matches the map fallback).
+    p_title = proj.get("title") or d.get("title")
 
     def proj_pat(rest: str) -> str:
         return f"?p a {P} . {rest}"
@@ -611,10 +616,11 @@ def _build_checks(b: Builder, dmp: dict, device: dict | None,
                 proj_pat(f'?p dcterms:description {sparql_str(proj["description"])}'))
     b.check("C03", "P3", "DMP language (absent -> default)", 'dcterms:language "eng"',
             proj_pat('?p dcterms:language "eng"'))
-    b.check("C04", "P4", "DMP project start/end", f"interval {proj.get('start')}…{proj.get('end')}",
-            proj_pat(f'?p time:hasInterval ?i . ?i time:hasBeginning ?b . '
-                     f'?i time:hasEnd ?e . FILTER(STR(?b) = "{proj.get("start")}") . '
-                     f'FILTER(STR(?e) = "{proj.get("end")}")'))
+    if proj:
+        b.check("C04", "P4", "DMP project start/end", f"interval {proj.get('start')}…{proj.get('end')}",
+                proj_pat(f'?p time:hasInterval ?i . ?i time:hasBeginning ?b . '
+                         f'?i time:hasEnd ?e . FILTER(STR(?b) = "{proj.get("start")}") . '
+                         f'FILTER(STR(?e) = "{proj.get("end")}")'))
     b.check("C05", "P5/P16/P17", "DMP dmp_id",
             f"dmpId {dmp_id!r} typed {d['dmp_id']['type']!r}",
             proj_pat(f'?p edo:dmpId ?id . ?id dcterms:identifier '
@@ -684,13 +690,16 @@ def _build_checks(b: Builder, dmp: dict, device: dict | None,
         dists = ds.get("distribution", [])
         if dists:
             during = dists[0]
+            d_title = during.get("title", "Storage during the project")
+            # access_url is optional (P32); partial exports omit it
+            props = f'?x dcterms:title {sparql_str(d_title)}'
+            if during.get("access_url"):
+                props += f' ; dcat:accessURL <{during["access_url"]}>'
+            props += f' ; edo:dataAccess "{during.get("data_access", "closed")}"'
             b.check("C20", "P31/P32/P33", "DMP distribution (during)",
-                    f'title {during.get("title")!r}, accessURL {during.get("access_url")!r}, '
+                    f'title {d_title!r}, accessURL {during.get("access_url")!r}, '
                     f'dataAccess {during.get("data_access")!r}',
-                    f'?p dcat:dataset ?d . ?d dcat:distribution ?x . '
-                    f'?x dcterms:title {sparql_str(during.get("title", "Storage during the project"))} ; '
-                    f'dcat:accessURL <{during["access_url"]}> ; '
-                    f'edo:dataAccess "{during.get("data_access", "closed")}"')
+                    f'?p dcat:dataset ?d . ?d dcat:distribution ?x . {props}')
             formats = sorted({m for fmt in during.get("format", [])
                               for pat, m in FORMAT_TRANSLATION if pat.search(fmt)})
             if formats:
@@ -847,7 +856,7 @@ def shacl_validate(graph_file: Path, shapes_file: Path) -> dict:
     proc = subprocess.run(
         [*cmd, "-s", str(shapes_file), "-d", str(graph_file),
          "-e", str(shapes_file)],
-        capture_output=True, text=True, timeout=300)
+        check=False, capture_output=True, text=True, timeout=300)
     # pyshacl writes the human-readable validation report to stdout (small) and
     # verbose progress logs to stderr (large) — report on stdout wins.
     stdout = (proc.stdout or "").strip()
@@ -890,7 +899,7 @@ def trip(ctx, port, user, password, dataset):
 
     Realises the three acceptance scenarios of card CF2-003 against the
     maDMP export Measurement_02-13.json and the SMS device-67 record;
-    see scripts/trafos/README.md for the full documentation.
+    see inputs/trafos/README.md for the full documentation.
     """
     ctx.obj = {
         "base_url": f"http://127.0.0.1:{port}",
@@ -908,7 +917,7 @@ def trip(ctx, port, user, password, dataset):
 @click.option("--sms-property", "property_paths", multiple=True,
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
-              show_default="(all device-*-property-*.json under scripts/sms/)",
+              show_default="(all device-*-property-*.json under inputs/sms/)",
               help="SMS device-property JSON records (repeatable).")
 @click.option("--out", "out_dir", type=click.Path(file_okay=False), default=None,
               help="Artifacts directory (default: data/trip/<timestamp>).")
@@ -1014,7 +1023,7 @@ def store_cmd(obj, graph_path, wipe, validate):
 @click.option("--sms-property", "property_paths", multiple=True,
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
-              show_default="(all device-*-property-*.json under scripts/sms/)")
+              show_default="(all device-*-property-*.json under inputs/sms/)")
 @click.pass_obj
 def verify_cmd(obj, dmp_path, device_path, property_paths):
     """Scenario 3: dump /projects and verify field-level equality with the sources."""
@@ -1028,7 +1037,7 @@ def verify_cmd(obj, dmp_path, device_path, property_paths):
     dmp = _load_json(Path(dmp_path))
     device = _load_json(Path(device_path)) if device_path else None
     properties = [_load_json(Path(p)) for p in property_paths]
-    _, checks, meta = transform(dmp, device, properties)
+    _, checks, _meta = transform(dmp, device, properties)
 
     # 1. dump the stored graph back out
     dump = D.dump_graph(base, ds, user, password)
