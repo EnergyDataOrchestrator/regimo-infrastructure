@@ -20,7 +20,8 @@ While other repositories house the system logic (referencing **KITopen-ID: 10001
 * `docker/`: Standardised Dockerfiles and `docker-compose.yml` blueprints for local development and laboratory deployment.
 * `k8s/`: (Optional) Kubernetes Helm charts or manifests for scaling the orchestrator in cloud environments.
 * `config/`: Centralised configuration files for Kafka brokers and the Regimo message schema registry.
-* `scripts/`: Maintenance scripts for resetting the bus state, performing bulk data migrations or installing RDMO plugins (`install_madmp_exporter.py`).
+* `scripts/`: Maintenance scripts for resetting the bus state, performing bulk data migrations or installing RDMO plugins (`install_madmp_exporter.py`, `create_project_from_doi.py`).
+* `fixtures/`: Importable reference artifacts, e.g. RDMO project XML exports (see below).
 
 ## Graph database (`fuseki-proto`)
 The `fuseki-proto/` directory hosts the internal **graph database**: an Apache Jena **Fuseki Full** instance built from source (Apache publishes no registry image), serving
@@ -70,6 +71,28 @@ python3 scripts/install_madmp_exporter.py          # add --create-token admin fo
 
 Note: `uv pip install` needs the exporter's `pyyaml` dep present in the env;
 the script re-runs the editable install automatically whenever the probe fails.
+
+### RDMO projects from DOIs (`scripts/create_project_from_doi.py`)
+Fetches DataCite metadata for a DOI, maps it onto the RDMO standard questionary
+("RDMO" catalog; import the [rdmo-catalog](https://github.com/rdmorganiser/rdmo-catalog)
+first: `domain/attributes.xml`, `conditions/conditions.xml`, `options/optionsets.xml`,
+`conditions` again, `questions/questions-rdmo.xml`), creates the project in the dev
+instance (owner membership for `admin`) and exports it via RDMO's own XML exporter:
+
+```bash
+python3 scripts/create_project_from_doi.py             # default DOI: 10.5445/IR/1000162908
+python3 scripts/create_project_from_doi.py --dry-run   # show the value plan only
+```
+
+The export lands in `fixtures/rdmo/` (e.g. `doi-10.5445-ir-1000162908.project.xml`,
+DOI 10.5445/IR/1000162908 — "Semantico – Toolchain for literature classification",
+KITopen License) and can be imported into any RDMO instance via
+*Projects → Create → Import from file*. Values that cannot be grounded in the DOI
+metadata (exact dates, ethics/legal details) are left empty; the funder
+(Helmholtz Metadata Collaboration, `https://helmholtz-metadaten.de/about-hmc`)
+is added out-of-band. Inferences are limited to research field, coordination
+contact (first creator) and personal-data questions and are marked in the
+script docstring.
 
 ### Rebuild from scratch (e.g. after a fresh clone)
 
