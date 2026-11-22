@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:dc="http://purl.org/dc/elements/1.1/" created="2026-11-22T20:15:21.308050+01:00" required="2.1.0" version="2.5.2">
+	<title>Semantico – Toolchain for literature classification</title>
+	<description>Toolchain to find and analyse relevant literature</description>
+	<catalog dc:uri="https://rdmorganiser.github.io/terms/questions/rdmo"/>
+	<values>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/coordination/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>Mohamed Anis Koubaa</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.299636+01:00</created>
+			<updated>2026-11-22T20:15:21.299638+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_publication_pid"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>https://doi.org/10.5445/ir/1000162908</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300895+01:00</created>
+			<updated>2026-11-22T20:15:21.300896+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/description"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Toolchain to find and analyse relevant literature (Text, published via Zenodo, 2023).</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300624+01:00</created>
+			<updated>2026-11-22T20:15:21.300625+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.299188+01:00</created>
+			<updated>2026-11-22T20:15:21.299191+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/ipr/owner/name"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/yes_with_text_no/yes"/>
+			<file/>
+			<value_type>option</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301750+01:00</created>
+			<updated>2026-11-22T20:15:21.301751+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/origin"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_origin_options/148"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300744+01:00</created>
+			<updated>2026-11-22T20:15:21.300745+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/system"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/pid_types/123"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301128+01:00</created>
+			<updated>2026-11-22T20:15:21.301129+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/yesno"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>1</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300998+01:00</created>
+			<updated>2026-11-22T20:15:21.300998+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/repository"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/preservation_repository_options/141"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301660+01:00</created>
+			<updated>2026-11-22T20:15:21.301661+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/yesno"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>1</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301567+01:00</created>
+			<updated>2026-11-22T20:15:21.301568+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sensitive_data/personal_data_yesno/yesno"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>0</text>
+			<option/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301843+01:00</created>
+			<updated>2026-11-22T20:15:21.301844+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/conditions"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>KITopen License (https://publikationen.bibliothek.kit.edu/kitopen-lizenz)</text>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_license_types/233"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301468+01:00</created>
+			<updated>2026-11-22T20:15:21.301469+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/repository"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Zenodo</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301366+01:00</created>
+			<updated>2026-11-22T20:15:21.301367+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/yesno"/>
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>0</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_sharing_options/69"/>
+			<file/>
+			<value_type>boolean</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.301247+01:00</created>
+			<updated>2026-11-22T20:15:21.301248+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/id"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>https://helmholtz-metadaten.de/about-hmc</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300532+01:00</created>
+			<updated>2026-11-22T20:15:21.300533+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/name"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>Helmholtz Metadata Collaboration</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300421+01:00</created>
+			<updated>2026-11-22T20:15:21.300422+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_field/title"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/research_fields/215"/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300322+01:00</created>
+			<updated>2026-11-22T20:15:21.300323+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>Ontology</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.299956+01:00</created>
+			<updated>2026-11-22T20:15:21.299958+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>1</collection_index>
+			<text>Literature classification</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300110+01:00</created>
+			<updated>2026-11-22T20:15:21.300111+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>2</collection_index>
+			<text>Ontology learning</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.300222+01:00</created>
+			<updated>2026-11-22T20:15:21.300222+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/title"/>
+			<set_prefix/>
+			<set_index>0</set_index>
+			<set_collection>False</set_collection>
+			<collection_index>0</collection_index>
+			<text>Toolchain to find and analyse relevant literature</text>
+			<option/>
+			<file/>
+			<value_type>text</value_type>
+			<unit/>
+			<external_id/>
+			<created>2026-11-22T20:15:21.299771+01:00</created>
+			<updated>2026-11-22T20:15:21.299772+01:00</updated>
+		</value>
+	</values>
+	<created>2026-11-22T20:15:21.297056+01:00</created>
+	<updated>2026-11-22T20:15:21.297400+01:00</updated>
+</project>
