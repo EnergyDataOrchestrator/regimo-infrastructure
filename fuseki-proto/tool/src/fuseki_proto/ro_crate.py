@@ -142,7 +142,7 @@ def _build(doc: dict, src: Path, out: Path) -> ROCrate:
     project = _as_dict(doc)
     project_title = _first_text(project, "dcterms:title")
 
-    dataset = _as_dict(_val(project, "dcat:dataset"))
+    dataset = _as_dict(_node(_val(project, "dcat:dataset")))
     ds_id = _first_text(dataset, "@id") or "edo:dataset:weatherstation-q3-2026"
     ds_title = _first_text(dataset, "dcterms:title") or "Dataset"
     ds_description = _first_text(dataset, "dcterms:description")

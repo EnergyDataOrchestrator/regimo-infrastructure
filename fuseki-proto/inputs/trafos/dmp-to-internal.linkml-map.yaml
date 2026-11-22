@@ -105,7 +105,7 @@ class_derivations:
         description: "P5/P16/P17: dmp_id -> edo:dmpId Identifier node (see Identifier derivation)."
         populated_from: dmp_id
       has_contact:
-        description: "P6/P10/P11: dmp/contact -> edo:hasContact Person node; absent in this export -> omitted (faithful; trips the SHACL sh:minCount 1 — documented conflict, CF2-003 finding F1)."
+        description: "P6/P10/P11: dmp/contact -> edo:hasContact Person node (see Person derivation). Absent contact -> omitted (faithful; trips the SHACL sh:minCount 1 — CF2-003 finding F1). The contact-fallback in the exporter mapping (CF1-004) resolves dmp/contact from project/coordination for the DOI-based projects, so F1 no longer trips for them."
         populated_from: contact
       has_contribution:
         description: "P7/P8/P10/P11: dmp/contributor -> edo:hasContribution Contribution nodes (see Contribution derivation)."
@@ -130,6 +130,17 @@ class_derivations:
       identifier_type:
         description: "P17/P18: type -> dcterms:type (CV pass-through via IdentifierTypeEnum)."
         populated_from: type
+
+  Person:
+    populated_from: Contact
+    description: "P6/P10/P11: maDMP dmp/contact -> foaf:Person (the contact-fallback in the exporter mapping now populates it for the DOI-based projects)."
+    slot_derivations:
+      name:
+        description: "P10: contact/name -> foaf:name (1:1)."
+        populated_from: name
+      mbox:
+        description: "P11: contact/mbox -> foaf:mbox (mailto: URI cast, like Contribution/agent; absent mbox -> key dropped)."
+        expr: "mbox and ('mailto:' + mbox) or None"
 
   Contribution:
     populated_from: Contributor

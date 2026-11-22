@@ -476,6 +476,92 @@ def transform_cmd(obj, dmp_path, device_path, property_paths, dmp_map, sms_map,
     click.echo(f"Graph written to {out / 'project-graph.ttl'}")
 
 
+# ---------------------------------------------------------------------------
+# compact JSON-LD linked instance (the CF2-005 form `crate generate` expects)
+# ---------------------------------------------------------------------------
+def linked_instance(project_obj: dict, sensor_obj: dict | None) -> dict:
+    """Serialise the transformed objects into the compact JSON-LD instance.
+
+    Same schema-driven rules as :class:`GraphSerializer` (predicate = first
+    `mappings` entry, else `default_prefix:lowerCamel`; @type = class_uri),
+    but nested class nodes stay inlined as JSON objects instead of triples.
+    The result is the "linked instance" form that ``fuseki-proto crate
+    generate`` consumes (CF2-005/CF2-006 bridge); the sensor, if present, is
+    linked into the first dataset via ``prov:wasGeneratedBy``.
+    """
+    SchemaView, _ = _linkml()
+    sv = SchemaView(str(INTERNAL_SCHEMA))
+    classes = sv.all_classes()
+    project = _compact_node(sv, classes, "Project", project_obj)
+
+    if sensor_obj is not None:
+        sms_sv = SchemaView(str(SMS_SCHEMA))
+        sensor = _compact_node(sv, classes, "Sensor", sensor_obj)
+        datasets = project.get("dcat:dataset")
+        first = datasets[0] if isinstance(datasets, list) and datasets else datasets
+        if isinstance(first, dict):
+            first["prov:wasGeneratedBy"] = sensor
+
+    context = {p: str(e) for p, e in sv.schema.prefixes.items() if p != "linkml"}
+    # the SMS CV prefix is not part of the internal schema but appears in
+    # sensor values (measured quantities, units, ...)
+    if sensor_obj is not None:
+        sms_ctx = SchemaView(str(SMS_SCHEMA)).schema.prefixes
+        for p, e in sms_ctx.items():
+            context.setdefault(p, str(e))
+    return {"@context": context, **project}
+
+
+def _compact_node(sv, classes, class_name: str, obj: dict) -> dict:
+    node: dict = {}
+    cd = sv.get_class(class_name)
+    class_uri = cd.class_uri or (cd.mappings[0] if cd.mappings else None)
+    if class_uri:
+        node["@type"] = class_uri
+    for slot in sv.class_induced_slots(class_name):
+        value = obj.get(slot.name)
+        if value is None:
+            continue
+        predicate = slot.mappings[0] if slot.mappings else \
+            f"{sv.schema.default_prefix}:{_lower_camel(slot.name)}"
+        if slot.range in classes:
+            items = value if slot.multivalued and isinstance(value, list) else [value]
+            nodes = [_compact_node(sv, classes, str(slot.range), item)
+                     for item in items
+                     if isinstance(item, dict) and any(v is not None for v in item.values())]
+            if nodes:
+                node[predicate] = nodes if slot.multivalued else nodes[0]
+        else:
+            values = [v for v in (value if slot.multivalued and isinstance(value, list)
+                                  else [value]) if v is not None]
+            if values:
+                node[predicate] = values if slot.multivalued else values[0]
+    return node
+
+
+@agnostic_trip.command("instance")
+@click.option("--report", "report_path", type=click.Path(exists=True, dir_okay=False),
+              required=True,
+              help="agnostic-trip report (JSON) whose transformed objects are serialised.")
+@click.option("--out", "out_path", type=click.Path(dir_okay=False), required=True,
+              help="Output path for the linked internal-format JSON-LD instance.")
+def instance_cmd(report_path, out_path):
+    """Emit the compact JSON-LD linked instance from an agnostic-trip report.
+
+    Bridges CF2-004 (transform) and CF2-006 (crate generate): the output is
+    the ``--input`` for `fuseki-proto crate generate`.
+    """
+    report = _load_json(Path(report_path))
+    stage = report["stages"]["transform"]
+    instance = linked_instance(stage["transformed_project"],
+                               stage.get("transformed_sensor"))
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(instance, indent=2, ensure_ascii=False, default=str),
+                   encoding="utf-8")
+    click.echo(f"Linked instance written to {out}")
+
+
 @agnostic_trip.command("store")
 @click.option("--graph", "graph_path", type=click.Path(exists=True, dir_okay=False),
               default=None, help="Graph to store (default: latest agnostic-trip artifacts).")
