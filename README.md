@@ -20,7 +20,7 @@ While other repositories house the system logic (referencing **KITopen-ID: 10001
 * `docker/`: Standardised Dockerfiles and `docker-compose.yml` blueprints for local development and laboratory deployment.
 * `k8s/`: (Optional) Kubernetes Helm charts or manifests for scaling the orchestrator in cloud environments.
 * `config/`: Centralised configuration files for Kafka brokers and the Regimo message schema registry.
-* `scripts/`: The `edo-infra` maintenance CLI (Python package, src layout) for the local RDMO instance — installing RDMO plugins, creating projects from DOIs and resetting the projects database (see below).
+* `scripts/`: The `edo-infra` maintenance CLI (Python package, src layout) for the local RDMO instance — installing RDMO plugins, creating projects from DOIs, extending fixture XMLs and resetting the projects database (see below).
 * `fixtures/`: Importable reference artifacts, e.g. RDMO project XML exports (see below).
 
 ## Graph database (`fuseki-proto`)
@@ -94,6 +94,9 @@ metadata (exact dates, ethics/legal details) are left empty; the funder
 is added out-of-band. Inferences are limited to research field, coordination
 contact (first creator) and personal-data questions and are marked in the
 command's docstring.
+
+Fixture XMLs can be extended programmatically with `edo-infra add-dataset`
+(e.g. the papers collection of the Semantico project); see `scripts/README.md`.
 
 ### Reset the projects database (`edo-infra reset-projects`)
 

@@ -1,321 +1,381 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <project xmlns:dc="http://purl.org/dc/elements/1.1/" created="2026-11-22T20:15:21.308050+01:00" required="2.1.0" version="2.5.2">
 	<title>Semantico – Toolchain for literature classification</title>
 	<description>Toolchain to find and analyse relevant literature</description>
-	<catalog dc:uri="https://rdmorganiser.github.io/terms/questions/rdmo"/>
+	<catalog dc:uri="https://rdmorganiser.github.io/terms/questions/rdmo" />
 	<values>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/coordination/name"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/coordination/name" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
 			<text>Mohamed Anis Koubaa</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.299636+01:00</created>
 			<updated>2026-11-22T20:15:21.299638+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_publication_pid"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/creation_methods" />
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Compiled by the project team through literature search: papers relevant to the Semantico classification toolchain were collected manually, recording author(s), publication date and title for each.</text>
+			<option />
+			<file />
+			<value_type>text</value_type>
+			<unit />
+			<external_id />
+			<created>2026-11-22T23:50:27.478361+01:00</created>
+			<updated>2026-11-22T23:50:27.478364+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/data_publication_pid" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>https://doi.org/10.5445/ir/1000162908</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300895+01:00</created>
 			<updated>2026-11-22T20:15:21.300896+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/description"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/description" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>Toolchain to find and analyse relevant literature (Text, published via Zenodo, 2023).</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300624+01:00</created>
 			<updated>2026-11-22T20:15:21.300625+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/id"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/description" />
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Collection of scholarly papers to be analysed with the Semantico toolchain (literature classification and analysis workflow). The dataset is a structured, curated list in which each row describes exactly one paper with three columns: Author — the author(s) of the paper as given in the publication; Publication Date — the date (year, or full date when known) the paper was published; Title — the full title of the paper. The list is maintained by the project team through literature search and constitutes the input corpus of the analysis.</text>
+			<option />
+			<file />
+			<value_type>text</value_type>
+			<unit />
+			<external_id />
+			<created>2026-11-22T23:50:27.478344+01:00</created>
+			<updated>2026-11-22T23:50:27.478348+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/format" />
+			<set_prefix>project/dataset</set_prefix>
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>CSV (three columns: Author, Publication Date, Title; one row per paper)</text>
+			<option />
+			<file />
+			<value_type>text</value_type>
+			<unit />
+			<external_id />
+			<created>2026-11-22T23:50:27.478353+01:00</created>
+			<updated>2026-11-22T23:50:27.478356+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/id" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option/>
-			<file/>
+			<text />
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.299188+01:00</created>
 			<updated>2026-11-22T20:15:21.299191+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/ipr/owner/name"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/id" />
+			<set_prefix />
+			<set_index>1</set_index>
+			<set_collection>True</set_collection>
+			<collection_index>0</collection_index>
+			<text>Collection of papers to be analysed</text>
+			<option />
+			<file />
+			<value_type>text</value_type>
+			<unit />
+			<external_id />
+			<created>2026-11-22T23:50:27.478319+01:00</created>
+			<updated>2026-11-22T23:50:27.478338+01:00</updated>
+		</value>
+		<value>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/ipr/owner/name" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/yes_with_text_no/yes"/>
-			<file/>
+			<text />
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/yes_with_text_no/yes" />
+			<file />
 			<value_type>option</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301750+01:00</created>
 			<updated>2026-11-22T20:15:21.301751+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/origin"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/origin" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_origin_options/148"/>
-			<file/>
+			<text />
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_origin_options/148" />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300744+01:00</created>
 			<updated>2026-11-22T20:15:21.300745+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/system"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/system" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/pid_types/123"/>
-			<file/>
+			<text />
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/pid_types/123" />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301128+01:00</created>
 			<updated>2026-11-22T20:15:21.301129+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/yesno"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/pids/yesno" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>1</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>boolean</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300998+01:00</created>
 			<updated>2026-11-22T20:15:21.300998+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/repository"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/repository" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/preservation_repository_options/141"/>
-			<file/>
+			<text />
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/preservation_repository_options/141" />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301660+01:00</created>
 			<updated>2026-11-22T20:15:21.301661+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/yesno"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/preservation/yesno" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>1</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>boolean</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301567+01:00</created>
 			<updated>2026-11-22T20:15:21.301568+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sensitive_data/personal_data_yesno/yesno"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sensitive_data/personal_data_yesno/yesno" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>0</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>boolean</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301843+01:00</created>
 			<updated>2026-11-22T20:15:21.301844+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/conditions"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/conditions" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>KITopen License (https://publikationen.bibliothek.kit.edu/kitopen-lizenz)</text>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_license_types/233"/>
-			<file/>
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_license_types/233" />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301468+01:00</created>
 			<updated>2026-11-22T20:15:21.301469+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/repository"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/repository" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
 			<text>Zenodo</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301366+01:00</created>
 			<updated>2026-11-22T20:15:21.301367+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/yesno"/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/dataset/sharing/yesno" />
 			<set_prefix>project/dataset</set_prefix>
 			<set_index>0</set_index>
 			<set_collection>True</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_sharing_options/69"/>
-			<file/>
+			<text />
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/dataset_sharing_options/69" />
+			<file />
 			<value_type>boolean</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.301247+01:00</created>
 			<updated>2026-11-22T20:15:21.301248+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/id"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/id" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
 			<text>https://helmholtz-metadaten.de/about-hmc</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300532+01:00</created>
 			<updated>2026-11-22T20:15:21.300533+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/name"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/funder/name" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
 			<text>Helmholtz Metadata Collaboration</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300421+01:00</created>
 			<updated>2026-11-22T20:15:21.300422+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_field/title"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_field/title" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
-			<text/>
-			<option dc:uri="https://rdmorganiser.github.io/terms/options/research_fields/215"/>
-			<file/>
+			<text />
+			<option dc:uri="https://rdmorganiser.github.io/terms/options/research_fields/215" />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300322+01:00</created>
 			<updated>2026-11-22T20:15:21.300323+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
 			<text>Ontology</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.299956+01:00</created>
 			<updated>2026-11-22T20:15:21.299958+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>1</collection_index>
 			<text>Literature classification</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300110+01:00</created>
 			<updated>2026-11-22T20:15:21.300111+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/keywords" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>2</collection_index>
 			<text>Ontology learning</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.300222+01:00</created>
 			<updated>2026-11-22T20:15:21.300222+01:00</updated>
 		</value>
 		<value>
-			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/title"/>
-			<set_prefix/>
+			<attribute dc:uri="https://rdmorganiser.github.io/terms/domain/project/research_question/title" />
+			<set_prefix />
 			<set_index>0</set_index>
 			<set_collection>False</set_collection>
 			<collection_index>0</collection_index>
 			<text>Toolchain to find and analyse relevant literature</text>
-			<option/>
-			<file/>
+			<option />
+			<file />
 			<value_type>text</value_type>
-			<unit/>
-			<external_id/>
+			<unit />
+			<external_id />
 			<created>2026-11-22T20:15:21.299771+01:00</created>
 			<updated>2026-11-22T20:15:21.299772+01:00</updated>
 		</value>
