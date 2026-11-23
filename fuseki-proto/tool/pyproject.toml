@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fuseki-proto-tool"
-version = "0.1.0"
+version = "0.2.0"
 description = "Maintenance CLI for the EDO/Regimo Fuseki prototype (start/stop, backup/restore, load, wipe)."
 readme = "README.md"
 requires-python = ">=3.10"

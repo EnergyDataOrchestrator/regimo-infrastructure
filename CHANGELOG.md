@@ -3,6 +3,11 @@
 All notable changes to the EDO infrastructure repository are documented here.
 Format: [Keep a Changelog](https://keepachangelog.com/); versioning: SemVer.
 
+## [0.2.0] - 2026-11-23
+
+### Fixed
+- `trip` / `agnostic-trip` verify stages now `DROP SILENT` their replay named graphs, so no leftover Weatherstation data stays in the Fuseki `/projects` dataset between runs (CF1-013).
+
 ## [0.1.0] - 2026-11-23
 
 First release — graph database prototype, transformation tooling and local RDMO instance.
