@@ -7,6 +7,7 @@ import click
 from . import __version__
 from .add_dataset import add_dataset
 from .create_project_from_doi import create_project_from_doi
+from .create_project_from_datapackage import create_project_from_datapackage
 from .install_exporter import install_exporter
 from .reset_projects import reset_projects
 
@@ -22,5 +23,6 @@ def cli():
 
 cli.add_command(install_exporter)
 cli.add_command(create_project_from_doi)
+cli.add_command(create_project_from_datapackage)
 cli.add_command(add_dataset)
 cli.add_command(reset_projects)

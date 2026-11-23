@@ -21,6 +21,9 @@ def dispatch() -> None:
     if command == "create-project-from-doi":
         from .doi_project import main
         raise SystemExit(main(argv))
+    if command == "create-project-from-datapackage":
+        from .datapackage_project import main
+        raise SystemExit(main(argv))
 
     print(f"ERROR: unknown command for instance child: {command!r}",
           file=sys.stderr)
