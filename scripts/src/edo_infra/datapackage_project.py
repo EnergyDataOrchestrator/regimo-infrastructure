@@ -306,7 +306,7 @@ def child_main(rdmo_app: Path, dp_path: Path, catalog_uri: str | None,
     print(f"Using catalog: {catalog.uri} ({catalog.title})")
 
     attributes = {a.path: a for a in Attribute.objects.filter(
-        path__in={entry["path"] for entry in plan})}
+        path__in={entry["path"] for entry in plan} | {f"{DATASET_PREFIX}/id"})}
 
     def question_for(path: str):
         return Question.objects.filter(attribute__path=path).first()
@@ -381,9 +381,12 @@ def child_main(rdmo_app: Path, dp_path: Path, catalog_uri: str | None,
         set_attribute = attributes.get(f"{DATASET_PREFIX}/id")
         dataset_sets = sorted({entry["set_index"] for entry in resolved
                                if entry["set_prefix"] == DATASET_PREFIX})
-        if set_attribute is not None:
-            for set_index in dataset_sets:
-                created.append(Value(
+        if set_attribute is None:
+            print("WARN: no attribute 'project/dataset/id' — no dataset set "
+                  "value created; the dataset(s) will not be visible in RDMO",
+                  file=sys.stderr)
+        for set_index in dataset_sets:
+            created.append(Value(
                     project=project, attribute=set_attribute,
                     set_prefix="", set_index=set_index, set_collection=True,
                     collection_index=0,
