@@ -1100,6 +1100,13 @@ def verify_cmd(obj, dmp_path, device_path, property_paths):
                            encoding="utf-8")
     click.echo(f"Report updated: {report_path}")
 
+    # The replay graph was only needed for the verification above; dropping it
+    # keeps the dataset free of testbed leftovers (they would otherwise linger
+    # next to the live internal-format graphs).
+    sparql_update(base, ds, user, password,
+                  f"DROP SILENT GRAPH <{REPLAY_GRAPH}>")
+    click.echo(f"Dropped replay graph <{REPLAY_GRAPH}>.")
+
     if failed or not counts_equal:
         raise SystemExit(1)
 
