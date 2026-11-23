@@ -69,6 +69,7 @@ PROV = "http://www.w3.org/ns/prov#"
 TIME = "http://www.w3.org/2006/time#"
 SOSA = "http://www.w3.org/ns/sosa/"
 SMSCV = "https://sms-cv.helmholtz.cloud/sms/cv/api/v1/"
+CSVW = "http://www.w3.org/ns/csvw#"
 XSD = "http://www.w3.org/2001/XMLSchema#"
 MEDIATYPE = "http://purl.org/NET/mediatypes/"
 SMS_DEVICE_BASE = "https://sms.atmohub.kit.edu/devices/"
@@ -82,6 +83,7 @@ TTL_PREFIXES = f"""@prefix edo:    <{EDO}> .
 @prefix time:   <{TIME}> .
 @prefix sosa:   <{SOSA}> .
 @prefix smscv:  <{SMSCV}> .
+@prefix csvw:   <{CSVW}> .
 @prefix xsd:    <{XSD}> ."""
 
 SPARQL_PREFIXES = (
@@ -93,6 +95,7 @@ SPARQL_PREFIXES = (
     f"PREFIX time: <{TIME}>\n"
     f"PREFIX sosa: <{SOSA}>\n"
     f"PREFIX smscv: <{SMSCV}>\n"
+    f"PREFIX csvw: <{CSVW}>\n"
     f"PREFIX xsd: <{XSD}>\n"
 )
 

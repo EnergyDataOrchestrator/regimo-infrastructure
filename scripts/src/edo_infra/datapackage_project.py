@@ -42,7 +42,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .paths import DEFAULT_RDMO_APP, DEFAULT_XML_DIR
+from .paths import DEFAULT_RDMO_APP, DEFAULT_XML_DIR, EDO_ROOT
 from .instance import resolve_invocation_path
 
 DEFAULT_DATAPACKAGE = (DEFAULT_XML_DIR
@@ -118,6 +118,44 @@ def csv_shape(path: Path) -> tuple[int, int]:
     if not rows:
         return 0, 0
     return max(len(rows) - 1, 0), max(len(row) for row in rows)
+
+
+def build_columns_manifest(meta: dict) -> dict:
+    """Columns manifest for regimo-core (UPL-004 Stage 2, decision A).
+
+    One ``datasets`` entry per resource, verbatim subset of the OEMetadata
+    ``schema.fields`` (``type`` renamed to ``datatype``). regimo-core matches
+    the entry to the maDMP dataset by title and attaches
+    ``edo:hasColumn`` -> ``csvw:Column`` nodes to the internal-format graph.
+    """
+    datasets = []
+    for resource in meta["resources"]:
+        columns = []
+        for field in resource["fields"]:
+            entry = {"name": field["name"],
+                     "datatype": field.get("type") or ""}
+            for key in ("unit", "description"):
+                if (field.get(key) or "").strip():
+                    entry[key] = field[key]
+            if "nullable" in field:
+                entry["nullable"] = bool(field["nullable"])
+            columns.append(entry)
+        datasets.append({"dataset_title": resource["title"] or resource["name"],
+                         "columns": columns})
+    return {"source": "oemetadata-datapackage", "datasets": datasets}
+
+
+def write_columns_manifest_file(out_dir: Path, project_id: int,
+                                manifest: dict) -> Path:
+    """Install the manifest for a project:
+    ``<out_dir>/<project_id>/columns.json`` (the layout regimo-core reads
+    via ``REGIMO_COLUMNS_EXTRAS``)."""
+    target = out_dir / str(project_id) / "columns.json"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with open(target, "w", encoding="utf-8") as fh:
+        json.dump(manifest, fh, indent=2, ensure_ascii=False)
+        fh.write("\n")
+    return target
 
 
 def dataset_description(resource: dict) -> str:
@@ -277,7 +315,8 @@ def describe_plan(meta: dict, plan: list[dict]) -> str:
 # Instance phase: resolve the plan against the questionary, create, export
 # ---------------------------------------------------------------------------
 def child_main(rdmo_app: Path, dp_path: Path, catalog_uri: str | None,
-               owner_name: str, xml_out: Path, dry_run: bool, force: bool) -> int:
+               owner_name: str, xml_out: Path, dry_run: bool, force: bool,
+               columns_out: Path | None, skip_manifest: bool) -> int:
     from django.contrib.auth import get_user_model
     from django.db import transaction
 
@@ -292,6 +331,9 @@ def child_main(rdmo_app: Path, dp_path: Path, catalog_uri: str | None,
 
     if dry_run:
         print(describe_plan(meta, plan))
+        manifest = build_columns_manifest(meta)
+        print("\nColumns manifest (regimo-core, REGIMO_COLUMNS_EXTRAS):")
+        print(json.dumps(manifest, indent=2, ensure_ascii=False))
         print("\n(dry-run) no project created, no XML written")
         return 0
 
@@ -411,6 +453,17 @@ def child_main(rdmo_app: Path, dp_path: Path, catalog_uri: str | None,
           f"with {len(created)} values in {len(dataset_sets)} dataset set(s) "
           f"(owner: {owner_name})")
 
+    # -- 2b. columns manifest for regimo-core (UPL-004 Stage 2, decision A) --
+    # The data-file publisher owns the column structure: write it next to the
+    # project so the next regimo-core sync attaches the columns to the graph.
+    if not skip_manifest:
+        manifest = build_columns_manifest(meta)
+        manifest_path = write_columns_manifest_file(columns_out, project.pk,
+                                                    manifest)
+        print(f"OK: wrote {manifest_path} "
+              f"({sum(len(d['columns']) for d in manifest['datasets'])} "
+              f"columns for {len(manifest['datasets'])} dataset(s))")
+
     # -- 3. export XML via RDMO's own export plugin ---------------------------
     exporter = RDMOXMLExport("xml", "RDMO XML", "rdmo.projects.exports.RDMOXMLExport")
     exporter.project = project
@@ -444,6 +497,13 @@ def main(argv: list[str]) -> int:
                         help="Print the value plan; no DB writes, no XML.")
     parser.add_argument("--force", action="store_true",
                         help="Create the project even if one with the same title exists.")
+    parser.add_argument("--columns-out", type=Path,
+                        default=EDO_ROOT / "data" / "regimo-core" / "columns",
+                        help="Directory for the regimo-core columns manifest "
+                             "written as <dir>/<project-id>/columns.json "
+                             "(default: %(default)s)")
+    parser.add_argument("--skip-columns-manifest", action="store_true",
+                        help="Do not write the columns manifest.")
     args = parser.parse_args(argv)
 
     # the child re-exec runs with cwd = rdmo-app; relative paths were typed
@@ -465,10 +525,13 @@ def main(argv: list[str]) -> int:
                        for c in name.lower().replace(" ", "-"))
         args.xml_out = DEFAULT_XML_DIR / f"datapackage-{slug}.project.xml"
 
+    args.columns_out = resolve_invocation_path(args.columns_out)
+
     # we are already in the instance env child (dispatched by child_dispatch)
     from .instance import instance_child
 
     rdmo_app = args.rdmo_app.resolve()  # absolute by now
     instance_child(rdmo_app)
     return child_main(rdmo_app, args.datapackage, args.catalog,
-                      args.owner, args.xml_out, args.dry_run, args.force)
+                      args.owner, args.xml_out, args.dry_run, args.force,
+                      args.columns_out, args.skip_columns_manifest)

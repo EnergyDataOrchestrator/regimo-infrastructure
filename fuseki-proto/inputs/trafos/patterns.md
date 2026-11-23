@@ -215,6 +215,35 @@ right-most columns:
 > overrides for range / accuracy / resolution (S10–S12) supercede the (sometimes
 > contradictory, sometimes null) SMS values per CF1-005.
 
+## Columns → Internes Format (UPL-004 Stage 2, decision A)
+
+Source: the **columns manifest** written by the data-file publisher
+(`data/regimo-core/columns/<project_id>/columns.json`, OEMetadata v2
+`schema.fields` verbatim subset, `type` renamed to `datatype`). The engine loads
+it per project (`REGIMO_COLUMNS_EXTRAS`), passes it to the transform, and it
+participates in the change digest (a manifest change re-transforms). Rule C6
+(matching) is tool-side, like the SMS envelope unwrapping.
+
+Map file: `columns-to-internal.linkml-map.yaml` (schema
+`05_P05_S05_columns-schema.yaml` → target class `Column`, class_uri
+`csvw:Column`).
+
+| # | Source (manifest) | Target (internal) | Pattern (Category) | 1:1? | Missing → |
+|---|---|---|---|---|---|
+| C1 | `columns[]/name` | Column `csvw:name` (required key of `Column`) | `direct-property-mapping` (Property-Level) | 1:1 | omit (nameless column) |
+| C2 | `columns[]/datatype` | Column `csvw:datatype` | `direct-property-mapping` (`expr: datatype or None`) | 1:1 | omit |
+| C3 | `columns[]/unit` | Column `edo:unit` (**string** — OEMetadata unit codes like "KW", not CV IRIs; documented divergence from `MeasuredProperty.unit`'s uriorcurie) | `direct-property-mapping` | 1:1 | omit |
+| C4 | `columns[]/description` | Column `dcterms:description` | `direct-property-mapping` | 1:1 | omit |
+| C5 | `columns[]/nullable` | Column `edo:nullable` (boolean; fallback predicate `edo:nullable` via the serializer's lowerCamel default) | `direct-property-mapping` | 1:1 | omit |
+| C6 | manifest entry → maDMP dataset | Dataset `edo:hasColumn` → **Column[]** | tool-side matching (outside the map), priority: `dataset_id` (dcterms:identifier) → `dataset_title` (dcterms:title) → order fallback (only when the manifest covers every dataset of the project, with warning) | n/a | entry skipped with a warning — never force-attached (CF1-013: no fabricated data) |
+
+> **Notes (Columns):** the vocabulary is **W3C CSVW** (`csvw:Column`,
+> `csvw:name`, `csvw:datatype`) linked via the minted `edo:hasColumn` —
+> consistent with the `edo:hasFunding` practice. Unmatched manifest entries are
+> skipped with a warning, never attached to a guessed dataset (CF1-013).
+> SHACL safety: `project-claim-shapes.ttl` has no `sh:closed`, so the new
+> predicates do not break validation.
+
 ## R4 / neue Klassen (MeasurementSeries, SamplingPlan) — keine maschinenlesbare Quelle
 
 These target classes have **no machine-readable source** today (gap register

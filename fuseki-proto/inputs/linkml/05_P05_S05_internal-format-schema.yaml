@@ -17,6 +17,7 @@ prefixes:
   time: http://www.w3.org/2006/time#
   sosa: http://www.w3.org/ns/sosa/
   smscv: https://sms-cv.helmholtz.cloud/sms/cv/api/v1/
+  csvw: http://www.w3.org/ns/csvw#
   xsd: http://www.w3.org/2001/XMLSchema#
 default_prefix: edo
 default_range: string
@@ -115,6 +116,22 @@ classes:
       - observes
       - was_generated_by
       - realized_as
+      - has_column
+
+  Column:
+    description: >
+      Column of a data-file dataset, published by the data-file side at
+      publish time (UPL-004 Stage 2, decision A: the publisher owns the
+      column structure; first source: OEMetadata datapackage
+      `schema.fields`). Linked via `has_column` (edo:hasColumn); the column
+      attributes reuse the W3C CSV on the Web (CSVW) vocabulary.
+    class_uri: csvw:Column
+    slots:
+      - column_name
+      - column_datatype
+      - column_unit
+      - column_description
+      - nullable
 
   Distribution:
     description: Storage during / preservation after the project (two per dataset).
@@ -426,6 +443,43 @@ slots:
   realized_as:
     range: MeasurementSeries
     inlined: true
+
+  has_column:
+    mappings:
+      - edo:hasColumn
+    range: Column
+    multivalued: true
+    inlined_as_list: true
+    description: Data-file columns of a dataset, published by the data-file side (C rules, patterns.md).
+  column_name:
+    mappings:
+      - csvw:name
+    range: string
+    required: true
+  column_datatype:
+    mappings:
+      - csvw:datatype
+    range: string
+    description: >
+      CSV/OEMetadata datatype code (e.g. bigint, timestamp, float), kept as a
+      literal until OEMetadata types are normalised to URI datatypes.
+  column_unit:
+    mappings:
+      - edo:unit
+    range: string
+    description: >
+      Same predicate as MeasuredProperty.unit but string-typed: OEMetadata v2
+      carries unit codes ("KW"), not URIs.
+  column_description:
+    mappings:
+      - dcterms:description
+    range: string
+  nullable:
+    range: boolean
+    description: >
+      edo:nullable — whether the column may carry null values (OEMetadata
+      `schema.fields.nullable`); predicate minted in the EDO vocabulary
+      (edo:nullable, fallback naming in the serialiser).
   has_sampling_plan:
     range: SamplingPlan
     inlined: true

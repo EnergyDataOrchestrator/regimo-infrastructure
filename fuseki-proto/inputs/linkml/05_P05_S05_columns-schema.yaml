@@ -1,0 +1,85 @@
+id: https://w3id.org/edo/schemas/columns-manifest
+name: edo-columns-manifest-schema
+title: EDO Columns Manifest Schema (publisher side)
+description: >
+  The per-project columns manifest written by the data-file side at publish
+  time (UPL-004 Stage 2, decision A: the publisher owns the column
+  structure; first source: OEMetadata datapackage `schema.fields` via
+  `edo-infra create-project-from-datapackage`, later: regimo publish time).
+  Consumed by the regimo-core sync engine from
+  `data/regimo-core/columns/<project_id>/columns.json` and realised into the
+  internal format by the C1-C5 map (`columns-to-internal.linkml-map.yaml`).
+  Matching to the maDMP datasets is done by the executing tool, not in the
+  map (rule C6).
+prefixes:
+  linkml: https://w3id.org/linkml/
+
+imports:
+  - linkml:types
+
+default_range: string
+
+classes:
+
+  ColumnsManifest:
+    description: One manifest per project; `datasets` in the same order as the datapackage resources.
+    slots:
+      - source
+      - datasets
+
+  DatasetColumns:
+    description: >
+      Column metadata for one dataset. Matched to the maDMP dataset by
+      `dataset_id` (dcterms:identifier value), else by `dataset_title`
+      (dcterms:title), else by order (C6 fallback).
+    slots:
+      - dataset_id
+      - dataset_title
+      - columns
+
+  ColumnEntry:
+    description: One data-file column (OEMetadata `schema.fields` entry, verbatim subset).
+    slots:
+      - name
+      - datatype
+      - unit
+      - description
+      - nullable
+
+slots:
+
+  source:
+    description: What published the manifest (e.g. "oemetadata-datapackage", later "regimo-publish").
+
+  datasets:
+    range: DatasetColumns
+    multivalued: true
+    inlined_as_list: true
+
+  dataset_id:
+    description: maDMP dataset_id.identifier value this entry belongs to (optional).
+
+  dataset_title:
+    description: maDMP dataset title this entry belongs to (optional, human-oriented fallback).
+
+  columns:
+    range: ColumnEntry
+    multivalued: true
+    inlined_as_list: true
+
+  name:
+    required: true
+    description: Column header (csvw:name in the internal format, rule C1).
+
+  datatype:
+    description: Column datatype code (csvw:datatype in the internal format, rule C2).
+
+  unit:
+    description: Column unit code (edo:unit string in the internal format, rule C3).
+
+  description:
+    description: Column description (dcterms:description in the internal format, rule C4).
+
+  nullable:
+    range: boolean
+    description: Whether the column may carry null values (edo:nullable, rule C5).

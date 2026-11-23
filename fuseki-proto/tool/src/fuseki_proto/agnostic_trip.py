@@ -108,8 +108,10 @@ TRAFO_DIR = SCRIPTS_DIR / "trafos"
 LINKML_DIR = SCRIPTS_DIR / "linkml"
 DMP_MAP_DEFAULT = TRAFO_DIR / "dmp-to-internal.linkml-map.yaml"
 SMS_MAP_DEFAULT = TRAFO_DIR / "sms-to-internal.linkml-map.yaml"
+COLUMNS_MAP_DEFAULT = TRAFO_DIR / "columns-to-internal.linkml-map.yaml"
 MADMP_SCHEMA = LINKML_DIR / "05_P05_S05_madmp-schema.yaml"
 SMS_SCHEMA = LINKML_DIR / "05_P05_S05_sms-schema.yaml"
+COLUMNS_SCHEMA = LINKML_DIR / "05_P05_S05_columns-schema.yaml"
 INTERNAL_SCHEMA = LINKML_DIR / "05_P05_S05_internal-format-schema.yaml"
 SMS_DIR = SCRIPTS_DIR / "sms"
 AGNOSTIC_DIR = PROTO_DIR / "data" / "agnostic-trip"
@@ -282,12 +284,80 @@ class GraphSerializer:
                     self.g.add(subject, predicate, self.literal(slot, predicate, v))
 
 
+def _as_list(value) -> "list[dict]":
+    """Multivalued map results arrive as a list — or as the bare node when
+    exactly one element was mapped. Normalise for the assembly helpers."""
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return [item for item in value if isinstance(item, dict)]
+    return [value] if isinstance(value, dict) else []
+
+
+def _match_dataset(datasets: "list[dict]", entry: dict,
+                   index: int, total: int) -> "dict | None":
+    """Rule C6: match a manifest entry to a transformed Dataset node.
+
+    Priority: dataset_id (dcterms:identifier value) -> dataset_title
+    (dcterms:title) -> order fallback (only when the manifest covers every
+    dataset of the project). Returns None when nothing matches.
+    """
+    dataset_id = str(entry.get("dataset_id") or "")
+    dataset_title = str(entry.get("dataset_title") or "")
+    if dataset_id:
+        for ds in datasets:
+            ident = (ds.get("identifier") or {}).get("identifier_value")
+            if ident is not None and str(ident) == dataset_id:
+                return ds
+    if dataset_title:
+        for ds in datasets:
+            if str(ds.get("title") or "") == dataset_title:
+                return ds
+    if total == len(datasets) and 0 <= index < len(datasets):
+        logging.getLogger(__name__).warning(
+            "columns manifest entry %d: no dataset_id/title match — using "
+            "the order fallback (C6)", index)
+        return datasets[index]
+    return None
+
+
+def _attach_columns(project_obj: dict, columns: "list[dict] | None",
+                    columns_map: Path) -> "list[dict]":
+    """Map the columns manifest (rule C1-C5) and attach the resulting
+    Column nodes to the matching Datasets (rule C6). Returns the attached
+    per-entry summaries for the meta report; entries without a match are
+    skipped with a warning — no column is fabricated (CF1-013)."""
+    if not columns:
+        return []
+    datasets = _as_list(project_obj.get("has_dataset"))
+    if datasets:
+        project_obj["has_dataset"] = datasets
+    summaries: "list[dict]" = []
+    for index, entry in enumerate(columns):
+        column_objs = [run_map(columns_map, COLUMNS_SCHEMA, column, "ColumnEntry")
+                       for column in (entry.get("columns") or [])]
+        target = _match_dataset(datasets, entry, index, len(columns))
+        if target is None:
+            logging.getLogger(__name__).warning(
+                "columns manifest entry %d (title=%r): no dataset match — "
+                "columns skipped", index, entry.get("dataset_title") or "")
+            summaries.append({"matched": False, "columns": len(column_objs)})
+            continue
+        existing = _as_list(target.get("has_column"))
+        target["has_column"] = existing + column_objs
+        summaries.append({"matched": True, "columns": len(column_objs),
+                          "dataset_title": target.get("title")})
+    return summaries
+
+
 # ---------------------------------------------------------------------------
 # transformation (scenario 1)
 # ---------------------------------------------------------------------------
-def transform(dmp: dict, device: dict | None, properties: list[dict],
+def transform(dmp: dict, device: dict | None, properties: "list[dict]",
               dmp_map: Path = DMP_MAP_DEFAULT,
-              sms_map: Path = SMS_MAP_DEFAULT):
+              sms_map: Path = SMS_MAP_DEFAULT,
+              columns: "list[dict] | None" = None,
+              columns_map: Path = COLUMNS_MAP_DEFAULT):
     """Run both maps and serialize the transformed objects into one graph.
 
     Returns ``(turtle, checks, meta)`` where ``checks`` are the CF2-003
@@ -311,6 +381,10 @@ def transform(dmp: dict, device: dict | None, properties: list[dict],
     # --- serialise both halves into one graph --------------------------------
     ser = GraphSerializer(SchemaView(str(INTERNAL_SCHEMA)))
     project_iri = project_obj["dmp_id"]["identifier_value"]
+
+    # --- columns manifest half (C1-C6, UPL-004 Stage 2 decision A) -----------
+    column_summaries = _attach_columns(project_obj, columns, columns_map)
+
     ser.serialize("Project", project_obj, iri(project_iri), project_iri)
     sensor_iri = None
     if sensor_obj is not None:
@@ -324,11 +398,14 @@ def transform(dmp: dict, device: dict | None, properties: list[dict],
     meta = {
         "project_iri": project_iri,
         "sensor_iri": sensor_iri,
-        "map_files": {"dmp": str(dmp_map), "sms": str(sms_map)},
+        "map_files": {"dmp": str(dmp_map), "sms": str(sms_map),
+                      "columns": str(columns_map)},
         "linkml_map_version": _package_version("linkml-map"),
-        "derivations": [_derivation_summary(dmp_map), _derivation_summary(sms_map)],
+        "derivations": [_derivation_summary(dmp_map), _derivation_summary(sms_map),
+                        _derivation_summary(columns_map)],
         "transformed_project": project_obj,
         "transformed_sensor": sensor_obj,
+        "columns_attached": column_summaries,
         "notes": [
             ("The serialiser emits rdf:type for every nested class node; "
              "trip.py (CF2-003) omitted it for Interval and Identifier blank "
@@ -431,25 +508,34 @@ def agnostic_trip(ctx, port, user, password, dataset):
 @click.option("--sms-map", "sms_map", type=click.Path(exists=True, dir_okay=False),
               default=str(SMS_MAP_DEFAULT), show_default=True,
               help="LinkML Map for the SMS half (rules S1–S16).")
+@click.option("--columns", "columns_paths", multiple=True,
+              type=click.Path(exists=True, dir_okay=False),
+              help="Columns manifest (JSON, rules C1-C6) to attach; repeatable.")
+@click.option("--columns-map", "columns_map", type=click.Path(exists=True, dir_okay=False),
+              default=str(COLUMNS_MAP_DEFAULT), show_default=True,
+              help="LinkML Map for the columns half (rules C1-C5).")
 @click.option("--out", "out_dir", type=click.Path(file_okay=False), default=None,
               help="Artifacts directory (default: data/agnostic-trip/<timestamp>).")
 @click.pass_obj
 def transform_cmd(obj, dmp_path, device_path, property_paths, dmp_map, sms_map,
-                  out_dir):
+                  columns_paths, columns_map, out_dir):
     """Scenario 1: apply the LinkML Maps and emit the internal-format graph."""
     out = Path(out_dir) if out_dir else AGNOSTIC_DIR / _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     out.mkdir(parents=True, exist_ok=True)
     dmp = _load_json(Path(dmp_path))
     device = _load_json(Path(device_path)) if device_path else None
     properties = [_load_json(Path(p)) for p in property_paths]
+    columns = _load_columns_manifests(columns_paths)
     turtle, checks, meta = transform(dmp, device, properties,
-                                     dmp_map=Path(dmp_map), sms_map=Path(sms_map))
+                                     dmp_map=Path(dmp_map), sms_map=Path(sms_map),
+                                     columns=columns, columns_map=Path(columns_map))
     (out / "project-graph.ttl").write_text(turtle, encoding="utf-8")
     report = {
         "timestamp": _dt.datetime.now().isoformat(timespec="seconds"),
         "tool": "agnostic-trip (CF2-004)",
         "inputs": {"dmp": str(dmp_path), "sms_device": str(device_path),
-                   "sms_properties": list(property_paths)},
+                   "sms_properties": list(property_paths),
+                   "columns": list(columns_paths)},
         "maps": meta["map_files"],
         "linkml_map_version": meta["linkml_map_version"],
         "stages": {"transform": {
@@ -458,6 +544,7 @@ def transform_cmd(obj, dmp_path, device_path, property_paths, dmp_map, sms_map,
             "derivations": meta["derivations"],
             "transformed_project": meta["transformed_project"],
             "transformed_sensor": meta["transformed_sensor"],
+            "columns_attached": meta["columns_attached"],
             "notes": meta["notes"]}},
         "checks": [{"id": c["id"], "rule": c["rule"],
                     "description": c["description"], "kind": c["kind"]}
@@ -474,6 +561,21 @@ def transform_cmd(obj, dmp_path, device_path, property_paths, dmp_map, sms_map,
     for note in meta["notes"]:
         click.echo(f"  NOTE: {note}")
     click.echo(f"Graph written to {out / 'project-graph.ttl'}")
+
+
+# ---------------------------------------------------------------------------
+# columns manifest loading (C rules)
+# ---------------------------------------------------------------------------
+def _load_columns_manifests(paths) -> "list[dict] | None":
+    """Load columns manifests (repeatable --columns files); the datasets of
+    all manifests are concatenated into one list of entries."""
+    if not paths:
+        return None
+    entries: "list[dict]" = []
+    for path in paths:
+        manifest = _load_json(Path(path))
+        entries.extend(manifest.get("datasets") or [])
+    return entries
 
 
 # ---------------------------------------------------------------------------
@@ -632,8 +734,11 @@ def store_cmd(obj, graph_path, wipe, validate):
               type=click.Path(exists=True, dir_okay=False),
               default=[str(p) for p in _default_property_files()],
               show_default="(all device-*-property-*.json under inputs/sms/)")
+@click.option("--columns", "columns_paths", multiple=True,
+              type=click.Path(exists=True, dir_okay=False),
+              help="Columns manifest (JSON, rules C1-C6) to attach; repeatable.")
 @click.pass_obj
-def verify_cmd(obj, dmp_path, device_path, property_paths):
+def verify_cmd(obj, dmp_path, device_path, property_paths, columns_paths):
     """Scenario 3: dump /projects and verify field-level equality with the sources."""
     base, ds, user, password = (obj["base_url"], obj["dataset"],
                                 obj["user"], obj["password"])
@@ -645,7 +750,8 @@ def verify_cmd(obj, dmp_path, device_path, property_paths):
     dmp = _load_json(Path(dmp_path))
     device = _load_json(Path(device_path)) if device_path else None
     properties = [_load_json(Path(p)) for p in property_paths]
-    _, checks, _ = transform(dmp, device, properties)
+    columns = _load_columns_manifests(columns_paths)
+    _, checks, _ = transform(dmp, device, properties, columns=columns)
 
     # 1. dump the stored graph back out
     dump = D.dump_graph(base, ds, user, password)

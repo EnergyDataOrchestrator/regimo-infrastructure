@@ -1,0 +1,48 @@
+id: https://w3id.org/edo/trafos/columns-to-internal
+title: Columns manifest -> EDO internal format (linkml-map transformation specification, C1-C5)
+description: >
+  Compiles the column half of the transformation catalogue
+  `scripts/trafos/patterns.md` (rules C1-C5) into a linkml-map
+  TransformationSpecification (UPL-004 Stage 2, decision A). Executed by
+  `fuseki_proto.agnostic_trip.transform` via its `columns` parameter; the
+  manifest entries are mapped to internal-format Column nodes and attached
+  to the matching dcat:Dataset nodes by the executing tool (rule C6 —
+  matching is outside the map, same pattern as the SMS JSON:API unwrapping
+  in the S half).
+
+  Conventions (same as dmp-to-internal / sms-to-internal):
+
+  * Class derivations are keyed by the *target* class name and carry
+    `populated_from` = the *source* class name.
+  * Slot derivations are keyed by the *target* slot name; `populated_from`
+    names the source field, `expr` is a LinkML expression (restricted
+    evaluator: null-propagating operators, schema-known attribute access).
+source_schema: 05_P05_S05_columns-schema.yaml
+target_schema: 05_P05_S05_internal-format-schema.yaml
+prefixes:
+  edo: https://w3id.org/edo/terms/
+  dcterms: http://purl.org/dc/terms/
+  csvw: http://www.w3.org/ns/csvw#
+
+class_derivations:
+  Column:
+    populated_from: ColumnEntry
+    description: "One manifest column -> csvw:Column node (linked via edo:hasColumn by the serialiser)."
+    slot_derivations:
+      column_name:
+        description: "C1: name -> csvw:name (1:1, required)."
+        populated_from: name
+      column_datatype:
+        description: "C2: datatype -> csvw:datatype (literal; empty -> omitted)."
+        expr: datatype or None
+      column_unit:
+        description: "C3: unit -> edo:unit (string passthrough; empty -> omitted)."
+        expr: unit or None
+      column_description:
+        description: "C4: description -> dcterms:description (empty -> omitted)."
+        expr: description or None
+      nullable:
+        description: "C5: nullable -> edo:nullable (boolean passthrough)."
+        populated_from: nullable
+      # C6 (dataset matching: dataset_id -> title -> order) is realised by the
+      # executing tool — see the description above.

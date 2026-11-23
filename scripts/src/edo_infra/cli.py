@@ -10,6 +10,7 @@ from .create_project_from_doi import create_project_from_doi
 from .create_project_from_datapackage import create_project_from_datapackage
 from .install_exporter import install_exporter
 from .reset_projects import reset_projects
+from .write_columns_manifest import write_columns_manifest
 
 CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"]}
 
@@ -26,3 +27,4 @@ cli.add_command(create_project_from_doi)
 cli.add_command(create_project_from_datapackage)
 cli.add_command(add_dataset)
 cli.add_command(reset_projects)
+cli.add_command(write_columns_manifest)
