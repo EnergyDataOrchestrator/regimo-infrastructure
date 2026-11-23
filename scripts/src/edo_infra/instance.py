@@ -19,10 +19,30 @@ from pathlib import Path
 from .paths import PACKAGE_SRC
 
 CHILD_ENV_VAR = "EDO_INFRA_INSTANCE_CHILD"
+INVOCATION_CWD_VAR = "EDO_INFRA_INSTANCE_CWD"
 
 
 def in_instance_child() -> bool:
     return os.environ.get(CHILD_ENV_VAR) == "1"
+
+
+def invocation_cwd() -> Path:
+    """Directory the outer CLI was invoked from.
+
+    The child re-exec runs with cwd = the RDMO instance dir, so relative
+    path options must be resolved against the recorded invocation cwd —
+    without it, ``--datapackage fixtures/...`` breaks even though it exists
+    relative to where the user typed the command.
+    """
+    recorded = os.environ.get(INVOCATION_CWD_VAR)
+    return Path(recorded) if recorded else Path.cwd()
+
+
+def resolve_invocation_path(path: Path) -> Path:
+    """Resolve a relative path option against the invocation cwd."""
+    if path.is_absolute():
+        return path
+    return invocation_cwd() / path
 
 
 def reexec_in_instance_env(rdmo_app: Path) -> int:
@@ -35,6 +55,7 @@ def reexec_in_instance_env(rdmo_app: Path) -> int:
         return 2
     env = os.environ.copy()
     env[CHILD_ENV_VAR] = "1"
+    env[INVOCATION_CWD_VAR] = os.getcwd()
     env["DJANGO_SETTINGS_MODULE"] = "config.settings"
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = (str(PACKAGE_SRC)

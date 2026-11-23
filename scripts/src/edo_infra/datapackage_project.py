@@ -43,6 +43,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 from .paths import DEFAULT_RDMO_APP, DEFAULT_XML_DIR
+from .instance import resolve_invocation_path
 
 DEFAULT_DATAPACKAGE = (DEFAULT_XML_DIR
                        / "iai_active_power_pv_202302" / "datapackage.json")
@@ -442,6 +443,13 @@ def main(argv: list[str]) -> int:
                         help="Create the project even if one with the same title exists.")
     args = parser.parse_args(argv)
 
+    # the child re-exec runs with cwd = rdmo-app; relative paths were typed
+    # relative to the invocation directory, so resolve them against that
+    args.datapackage = resolve_invocation_path(args.datapackage)
+    args.rdmo_app = resolve_invocation_path(args.rdmo_app)
+    if args.xml_out is not None:
+        args.xml_out = resolve_invocation_path(args.xml_out)
+
     if not args.datapackage.is_file():
         print(f"ERROR: datapackage not found: {args.datapackage}", file=sys.stderr)
         return 2
@@ -457,7 +465,7 @@ def main(argv: list[str]) -> int:
     # we are already in the instance env child (dispatched by child_dispatch)
     from .instance import instance_child
 
-    rdmo_app = args.rdmo_app.resolve()
+    rdmo_app = args.rdmo_app.resolve()  # absolute by now
     instance_child(rdmo_app)
-    return child_main(rdmo_app, args.datapackage.resolve(), args.catalog,
+    return child_main(rdmo_app, args.datapackage, args.catalog,
                       args.owner, args.xml_out, args.dry_run, args.force)

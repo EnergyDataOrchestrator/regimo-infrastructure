@@ -206,6 +206,15 @@ def main(argv: list[str]) -> int:
                         help="Create the project even if one with the same title exists.")
     args = parser.parse_args(argv)
 
+    # the child re-exec runs with cwd = rdmo-app; relative paths were typed
+    # relative to the invocation directory, so resolve them against that
+    from .instance import resolve_invocation_path
+    args.rdmo_app = resolve_invocation_path(args.rdmo_app)
+    if args.doi_json is not None:
+        args.doi_json = str(resolve_invocation_path(Path(args.doi_json)))
+    if args.xml_out is not None:
+        args.xml_out = resolve_invocation_path(args.xml_out)
+
     if args.xml_out is None:
         slug = args.doi.lower().replace("/", "-")
         args.xml_out = DEFAULT_XML_DIR / f"doi-{slug}.project.xml"
